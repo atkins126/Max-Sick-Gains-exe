@@ -56,17 +56,22 @@ type
     lbl2: TLabel;
     dbedt_fitStageName: TDBEdit;
     pmFitStages: TPopupMenu;
-    acttb1: TActionToolBar;
     actmgr1: TActionManager;
     flpn1: TFileOpen;
     flsvs1: TFileSaveAs;
     actFileNew: TAction;
     New1: TMenuItem;
     actDBInsert: TAction;
-    ilActions: TImageList;
+    ilActions48: TImageList;
     actDBDel: TAction;
     flpndlg_Bs: TFileOpenDialog;
     ilIcons24: TImageList;
+    Insert1: TMenuItem;
+    Action11: TMenuItem;
+    ilActions32: TImageList;
+    Record1: TMenuItem;
+    Insert2: TMenuItem;
+    Delete1: TMenuItem;
     procedure trckbr_PlyBsMinWChange(Sender: TObject);
     procedure trckbr_PlyBsMaxWChange(Sender: TObject);
     procedure dbgrd_fitStagesNavKeyDown(Sender: TObject; var Key: Word; Shift:
