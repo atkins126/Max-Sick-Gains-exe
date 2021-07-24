@@ -5,7 +5,9 @@ uses
   Unit1010_main in 'Unit1010_main.pas' {frmMain},
   Unit9010_dataModule in 'Unit9010_dataModule.pas' {dtmdl_Main: TDataModule},
   Vcl.Themes,
-  Vcl.Styles;
+  Vcl.Styles,
+  Unit5010_ExportBs in 'Unit5010_ExportBs.pas',
+  Functions.Regex in 'Functions.Regex.pas';
 
 {$R *.res}
 

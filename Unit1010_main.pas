@@ -101,16 +101,22 @@ var
 
 implementation
 
+uses
+  Unit5010_ExportBs;
+
 
 {$R *.dfm}
 
 procedure TfrmMain.actDBDelExecute(Sender: TObject);
 begin
-  Caption := 'eou'
+//  Show
+  Caption := BodyslideToLua('F:\Skyrim SE\MO2\mods\DM Bodyslide presets\CalienteTools\BodySlide\SliderPresets\DM Amazons 3BA Nude.xml');
 end;
 
 procedure TfrmMain.actDBInsertExecute(Sender: TObject);
 begin
+  ShowMessage(BodyslideToLua('F:\Skyrim SE\MO2\mods\DM Bodyslide presets\CalienteTools\BodySlide\SliderPresets\DM Amazons 3BA Nude.xml'));
+  Exit;
   dtmdl_Main.Append(ActivePageAsTable);
 end;
 
