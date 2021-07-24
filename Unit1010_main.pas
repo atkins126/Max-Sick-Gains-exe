@@ -9,10 +9,24 @@ uses
   Vcl.Menus, Vcl.Mask, Vcl.DBCtrls, Vcl.WinXPanels, Vcl.Buttons,
   Vcl.Samples.Spin, Data.Win.ADODB, Unit9010_dataModule,
   Vcl.PlatformDefaultStyleActnCtrls, System.Actions, Vcl.ActnList, Vcl.ActnMan,
-  Vcl.ToolWin, Vcl.ActnCtrls, Vcl.StdActns, System.ImageList, Vcl.ImgList;
+  Vcl.ToolWin, Vcl.ActnCtrls, Vcl.StdActns, System.ImageList, Vcl.ImgList,
+  Winapi.ShellAPI;
 
 type
   TStrToStr = reference to function(s: string): string;
+
+  TDropFile = procedure(Sender: TObject; fileName: string) of object;
+
+  TDropPanel = class(TPanel)
+    procedure WMDropFiles(var Message: TWMDropFiles); message WM_DROPFILES;
+    procedure CreateWnd; override;
+    procedure DestroyWnd; override;
+  private
+    FOnDropFile: TDropFile;
+  public
+    procedure AfterConstruction; override;
+    property OnDropFile: TDropFile read FOnDropFile write FOnDropFile;
+  end;
 
   TfrmMain = class(TForm)
     pgc1: TPageControl;
@@ -72,8 +86,10 @@ type
     Record1: TMenuItem;
     Insert2: TMenuItem;
     Delete1: TMenuItem;
-    m: TTabSheet;
+    tsOutput: TTabSheet;
     redtOutput: TRichEdit;
+    tsCreateTextures: TTabSheet;
+    img_TexLvl1: TImage;
     procedure trckbr_PlyBsMinWChange(Sender: TObject);
     procedure trckbr_PlyBsMaxWChange(Sender: TObject);
     procedure dbgrd_fitStagesNavKeyDown(Sender: TObject; var Key: Word; Shift:
@@ -87,7 +103,10 @@ type
     procedure btn1Click(Sender: TObject);
     procedure btn2Click(Sender: TObject);
     procedure dbedtBsChange(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
+    pnlTexLvl1: TDropPanel;
+    procedure OnTexLvl1Drop(Sender: TObject; fileName: string);
     procedure DisableCtrlDel(var Key: Word; Shift: TShiftState);
     procedure CheckDelAvailability;
     procedure SetBodyslideFromFile(const aField: string);
@@ -104,7 +123,7 @@ var
 implementation
 
 uses
-  Unit5010_ExportBs;
+  Unit5010_ExportBs, TargaImage;
 
 
 {$R *.dfm}
@@ -118,7 +137,6 @@ end;
 procedure TfrmMain.actDBInsertExecute(Sender: TObject);
 begin
   redtOutput.Text := dtmdl_Main.FitStageToLua;
-//  redtOutput.Text := BodyslideToLua('F:\Skyrim SE\MO2\mods\DM Bodyslide presets\CalienteTools\BodySlide\SliderPresets\DM Amazons 3BA Nude.xml');
   Exit;
   dtmdl_Main.Append(ActivePageAsTable);
 end;
@@ -160,11 +178,10 @@ end;
 procedure TfrmMain.dbedtBsChange(Sender: TObject);
 begin
   SetEdtHint(Sender as TCustomEdit,
-    function (s: string): string
+    function(s: string): string
     begin
       Result := ExtractFileName(s);
-    end
-  );
+    end);
 end;
 
 procedure TfrmMain.dbedt_fitStageDisplayNameChange(Sender: TObject);
@@ -195,9 +212,41 @@ begin
     Key := 0;
 end;
 
+procedure TfrmMain.FormCreate(Sender: TObject);
+begin
+  pnlTexLvl1 := TDropPanel.Create(tsCreateTextures);
+  pnlTexLvl1.OnDropFile := OnTexLvl1Drop;
+end;
+
 procedure TfrmMain.FormShow(Sender: TObject);
 begin
   CheckDelAvailability;
+
+  with pnlTexLvl1 do
+  begin
+    Parent := tsCreateTextures;
+    Top := 14;
+    Left := 14;
+  end;
+  img_TexLvl1.Parent := pnlTexLvl1;
+  img_TexLvl1.Align := alClient;
+end;
+
+procedure TfrmMain.OnTexLvl1Drop(Sender: TObject; fileName: string);
+var
+  tga: TTargaImage;
+begin
+  if CompareText(ExtractFileExt(fileName), '.tga') <> 0 then
+  begin
+    Application.MessageBox('Only TGA are files supported.', 'Invalid extension',
+      MB_OK + MB_ICONSTOP + MB_TOPMOST);
+    Exit;
+  end;
+
+  tga := TTargaImage.Create;
+  tga.LoadFromFile(fileName);
+  img_TexLvl1.Picture.Graphic := tga;
+  tga.Free;
 end;
 
 procedure TfrmMain.pgc1Change(Sender: TObject);
@@ -224,6 +273,46 @@ end;
 procedure TfrmMain.trckbr_PlyBsMinWChange(Sender: TObject);
 begin
   trckbr_PlyBsMaxW.Min := trckbr_PlyBsMinW.Position;
+end;
+
+
+{ TDropPanel }
+
+procedure TDropPanel.AfterConstruction;
+begin
+  inherited;
+  Width := 250;
+  Height := 250;
+  Caption := 'Drag a tga file here';
+  BevelKind := bkSoft;
+  BevelOuter := bvNone;
+  Color := clActiveBorder;
+  StyleElements := [seFont, seBorder];
+end;
+
+procedure TDropPanel.CreateWnd;
+begin
+  inherited;
+  DragAcceptFiles(Handle, true);
+end;
+
+procedure TDropPanel.DestroyWnd;
+begin
+  DragAcceptFiles(Handle, false);
+  inherited;
+end;
+
+procedure TDropPanel.WMDropFiles(var Message: TWMDropFiles);
+var
+  nameLen: Integer;
+  fileName: string;
+begin
+  nameLen := DragQueryFile(Message.Drop, 0, nil, 0) + 1;
+  SetLength(fileName, nameLen);
+  DragQueryFile(Message.Drop, 0, Pointer(fileName), nameLen);
+  if Assigned(FOnDropFile) then
+    FOnDropFile(Self, Trim(fileName));
+  DragFinish(Message.Drop);
 end;
 
 end.

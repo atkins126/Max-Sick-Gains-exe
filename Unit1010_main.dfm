@@ -15,6 +15,7 @@ object frmMain: TfrmMain
   Menu = mm1
   OldCreateOrder = False
   Position = poDesktopCenter
+  OnCreate = FormCreate
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -23,7 +24,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 542
     Height = 378
-    ActivePage = m
+    ActivePage = tsCreateTextures
     Align = alClient
     TabOrder = 0
     OnChange = pgc1Change
@@ -105,7 +106,7 @@ object frmMain: TfrmMain
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 177
+          Width = 106
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -121,7 +122,6 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
-          ExplicitWidth = 106
         end
         object dbgrd_fitStagesNav: TDBGrid
           Left = 1
@@ -336,15 +336,14 @@ object frmMain: TfrmMain
         Left = 0
         Top = 0
         Width = 185
-        Height = 368
+        Height = 350
         Align = alLeft
         TabOrder = 0
-        ExplicitHeight = 358
         object lbl11: TLabel
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 106
+          Width = 177
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -360,12 +359,13 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
+          ExplicitWidth = 106
         end
         object dbgrd1: TDBGrid
           Left = 1
           Top = 51
           Width = 183
-          Height = 316
+          Height = 298
           Align = alClient
           Options = [dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
           TabOrder = 0
@@ -454,15 +454,25 @@ object frmMain: TfrmMain
         end
       end
     end
-    object m: TTabSheet
+    object tsCreateTextures: TTabSheet
+      Caption = 'Create Textures'
+      ImageIndex = 3
+      object img_TexLvl1: TImage
+        Left = 252
+        Top = 35
+        Width = 225
+        Height = 225
+        Stretch = True
+      end
+    end
+    object tsOutput: TTabSheet
       Caption = 'Output'
       ImageIndex = 2
       object redtOutput: TRichEdit
         Left = 0
         Top = 0
-        Width = 534
-        Height = 350
-        Align = alClient
+        Width = 232
+        Height = 218
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -13
