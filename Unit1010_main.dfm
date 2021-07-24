@@ -23,7 +23,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 542
     Height = 378
-    ActivePage = tsFitStages
+    ActivePage = m
     Align = alClient
     TabOrder = 0
     OnChange = pgc1Change
@@ -454,6 +454,28 @@ object frmMain: TfrmMain
         end
       end
     end
+    object m: TTabSheet
+      Caption = 'Output'
+      ImageIndex = 2
+      object redtOutput: TRichEdit
+        Left = 0
+        Top = 0
+        Width = 534
+        Height = 350
+        Align = alClient
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Fira Code'
+        Font.Style = []
+        Lines.Strings = (
+          'redtOutput')
+        ParentFont = False
+        ScrollBars = ssBoth
+        TabOrder = 0
+        Zoom = 100
+      end
+    end
   end
   object stat1: TStatusBar
     Left = 0
@@ -469,7 +491,7 @@ object frmMain: TfrmMain
   object mm1: TMainMenu
     Images = ilActions32
     Left = 186
-    Top = 16
+    Top = 353
     object File1: TMenuItem
       Caption = 'File'
       object New1: TMenuItem
@@ -489,7 +511,7 @@ object frmMain: TfrmMain
   object pmFitStages: TPopupMenu
     Images = ilActions32
     Left = 220
-    Top = 16
+    Top = 353
     object Insert1: TMenuItem
       Action = actDBInsert
     end
@@ -515,7 +537,7 @@ object frmMain: TfrmMain
       end>
     Images = ilActions32
     Left = 16
-    Top = 16
+    Top = 353
     StyleName = 'Platform Default'
     object flpn1: TFileOpen
       Category = 'File'
@@ -555,7 +577,7 @@ object frmMain: TfrmMain
     Height = 48
     Width = 48
     Left = 118
-    Top = 16
+    Top = 353
     Bitmap = {
       494C010102005000040030003000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000C00000003000000001002000000000000090
@@ -1765,14 +1787,14 @@ object frmMain: TfrmMain
       end>
     Options = []
     Left = 50
-    Top = 16
+    Top = 353
   end
   object ilIcons24: TImageList
     ColorDepth = cd32Bit
     Height = 24
     Width = 24
     Left = 152
-    Top = 16
+    Top = 353
     Bitmap = {
       494C010102000800040018001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000001800000001002000000000000024
@@ -2083,7 +2105,7 @@ object frmMain: TfrmMain
     Height = 32
     Width = 32
     Left = 84
-    Top = 16
+    Top = 353
     Bitmap = {
       494C010102000800040020002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000002000000001002000000000000040

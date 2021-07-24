@@ -12,12 +12,13 @@ implementation
 
 uses
   Generics.Collections, Functional.Sequence, Functional.FuncFactory,
-  Functions.Regex;
+  Functions.Regex, Functions.Strings;
 
 type
   TBsVals = record
     min: string;
     max: string;
+    constructor Create(const aMin, aMax: string);
   end;
 
 function GetSliderName(const s: string): string;
@@ -35,19 +36,14 @@ var
   val: string;
 begin
   {
-  Updates an already set BS Slider, since records are inmutable.
+  Updates an already set BS Slider by creaing a new record, since records
+  seem to be inmutable.
   }
   val := GetSliderValue(xmlLine);
   if ContainsText(xmlLine, 'size="big"') then
-  begin
-    Result.min := oldVal.min;
-    Result.max := val;
-  end
+    Result := TBsVals.Create(oldVal.min, val)
   else
-  begin
-    Result.min := val;
-    Result.max := oldVal.max;
-  end;
+    Result := TBsVals.Create(val, oldVal.max);
 end;
 
 function BlankSlider: TBsVals;
@@ -62,24 +58,9 @@ var
 begin
   aList.Clear;
   for Item in aDict do
-    aList.Add(Format('["%s"] = {min = %s, max = %s}', [Item.Key, Item.Value.min,
+    aList.Add(Format('["%s"] = {min=%s, max=%s}', [Item.Key, Item.Value.min,
       Item.Value.max]));
-end;
-
-function FilterByContainsTxt(const aSubText: string): TPredicate<string>;
-begin
-// TODO: Move to independent unit
-  Result :=
-    function(const s: string): Boolean
-    begin
-      Result := ContainsText(s, aSubText);
-    end;
-end;
-
-function CommaSeparateStr(const s: string; const Accumulator: string): string;
-begin
-// TODO: Refactor as High order
-  Result := Accumulator + IfThen(Accumulator = '', '', ',') + s;
+  aList.Sort;
 end;
 
 function xmlLineToDict(aDict: TDictionary<string, TBsVals>): TProc<string>;
@@ -108,24 +89,38 @@ var
   slidersToDict: TProc<string>;
   commaSeparate: TFoldFunc<string, string>;
 begin
+  Result := '';
+  if not FileExists(aFileName) then
+    Exit;
+
   // Objects
   l := TStringList.Create;
   rawData := TDictionary<string, TBsVals>.Create;
   // Functions
   onlySliders := FilterByContainsTxt('<SetSlider');
-  commaSeparate := CommaSeparateStr;
+  commaSeparate := ReduceStr(','#13#10);
   slidersToDict := xmlLineToDict(rawData);
 
   try
     l.LoadFromFile(aFileName);
-    TSeq.From(l).Filter(onlySliders).ForEach(slidersToDict);
+    TSeq.From(l)
+      .Filter(onlySliders)
+      .ForEach(slidersToDict);
     DictToStrList(rawData, l);
-    Result := 'bs = {'#13#10 + TSeq.From(l).Fold<string>(commaSeparate, '') +
-      #13#10'}';
+    Result := TSeq.From(l).Fold<string>(commaSeparate, '');
   finally
     l.Free;
     rawData.Free
   end;
 end;
 
+{ TBsVals }
+
+constructor TBsVals.Create(const aMin, aMax: string);
+begin
+  min := aMin;
+  max := aMax;
+end;
+
 end.
+

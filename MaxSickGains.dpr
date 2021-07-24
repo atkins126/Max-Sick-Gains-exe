@@ -7,7 +7,8 @@ uses
   Vcl.Themes,
   Vcl.Styles,
   Unit5010_ExportBs in 'Unit5010_ExportBs.pas',
-  Functions.Regex in 'Functions.Regex.pas';
+  Functions.Regex in 'Functions.Regex.pas',
+  Functions.Strings in 'Functions.Strings.pas';
 
 {$R *.res}
 

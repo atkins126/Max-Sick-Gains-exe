@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, Data.DB, Data.Win.ADODB, Winapi.Windows,
-  System.IOUtils;
+  System.IOUtils, System.StrUtils, Functional.Sequence;
 
 type
   TTableName = (tnNone, tnFitStages, tnFitStagesPlayer);
@@ -39,7 +39,15 @@ type
     procedure RefreshToLast(aTbl: TCustomADODataSet);
     function InsertCommand(const aTable: TTableName): string;
     procedure Refresh(aTbl: TCustomADODataSet);
+    function FieldToLuaAssign(const aDataSet: TCustomADODataSet; const aFied:
+      string; const isStr: Boolean = true; const addComma: Boolean = true):
+      string;
+    function ToLuaTable(const s: string; const addComma: Boolean = true): string;
+    function MemoToLua(const aText: string): string;
+    function FieldFrom(const aTbl: TCustomADODataSet; const aField: string):
+      string;
   public
+    function FitStageToLua: string;
     procedure OpenFile(const aFileName: string);
     function IsAtFirst(const aTable: TTableName): Boolean;
     function FitStagesCurrIdx: Integer;
@@ -54,7 +62,7 @@ var
 implementation
 
 uses
-  Vcl.Forms;
+  Vcl.Forms, Unit5010_ExportBs, Functions.Strings;
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
@@ -136,9 +144,72 @@ begin
   end;
 end;
 
+function Tdtmdl_Main.MemoToLua(const aText: string): string;
+var
+  lines: TStringList;
+begin
+  lines := TStringList.Create;
+  try
+    lines.Text := aText;
+    Result := TSeq.From(lines)
+      .Map<string>(EncloseStr('"'))
+      .Fold<string>(ReduceStr(', '), '');
+  finally
+    lines.Free;
+  end;
+end;
+
+function Tdtmdl_Main.FieldFrom(const aTbl: TCustomADODataSet; const aField:
+  string): string;
+begin
+  Result := aTbl.FieldByName(aField).AsString;
+end;
+
+function Tdtmdl_Main.FieldToLuaAssign(const aDataSet: TCustomADODataSet; const
+  aFied: string; const isStr, addComma: Boolean): string;
+var
+  val: string;
+begin
+  val := FieldFrom(aDataSet, aFied);
+  if isStr then
+    val := '"' + val + '"';
+  Result := Format('%s=%s', [aFied, val]);
+  if addComma then
+    Result := Result + ',';
+end;
+
 function Tdtmdl_Main.FitStagesCurrIdx: Integer;
 begin
   Result := tblFitStages.FieldByName('Id').AsInteger;
+end;
+
+function Tdtmdl_Main.FitStageToLua: string;
+var
+  output: TStringList;
+  tbl: TCustomADODataSet;
+const
+  bs =
+    'F:\Skyrim SE\MO2\mods\DM Bodyslide presets\CalienteTools\BodySlide\SliderPresets\DM Amazons 3BA Nude.xml';
+begin
+  tbl := tblFitStages;
+  output := TStringList.Create;
+  try
+    output.Add(FieldToLuaAssign(tbl, 'displayName'));
+    output.Add('femBs=' + ToLuaTable(
+      BodyslideToLua(bs)
+      ));
+    output.Add('manBs=' + ToLuaTable(
+      BodyslideToLua(FieldFrom(tbl, 'manBs'))
+      ));
+    output.Add(FieldToLuaAssign(tbl, 'muscleDefType'));
+    output.Add(FieldToLuaAssign(tbl, 'muscleDefLvl'));
+    output.Add('excludedRaces=' + ToLuaTable(
+      MemoToLua(FieldFrom(tbl, 'excludedRaces'))
+      ));
+    Result := output.Text;
+  finally
+    output.Free;
+  end;
 end;
 
 function Tdtmdl_Main.GetTable(const aTable: TTableName): TCustomADODataSet;
@@ -167,7 +238,7 @@ end;
 procedure Tdtmdl_Main.OpenFile(const aFileName: string);
 const
   s =
-    'Provider=Microsoft.Jet.OLEDB.4.0;Data Source=%s;Mode=ReadWrite;Persist Security Info=False';
+      'Provider=Microsoft.Jet.OLEDB.4.0;Data Source=%s;Mode=ReadWrite;Persist Security Info=False';
 begin
   CloseAll;
   CreateTemp(AppPath + 'res\blankDB.mdb');
@@ -190,7 +261,11 @@ begin
     Result := AppPath + 'res\temp.mdb'
   else
     Result := tmp + 'temp.mdb';
+end;
 
+function Tdtmdl_Main.ToLuaTable(const s: string; const addComma: Boolean): string;
+begin
+  Result := '{'#13#10 + s + #13#10'}' + IfThen(addComma, ',', '');
 end;
 
 end.

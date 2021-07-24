@@ -119,6 +119,7 @@
         </DCCReference>
         <DCCReference Include="Unit5010_ExportBs.pas"/>
         <DCCReference Include="Functions.Regex.pas"/>
+        <DCCReference Include="Functions.Strings.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -146,6 +147,12 @@
             </Delphi.Personality>
             <Deployment Version="3">
                 <DeployFile LocalName="MaxSickGains.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>MaxSickGains.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="MaxSickGains.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>MaxSickGains.exe</RemoteName>
                         <Overwrite>true</Overwrite>

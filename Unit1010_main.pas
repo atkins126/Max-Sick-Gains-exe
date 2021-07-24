@@ -72,6 +72,8 @@ type
     Record1: TMenuItem;
     Insert2: TMenuItem;
     Delete1: TMenuItem;
+    m: TTabSheet;
+    redtOutput: TRichEdit;
     procedure trckbr_PlyBsMinWChange(Sender: TObject);
     procedure trckbr_PlyBsMaxWChange(Sender: TObject);
     procedure dbgrd_fitStagesNavKeyDown(Sender: TObject; var Key: Word; Shift:
@@ -115,7 +117,8 @@ end;
 
 procedure TfrmMain.actDBInsertExecute(Sender: TObject);
 begin
-  ShowMessage(BodyslideToLua('F:\Skyrim SE\MO2\mods\DM Bodyslide presets\CalienteTools\BodySlide\SliderPresets\DM Amazons 3BA Nude.xml'));
+  redtOutput.Text := dtmdl_Main.FitStageToLua;
+//  redtOutput.Text := BodyslideToLua('F:\Skyrim SE\MO2\mods\DM Bodyslide presets\CalienteTools\BodySlide\SliderPresets\DM Amazons 3BA Nude.xml');
   Exit;
   dtmdl_Main.Append(ActivePageAsTable);
 end;
