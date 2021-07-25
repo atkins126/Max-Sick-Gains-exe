@@ -10,7 +10,8 @@ uses
   Vcl.Samples.Spin, Data.Win.ADODB, Unit9010_dataModule,
   Vcl.PlatformDefaultStyleActnCtrls, System.Actions, Vcl.ActnList, Vcl.ActnMan,
   Vcl.ToolWin, Vcl.ActnCtrls, Vcl.StdActns, System.ImageList, Vcl.ImgList,
-  Winapi.ShellAPI;
+  Winapi.ShellAPI, System.Types, Vcl.Imaging.pngimage, Vcl.Imaging.jpeg,
+  System.Math;
 
 type
   TStrToStr = reference to function(s: string): string;
@@ -90,6 +91,10 @@ type
     redtOutput: TRichEdit;
     tsCreateTextures: TTabSheet;
     img_TexLvl1: TImage;
+    img_TexLvlMax: TImage;
+    pnlTexDummy1: TPanel;
+    pnlTexDummy2: TPanel;
+    btn_TexGen: TButton;
     procedure trckbr_PlyBsMinWChange(Sender: TObject);
     procedure trckbr_PlyBsMaxWChange(Sender: TObject);
     procedure dbgrd_fitStagesNavKeyDown(Sender: TObject; var Key: Word; Shift:
@@ -104,15 +109,21 @@ type
     procedure btn2Click(Sender: TObject);
     procedure dbedtBsChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure btn_TexGenClick(Sender: TObject);
   private
     pnlTexLvl1: TDropPanel;
+    pnlTexLvlMax: TDropPanel;
+    procedure InitDropPnl(const pnl: TDropPanel; const img: TImage; const
+      aParent: TPanel);
     procedure OnTexLvl1Drop(Sender: TObject; fileName: string);
+    procedure OnTexLvlMaxDrop(Sender: TObject; fileName: string);
     procedure DisableCtrlDel(var Key: Word; Shift: TShiftState);
     procedure CheckDelAvailability;
     procedure SetBodyslideFromFile(const aField: string);
     procedure DbEdtCursorToLastPos(const edt: TCustomMaskEdit);
     function ActivePageAsTable: TTableName;
     procedure SetEdtHint(const edt: TCustomEdit; const func: TStrToStr);
+    procedure LoadTgaFile(fileName: string; const imgTo: TImage);
   public
     { Public declarations }
   end;
@@ -123,7 +134,7 @@ var
 implementation
 
 uses
-  Unit5010_ExportBs, TargaImage;
+  Unit5010_ExportBs, TargaImage, FreeImage;
 
 
 {$R *.dfm}
@@ -159,6 +170,34 @@ procedure TfrmMain.btn2Click(Sender: TObject);
 begin
   SetBodyslideFromFile('manBs');
   DbEdtCursorToLastPos(dbedtmanBs);
+end;
+
+procedure TfrmMain.btn_TexGenClick(Sender: TObject);
+var
+  bmp: TBitmap;
+  n: Integer;
+  alpha: Byte;
+const
+  lvls = 6;
+  f =
+    'F:\Skyrim SE\MO2\mods\Max Sick Gains - Textures\textures\actors\character\Maxick\%.2d.bmp';
+begin
+  bmp := TBitmap.Create;
+  bmp.Width := img_TexLvl1.Picture.Bitmap.Width;
+  bmp.Height := img_TexLvl1.Picture.Bitmap.Height;
+  alpha := 0;
+  n := 0;
+  repeat
+    bmp.Canvas.Draw(0, 0, img_TexLvl1.Picture.Graphic);
+    bmp.Canvas.Draw(0, 0, img_TexLvlMax.Picture.Graphic, alpha);
+    bmp.SaveToFile(Format(f, [n + 1]));
+    n := n + 1;
+    alpha := Min(255, Round(((1 / (lvls - 1)) * n) * 255));
+  until n >= lvls;
+  bmp.Free;
+
+//  Invalidate;
+//  pbTexOutPaint(pbTexOut);
 end;
 
 procedure TfrmMain.CheckDelAvailability;
@@ -214,39 +253,38 @@ end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
-  pnlTexLvl1 := TDropPanel.Create(tsCreateTextures);
+  pnlTexLvl1 := TDropPanel.Create(self);
   pnlTexLvl1.OnDropFile := OnTexLvl1Drop;
+
+  pnlTexLvlMax := TDropPanel.Create(self);
+  pnlTexLvlMax.OnDropFile := OnTexLvlMaxDrop;
+  InitDropPnl(pnlTexLvl1, img_TexLvl1, pnlTexDummy1);
+  InitDropPnl(pnlTexLvlMax, img_TexLvlMax, pnlTexDummy2);
 end;
 
 procedure TfrmMain.FormShow(Sender: TObject);
 begin
   CheckDelAvailability;
+end;
 
-  with pnlTexLvl1 do
-  begin
-    Parent := tsCreateTextures;
-    Top := 14;
-    Left := 14;
-  end;
-  img_TexLvl1.Parent := pnlTexLvl1;
-  img_TexLvl1.Align := alClient;
+procedure TfrmMain.InitDropPnl(const pnl: TDropPanel; const img: TImage; const
+  aParent: TPanel);
+begin
+  pnl.Parent := aParent;
+  pnl.Align := alClient;
+  img.Parent := pnl;
+  img.Align := alClient;
 end;
 
 procedure TfrmMain.OnTexLvl1Drop(Sender: TObject; fileName: string);
-var
-  tga: TTargaImage;
 begin
-  if CompareText(ExtractFileExt(fileName), '.tga') <> 0 then
-  begin
-    Application.MessageBox('Only TGA are files supported.', 'Invalid extension',
-      MB_OK + MB_ICONSTOP + MB_TOPMOST);
-    Exit;
-  end;
+  LoadTgaFile(fileName, img_TexLvl1);
+end;
 
-  tga := TTargaImage.Create;
-  tga.LoadFromFile(fileName);
-  img_TexLvl1.Picture.Graphic := tga;
-  tga.Free;
+procedure TfrmMain.OnTexLvlMaxDrop(Sender: TObject; fileName: string);
+begin
+  Caption := 'Max';
+  LoadTgaFile(fileName, img_TexLvlMax);
 end;
 
 procedure TfrmMain.pgc1Change(Sender: TObject);
@@ -263,6 +301,69 @@ end;
 procedure TfrmMain.SetEdtHint(const edt: TCustomEdit; const func: TStrToStr);
 begin
   edt.Hint := func(edt.Text);
+end;
+
+procedure TfrmMain.LoadTgaFile(fileName: string; const imgTo: TImage);
+var
+  tga: TTargaImage;
+  Bitmap: TBitmap;
+  dib: PFIBITMAP;
+  PBH: PBITMAPINFOHEADER;
+  PBI: PBITMAPINFO;
+  t: FREE_IMAGE_FORMAT;
+  Ext: string;
+  BM: TBitmap;
+  x, y: integer;
+  BP: PLONGWORD;
+  DC: HDC;
+  BPP: longword;
+begin
+  if CompareText(ExtractFileExt(fileName), '.tga') <> 0 then
+  begin
+    Application.MessageBox('Only TGA are files supported.', 'Invalid extension',
+      MB_OK + MB_ICONSTOP + MB_TOPMOST);
+    Exit;
+  end;
+//  TPicture.RegisterFileFormat('tga', 'Targa Files', TTargaImage);
+//  imgTo.Picture.LoadFromFile(fileName);
+//  imgTo.Picture.SaveToFile('F:\Skyrim SE\MO2\mods\Max Sick Gains - Textures\textures\actors\character\Maxick\Hum\asdf.png')
+//  imgTo.Picture.Bitmap;
+//  tga := TTargaImage.Create;
+//  tga.LoadFromFile(fileName);
+//  imgTo.Picture.Graphic := tga;
+//  tga.Free;
+//FreeImage_LoadFromHandle()
+  dib := FreeImage_Load(FIF_TARGA, PAnsiChar(AnsiString(fileName)), 0);
+  if dib = nil then
+    Exit;
+  PBH := FreeImage_GetInfoHeader(dib);
+  PBI := FreeImage_GetInfo(dib);
+  BPP := FreeImage_GetBPP(dib);
+  if BPP <> 24 then
+  begin
+    Application.MessageBox('Right now I can only deal with 24-bits files.' +
+      #13#10 + 'Please, resave your image as tga 24-bits.', 'Invalid image',
+      MB_OK + MB_ICONSTOP + MB_TOPMOST);
+    Exit;
+//    dib := FreeImage_ConvertTo24Bits(dib);
+  end;
+  BM := TBitmap.Create;
+
+  BM.Assign(nil);
+  DC := GetDC(Handle);
+
+  BM.handle := CreateDIBitmap(DC,
+    PBH^,
+    CBM_INIT,
+    PChar(FreeImage_GetBits(dib)),
+    PBI^,
+    DIB_RGB_COLORS);
+
+  imgTo.Picture.Bitmap.Assign(BM);
+
+  BM.Free;
+  ReleaseDC(Handle, DC);
+  FreeImage_Unload(dib);
 end;
 
 procedure TfrmMain.trckbr_PlyBsMaxWChange(Sender: TObject);
