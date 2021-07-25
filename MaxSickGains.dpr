@@ -8,7 +8,9 @@ uses
   Vcl.Styles,
   Unit5010_ExportBs in 'Unit5010_ExportBs.pas',
   Functions.Regex in 'Functions.Regex.pas',
-  Functions.Strings in 'Functions.Strings.pas';
+  Functions.Strings in 'Functions.Strings.pas',
+  Unit9020_Types in 'Unit9020_Types.pas',
+  Unit7010_Textures in 'Unit7010_Textures.pas';
 
 {$R *.res}
 

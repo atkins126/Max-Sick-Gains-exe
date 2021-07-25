@@ -11,11 +11,9 @@ uses
   Vcl.PlatformDefaultStyleActnCtrls, System.Actions, Vcl.ActnList, Vcl.ActnMan,
   Vcl.ToolWin, Vcl.ActnCtrls, Vcl.StdActns, System.ImageList, Vcl.ImgList,
   Winapi.ShellAPI, System.Types, Vcl.Imaging.pngimage, Vcl.Imaging.jpeg,
-  System.Math;
+  System.Math, System.IOUtils, Unit9020_Types, Winapi.MMSystem;
 
 type
-  TStrToStr = reference to function(s: string): string;
-
   TDropFile = procedure(Sender: TObject; fileName: string) of object;
 
   TDropPanel = class(TPanel)
@@ -95,6 +93,7 @@ type
     pnlTexDummy1: TPanel;
     pnlTexDummy2: TPanel;
     btn_TexGen: TButton;
+    pbProgress: TProgressBar;
     procedure trckbr_PlyBsMinWChange(Sender: TObject);
     procedure trckbr_PlyBsMaxWChange(Sender: TObject);
     procedure dbgrd_fitStagesNavKeyDown(Sender: TObject; var Key: Word; Shift:
@@ -134,7 +133,7 @@ var
 implementation
 
 uses
-  Unit5010_ExportBs, TargaImage, FreeImage;
+  Unit5010_ExportBs, TargaImage, FreeImage, Unit7010_Textures;
 
 
 {$R *.dfm}
@@ -172,32 +171,68 @@ begin
   DbEdtCursorToLastPos(dbedtmanBs);
 end;
 
+procedure Blend(const canvas: TCanvas; const background, foreground: TGraphic;
+  const alpha: Byte);
+begin
+  canvas.Draw(0, 0, background);
+  canvas.Draw(0, 0, foreground, alpha);
+end;
+
+procedure TempToTga(const tempName, tgaName: string; const w, h: Integer);
+var
+  dib, dib24, dibR: PFIBITMAP;
+begin
+  // Load temp
+  dib := FreeImage_LoadU(FIF_BMP, PWideChar(WideString(tempName)), 0);
+  // Rescale
+  dibR:= FreeImage_Rescale(dib, w, h, FILTER_LANCZOS3);
+  // Save
+  dib24 := FreeImage_ConvertTo24Bits(dibR);
+  FreeImage_SaveU(FIF_TARGA, dib24, PWideChar(WideString(tgaName)), 0);
+  // Free memory
+  FreeImage_Unload(dib);
+  FreeImage_Unload(dib24);
+  FreeImage_Unload(dibR);
+end;
+
 procedure TfrmMain.btn_TexGenClick(Sender: TObject);
 var
   bmp: TBitmap;
   n: Integer;
   alpha: Byte;
+  tmpFile: string;
 const
   lvls = 6;
   f =
-    'F:\Skyrim SE\MO2\mods\Max Sick Gains - Textures\textures\actors\character\Maxick\%.2d.bmp';
+    'F:\Skyrim SE\MO2\mods\Max Sick Gains - Textures\textures\actors\character\Maxick\%.2d.tga';
 begin
   bmp := TBitmap.Create;
   bmp.Width := img_TexLvl1.Picture.Bitmap.Width;
   bmp.Height := img_TexLvl1.Picture.Bitmap.Height;
   alpha := 0;
   n := 0;
+
+  pbProgress.Min := 0;
+  pbProgress.Max := lvls;
+  pbProgress.Step := 1;
+  pbProgress.Position := 0;
   repeat
-    bmp.Canvas.Draw(0, 0, img_TexLvl1.Picture.Graphic);
-    bmp.Canvas.Draw(0, 0, img_TexLvlMax.Picture.Graphic, alpha);
-    bmp.SaveToFile(Format(f, [n + 1]));
+  	// Blend
+    Blend(bmp.Canvas, img_TexLvl1.Picture.Graphic, img_TexLvlMax.Picture.Graphic,
+      alpha);
+  	// Save to temp
+    tmpFile := TPath.GetTempPath + 'Maxick_bitmap.bmp';
+    bmp.SaveToFile(tmpFile);
+  	// Convert temp to tga
+    TempToTga(tmpFile, Format(f, [n + 1]), 512, 512);
+  	// Step
     n := n + 1;
     alpha := Min(255, Round(((1 / (lvls - 1)) * n) * 255));
+    Application.ProcessMessages;
+    pbProgress.StepBy(1);
   until n >= lvls;
+  PlaySound('SYSTEMASTERIX', 0, SND_ASYNC);
   bmp.Free;
-
-//  Invalidate;
-//  pbTexOutPaint(pbTexOut);
 end;
 
 procedure TfrmMain.CheckDelAvailability;
@@ -283,7 +318,6 @@ end;
 
 procedure TfrmMain.OnTexLvlMaxDrop(Sender: TObject; fileName: string);
 begin
-  Caption := 'Max';
   LoadTgaFile(fileName, img_TexLvlMax);
 end;
 
@@ -305,18 +339,8 @@ end;
 
 procedure TfrmMain.LoadTgaFile(fileName: string; const imgTo: TImage);
 var
-  tga: TTargaImage;
-  Bitmap: TBitmap;
-  dib: PFIBITMAP;
-  PBH: PBITMAPINFOHEADER;
-  PBI: PBITMAPINFO;
-  t: FREE_IMAGE_FORMAT;
-  Ext: string;
-  BM: TBitmap;
-  x, y: integer;
-  BP: PLONGWORD;
-  DC: HDC;
-  BPP: longword;
+  IfFailedOpen: TProcedureNoParams;
+  Validate: TBitmapForceValid;
 begin
   if CompareText(ExtractFileExt(fileName), '.tga') <> 0 then
   begin
@@ -324,46 +348,11 @@ begin
       MB_OK + MB_ICONSTOP + MB_TOPMOST);
     Exit;
   end;
-//  TPicture.RegisterFileFormat('tga', 'Targa Files', TTargaImage);
-//  imgTo.Picture.LoadFromFile(fileName);
-//  imgTo.Picture.SaveToFile('F:\Skyrim SE\MO2\mods\Max Sick Gains - Textures\textures\actors\character\Maxick\Hum\asdf.png')
-//  imgTo.Picture.Bitmap;
-//  tga := TTargaImage.Create;
-//  tga.LoadFromFile(fileName);
-//  imgTo.Picture.Graphic := tga;
-//  tga.Free;
-//FreeImage_LoadFromHandle()
-  dib := FreeImage_Load(FIF_TARGA, PAnsiChar(AnsiString(fileName)), 0);
-  if dib = nil then
-    Exit;
-  PBH := FreeImage_GetInfoHeader(dib);
-  PBI := FreeImage_GetInfo(dib);
-  BPP := FreeImage_GetBPP(dib);
-  if BPP <> 24 then
-  begin
-    Application.MessageBox('Right now I can only deal with 24-bits files.' +
-      #13#10 + 'Please, resave your image as tga 24-bits.', 'Invalid image',
-      MB_OK + MB_ICONSTOP + MB_TOPMOST);
-    Exit;
-//    dib := FreeImage_ConvertTo24Bits(dib);
-  end;
-  BM := TBitmap.Create;
 
-  BM.Assign(nil);
-  DC := GetDC(Handle);
-
-  BM.handle := CreateDIBitmap(DC,
-    PBH^,
-    CBM_INIT,
-    PChar(FreeImage_GetBits(dib)),
-    PBI^,
-    DIB_RGB_COLORS);
-
-  imgTo.Picture.Bitmap.Assign(BM);
-
-  BM.Free;
-  ReleaseDC(Handle, DC);
-  FreeImage_Unload(dib);
+  IfFailedOpen := TexNotOpened;
+  Validate := Force24BppTga;
+  LoadToBitmap(fileName, FIF_TARGA, imgTo.Picture.Bitmap, Handle, IfFailedOpen,
+    Validate);
 end;
 
 procedure TfrmMain.trckbr_PlyBsMaxWChange(Sender: TObject);

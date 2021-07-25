@@ -120,6 +120,8 @@
         <DCCReference Include="Unit5010_ExportBs.pas"/>
         <DCCReference Include="Functions.Regex.pas"/>
         <DCCReference Include="Functions.Strings.pas"/>
+        <DCCReference Include="Unit9020_Types.pas"/>
+        <DCCReference Include="Unit7010_Textures.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

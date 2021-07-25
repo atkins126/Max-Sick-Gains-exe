@@ -497,6 +497,13 @@ object frmMain: TfrmMain
         TabOrder = 2
         OnClick = btn_TexGenClick
       end
+      object pbProgress: TProgressBar
+        Left = 91
+        Top = 238
+        Width = 225
+        Height = 17
+        TabOrder = 3
+      end
     end
     object tsOutput: TTabSheet
       Caption = 'Output'
