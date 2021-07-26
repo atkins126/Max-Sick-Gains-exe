@@ -94,6 +94,9 @@ type
     pnlTexDummy2: TPanel;
     btn_TexGen: TButton;
     pbProgress: TProgressBar;
+    ools1: TMenuItem;
+    actTexGen: TAction;
+    exturegenerator1: TMenuItem;
     procedure trckbr_PlyBsMinWChange(Sender: TObject);
     procedure trckbr_PlyBsMaxWChange(Sender: TObject);
     procedure dbgrd_fitStagesNavKeyDown(Sender: TObject; var Key: Word; Shift:
@@ -109,20 +112,21 @@ type
     procedure dbedtBsChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btn_TexGenClick(Sender: TObject);
+    procedure actTexGenExecute(Sender: TObject);
   private
-    pnlTexLvl1: TDropPanel;
-    pnlTexLvlMax: TDropPanel;
-    procedure InitDropPnl(const pnl: TDropPanel; const img: TImage; const
-      aParent: TPanel);
-    procedure OnTexLvl1Drop(Sender: TObject; fileName: string);
-    procedure OnTexLvlMaxDrop(Sender: TObject; fileName: string);
+//    pnlTexLvl1: TDropPanel;
+//    pnlTexLvlMax: TDropPanel;
+//    procedure InitDropPnl(const pnl: TDropPanel; const img: TImage; const
+//      aParent: TPanel);
+//    procedure OnTexLvl1Drop(Sender: TObject; fileName: string);
+//    procedure OnTexLvlMaxDrop(Sender: TObject; fileName: string);
     procedure DisableCtrlDel(var Key: Word; Shift: TShiftState);
     procedure CheckDelAvailability;
     procedure SetBodyslideFromFile(const aField: string);
     procedure DbEdtCursorToLastPos(const edt: TCustomMaskEdit);
     function ActivePageAsTable: TTableName;
     procedure SetEdtHint(const edt: TCustomEdit; const func: TStrToStr);
-    procedure LoadTgaFile(fileName: string; const imgTo: TImage);
+//    procedure LoadTgaFile(fileName: string; const imgTo: TImage);
   public
     { Public declarations }
   end;
@@ -133,7 +137,7 @@ var
 implementation
 
 uses
-  Unit5010_ExportBs, TargaImage, FreeImage, Unit7010_Textures;
+  Unit5010_ExportBs, TargaImage, FreeImage, Unit7010_Textures, Unit1020_TexGen;
 
 
 {$R *.dfm}
@@ -159,6 +163,16 @@ begin
     Result := tnNone;
 end;
 
+procedure TfrmMain.actTexGenExecute(Sender: TObject);
+begin
+  frm_ToolTexGen := Tfrm_ToolTexGen.Create(Self);
+  try
+    frm_ToolTexGen.ShowModal;
+  finally
+    frm_ToolTexGen.Free;
+  end;
+end;
+
 procedure TfrmMain.btn1Click(Sender: TObject);
 begin
   SetBodyslideFromFile('femBs');
@@ -171,68 +185,16 @@ begin
   DbEdtCursorToLastPos(dbedtmanBs);
 end;
 
-procedure Blend(const canvas: TCanvas; const background, foreground: TGraphic;
-  const alpha: Byte);
-begin
-  canvas.Draw(0, 0, background);
-  canvas.Draw(0, 0, foreground, alpha);
-end;
-
-procedure TempToTga(const tempName, tgaName: string; const w, h: Integer);
-var
-  dib, dib24, dibR: PFIBITMAP;
-begin
-  // Load temp
-  dib := FreeImage_LoadU(FIF_BMP, PWideChar(WideString(tempName)), 0);
-  // Rescale
-  dibR:= FreeImage_Rescale(dib, w, h, FILTER_LANCZOS3);
-  // Save
-  dib24 := FreeImage_ConvertTo24Bits(dibR);
-  FreeImage_SaveU(FIF_TARGA, dib24, PWideChar(WideString(tgaName)), 0);
-  // Free memory
-  FreeImage_Unload(dib);
-  FreeImage_Unload(dib24);
-  FreeImage_Unload(dibR);
-end;
-
 procedure TfrmMain.btn_TexGenClick(Sender: TObject);
-var
-  bmp: TBitmap;
-  n: Integer;
-  alpha: Byte;
-  tmpFile: string;
-const
-  lvls = 6;
-  f =
-    'F:\Skyrim SE\MO2\mods\Max Sick Gains - Textures\textures\actors\character\Maxick\%.2d.tga';
 begin
-  bmp := TBitmap.Create;
-  bmp.Width := img_TexLvl1.Picture.Bitmap.Width;
-  bmp.Height := img_TexLvl1.Picture.Bitmap.Height;
-  alpha := 0;
-  n := 0;
+  Caption := 'Exporting files. Please wait.';
+  GenerateTextures(img_TexLvl1.Picture, img_TexLvlMax.Picture, 6,
+    'F:\Skyrim SE\MO2\mods\Max Sick Gains - Textures\textures\actors\character\Maxick\',
+    'FemTest', 256);
 
-  pbProgress.Min := 0;
-  pbProgress.Max := lvls;
-  pbProgress.Step := 1;
-  pbProgress.Position := 0;
-  repeat
-  	// Blend
-    Blend(bmp.Canvas, img_TexLvl1.Picture.Graphic, img_TexLvlMax.Picture.Graphic,
-      alpha);
-  	// Save to temp
-    tmpFile := TPath.GetTempPath + 'Maxick_bitmap.bmp';
-    bmp.SaveToFile(tmpFile);
-  	// Convert temp to tga
-    TempToTga(tmpFile, Format(f, [n + 1]), 512, 512);
-  	// Step
-    n := n + 1;
-    alpha := Min(255, Round(((1 / (lvls - 1)) * n) * 255));
-    Application.ProcessMessages;
-    pbProgress.StepBy(1);
-  until n >= lvls;
-  PlaySound('SYSTEMASTERIX', 0, SND_ASYNC);
-  bmp.Free;
+  Application.MessageBox('Files exported succesfully.', 'Exporting done',
+    MB_OK + MB_ICONINFORMATION + MB_TOPMOST);
+  Caption := 'Maxick';
 end;
 
 procedure TfrmMain.CheckDelAvailability;
@@ -288,13 +250,13 @@ end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
-  pnlTexLvl1 := TDropPanel.Create(self);
-  pnlTexLvl1.OnDropFile := OnTexLvl1Drop;
-
-  pnlTexLvlMax := TDropPanel.Create(self);
-  pnlTexLvlMax.OnDropFile := OnTexLvlMaxDrop;
-  InitDropPnl(pnlTexLvl1, img_TexLvl1, pnlTexDummy1);
-  InitDropPnl(pnlTexLvlMax, img_TexLvlMax, pnlTexDummy2);
+//  pnlTexLvl1 := TDropPanel.Create(self);
+//  pnlTexLvl1.OnDropFile := OnTexLvl1Drop;
+//
+//  pnlTexLvlMax := TDropPanel.Create(self);
+//  pnlTexLvlMax.OnDropFile := OnTexLvlMaxDrop;
+//  InitDropPnl(pnlTexLvl1, img_TexLvl1, pnlTexDummy1);
+//  InitDropPnl(pnlTexLvlMax, img_TexLvlMax, pnlTexDummy2);
 end;
 
 procedure TfrmMain.FormShow(Sender: TObject);
@@ -302,24 +264,24 @@ begin
   CheckDelAvailability;
 end;
 
-procedure TfrmMain.InitDropPnl(const pnl: TDropPanel; const img: TImage; const
-  aParent: TPanel);
-begin
-  pnl.Parent := aParent;
-  pnl.Align := alClient;
-  img.Parent := pnl;
-  img.Align := alClient;
-end;
+//procedure TfrmMain.InitDropPnl(const pnl: TDropPanel; const img: TImage; const
+//  aParent: TPanel);
+//begin
+//  pnl.Parent := aParent;
+//  pnl.Align := alClient;
+//  img.Parent := pnl;
+//  img.Align := alClient;
+//end;
 
-procedure TfrmMain.OnTexLvl1Drop(Sender: TObject; fileName: string);
-begin
-  LoadTgaFile(fileName, img_TexLvl1);
-end;
-
-procedure TfrmMain.OnTexLvlMaxDrop(Sender: TObject; fileName: string);
-begin
-  LoadTgaFile(fileName, img_TexLvlMax);
-end;
+//procedure TfrmMain.OnTexLvl1Drop(Sender: TObject; fileName: string);
+//begin
+//  LoadTgaFile(fileName, img_TexLvl1);
+//end;
+//
+//procedure TfrmMain.OnTexLvlMaxDrop(Sender: TObject; fileName: string);
+//begin
+//  LoadTgaFile(fileName, img_TexLvlMax);
+//end;
 
 procedure TfrmMain.pgc1Change(Sender: TObject);
 begin
@@ -337,23 +299,23 @@ begin
   edt.Hint := func(edt.Text);
 end;
 
-procedure TfrmMain.LoadTgaFile(fileName: string; const imgTo: TImage);
-var
-  IfFailedOpen: TProcedureNoParams;
-  Validate: TBitmapForceValid;
-begin
-  if CompareText(ExtractFileExt(fileName), '.tga') <> 0 then
-  begin
-    Application.MessageBox('Only TGA are files supported.', 'Invalid extension',
-      MB_OK + MB_ICONSTOP + MB_TOPMOST);
-    Exit;
-  end;
-
-  IfFailedOpen := TexNotOpened;
-  Validate := Force24BppTga;
-  LoadToBitmap(fileName, FIF_TARGA, imgTo.Picture.Bitmap, Handle, IfFailedOpen,
-    Validate);
-end;
+//procedure TfrmMain.LoadTgaFile(fileName: string; const imgTo: TImage);
+//var
+//  IfFailedOpen: TProcedureNoParams;
+//  Validate: TBitmapForceValid;
+//begin
+//  if CompareText(ExtractFileExt(fileName), '.tga') <> 0 then
+//  begin
+//    Application.MessageBox('Only TGA are files supported.', 'Invalid extension',
+//      MB_OK + MB_ICONSTOP + MB_TOPMOST);
+//    Exit;
+//  end;
+//
+//  IfFailedOpen := TexNotOpened;
+//  Validate := Force24BppTga;
+//  LoadToBitmap(fileName, FIF_TARGA, imgTo.Picture.Bitmap, Handle, IfFailedOpen,
+//    Validate);
+//end;
 
 procedure TfrmMain.trckbr_PlyBsMaxWChange(Sender: TObject);
 begin
