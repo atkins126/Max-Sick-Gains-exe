@@ -4,7 +4,7 @@ interface
 
 uses
   FreeImage, Winapi.Windows, Unit9020_Types, Vcl.Graphics, System.SysUtils,
-  System.Math;
+  System.Math, System.Types;
 
 function LoadToBitmap(fileName: string; fileFormat: FREE_IMAGE_FORMAT; loadInto:
   TBitmap; windowHandle: HWND; OnFailedToOpen: TProcedureNoParams; Validate:
@@ -46,6 +46,18 @@ begin
   FreeImage_Unload(dibR);
 end;
 
+function GetNewResolution(const w, h, maxRes: Integer): TPoint;
+// Should've probably used another type than TPoint for the sake of clarity,
+// but I'm too lazy to create a new type/check which one is better named.
+var
+  ratio: Real;
+  maxLen: Integer;
+begin
+  maxLen := Max(w, h);
+  ratio := maxRes / maxLen;
+  Result := Point(Round(w * ratio), Round(h * ratio));
+end;
+
 procedure GenerateTextures(const bg, fg: TPicture; const fitnessLevels: Byte;
   dirName, baseFileName: string; const maxRes: Integer);
 var
@@ -53,11 +65,13 @@ var
   n: Integer;
   alpha: Byte;
   tmpFile, tgaFile: string;
+  resolution: TPoint;
 begin
   dirName := IncludeTrailingPathDelimiter(dirName);
   bmp := TBitmap.Create;
   bmp.Width := bg.Bitmap.Width;
   bmp.Height := bg.Bitmap.Height;
+  resolution := GetNewResolution(bmp.Width, bmp.Height, maxRes);
   alpha := 0;
   n := 0;
   repeat
@@ -68,7 +82,7 @@ begin
     bmp.SaveToFile(tmpFile);
   	// Convert temp to tga
     tgaFile := Format('%s%s_%.2d.tga', [dirName, baseFileName, n + 1]);
-    TempToTga(tmpFile, tgaFile, maxRes, maxRes);
+    TempToTga(tmpFile, tgaFile, resolution.X, resolution.Y);
   	// Step
     n := n + 1;
     alpha := Min(255, Round(((1 / (fitnessLevels - 1)) * n) * 255));

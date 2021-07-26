@@ -12855,9 +12855,6 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
     Height = 19
     Panels = <>
     SimplePanel = True
-    ExplicitLeft = 252
-    ExplicitTop = 231
-    ExplicitWidth = 0
   end
   object pnl1: TPanel
     Left = 134
@@ -12867,10 +12864,6 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitLeft = 224
-    ExplicitTop = 147
-    ExplicitWidth = 185
-    ExplicitHeight = 41
     object rltvpnl1: TRelativePanel
       AlignWithMargins = True
       Left = 0
@@ -12908,8 +12901,7 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
       Padding.Top = 7
       Padding.Right = 14
       Padding.Bottom = 7
-      TabOrder = 0
-      ExplicitTop = 364
+      TabOrder = 1
       DesignSize = (
         647
         96)
@@ -12925,8 +12917,9 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
         Margins.Bottom = 7
         Anchors = []
         Cancel = True
-        Caption = 'Close'
-        TabOrder = 0
+        Caption = '&Close'
+        TabOrder = 1
+        OnClick = btnCloseClick
       end
       object btn_TexGen: TButton
         AlignWithMargins = True
@@ -12939,7 +12932,7 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
         Anchors = []
         Caption = '&Generate textures'
         Default = True
-        TabOrder = 1
+        TabOrder = 0
         OnClick = btn_TexGenClick
       end
     end
@@ -12972,11 +12965,7 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
       Padding.Left = 14
       Padding.Top = 14
       Padding.Right = 14
-      TabOrder = 1
-      ExplicitLeft = 364
-      ExplicitTop = 70
-      ExplicitWidth = 295
-      ExplicitHeight = 267
+      TabOrder = 0
       DesignSize = (
         647
         373)
@@ -13026,8 +13015,6 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
           Padding.Bottom = 7
           Spacing = 7
           TabOrder = 0
-          ExplicitTop = 263
-          ExplicitWidth = 300
           object lbl_fName1: TLabel
             Left = 7
             Top = 7
@@ -13042,6 +13029,7 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
             Height = 25
             Caption = 'Open file'
             TabOrder = 0
+            OnClick = btn1Click
           end
         end
       end
@@ -13087,8 +13075,6 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
           Padding.Bottom = 7
           Spacing = 7
           TabOrder = 0
-          ExplicitLeft = 2
-          ExplicitTop = 259
           object lbl_fName2: TLabel
             Left = 7
             Top = 7
@@ -13103,6 +13089,7 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
             Height = 25
             Caption = 'Open file'
             TabOrder = 0
+            OnClick = btn2Click
           end
         end
       end
@@ -13133,8 +13120,7 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
     Padding.Right = 7
     Padding.Bottom = 14
     Spacing = 14
-    TabOrder = 2
-    ExplicitHeight = 546
+    TabOrder = 0
     DesignSize = (
       134
       483)
@@ -13150,7 +13136,7 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
       Items.Strings = (
         '&Female'
         '&Male')
-      TabOrder = 1
+      TabOrder = 0
     end
     object rgRace: TRadioGroup
       Left = 8
@@ -13162,8 +13148,8 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
       Items.Strings = (
         '&Humanoid'
         '&Khajiit'
-        '&Argonian')
-      TabOrder = 0
+        'A&rgonian')
+      TabOrder = 1
     end
     object rgFitType: TRadioGroup
       Left = 8
@@ -13195,5 +13181,20 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
         '&8K')
       TabOrder = 3
     end
+  end
+  object opnDlg1: TFileOpenDialog
+    DefaultExtension = 'tga'
+    FavoriteLinks = <>
+    FileName = 
+      'C:\Users\Osrail\Documents\Embarcadero\Studio\Projects\Max Sick G' +
+      'ains'
+    FileTypes = <
+      item
+        DisplayName = 'Tga files (*.tga)'
+        FileMask = '*.tga'
+      end>
+    Options = [fdoFileMustExist, fdoDontAddToRecent]
+    Left = 378
+    Top = 252
   end
 end

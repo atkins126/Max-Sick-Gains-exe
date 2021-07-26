@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
   Vcl.ComCtrls, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.WinXCtrls, Vcl.WinXPanels,
-  Winapi.ShellAPI, FreeImage, Unit9020_Types, System.Math;
+  Winapi.ShellAPI, FreeImage, Unit9020_Types, System.Math, System.StrUtils;
 
 type
   TDropFile = procedure(Sender: TObject; fileName: string) of object;
@@ -44,8 +44,12 @@ type
     rgSex: TRadioGroup;
     rgFitType: TRadioGroup;
     rgRes: TRadioGroup;
+    opnDlg1: TFileOpenDialog;
     procedure FormCreate(Sender: TObject);
     procedure btn_TexGenClick(Sender: TObject);
+    procedure btnCloseClick(Sender: TObject);
+    procedure btn1Click(Sender: TObject);
+    procedure btn2Click(Sender: TObject);
   private
     pnlTexLvl1: TDropPanel;
     pnlTexLvlMax: TDropPanel;
@@ -57,12 +61,14 @@ type
     procedure OnTexLvlMaxDrop(Sender: TObject; fileName: string);
     procedure LoadTgaFile(fileName: string; const imgTo: TImage; const lbl:
       TLabel);
+    procedure LoadTgaFromDlg(const imgTo: TImage; const lbl: TLabel);
     function RaceDir: string;
     function BaseFileName: string;
     function SexToStr: string;
     function MuscleDefToStr: string;
     function MaxRes: Integer;
     function GetBtnProcessingCaption: string;
+    function SettingsAsMessage: string;
   public
     { Public declarations }
   end;
@@ -123,6 +129,21 @@ begin
   Result := SexToStr + MuscleDefToStr;
 end;
 
+procedure Tfrm_ToolTexGen.btn1Click(Sender: TObject);
+begin
+  LoadTgaFromDlg(img_Lvl1, lbl_fName1);
+end;
+
+procedure Tfrm_ToolTexGen.btn2Click(Sender: TObject);
+begin
+  LoadTgaFromDlg(img_LvlMax, lbl_fName2);
+end;
+
+procedure Tfrm_ToolTexGen.btnCloseClick(Sender: TObject);
+begin
+  Close;
+end;
+
 procedure Tfrm_ToolTexGen.btn_TexGenClick(Sender: TObject);
 var
   outDir: string;
@@ -148,14 +169,15 @@ begin
   InitDropPnl(pnlTexLvl1, img_Lvl1, pnlTex1);
   InitDropPnl(pnlTexLvlMax, img_LvlMax, pnlTexMax);
 end;
-//
+
 function Tfrm_ToolTexGen.GetBtnProcessingCaption: string;
 var
   res: Integer;
 begin
   res := MaxRes;
   if (res < 512) or (res > 4096) then
-    Result := Format('Are you really exporting at %d px, you magnificent bastard?', [res])
+    Result := Format('Are you really exporting at %d px, you magnificent bastard?',
+      [res])
   else
     Result := 'Exporting files. Please wait...';
 end;
@@ -189,6 +211,12 @@ begin
     IfFailedOpen, Validate);
   if loaded then
     lbl.Caption := ExtractFileName(fileName);
+end;
+
+procedure Tfrm_ToolTexGen.LoadTgaFromDlg(const imgTo: TImage; const lbl: TLabel);
+begin
+  if opnDlg1.Execute then
+    LoadTgaFile(opnDlg1.FileName, imgTo, lbl);
 end;
 
 function Tfrm_ToolTexGen.MaxRes: Integer;
@@ -230,6 +258,20 @@ begin
   end;
 end;
 
+function Tfrm_ToolTexGen.SettingsAsMessage: string;
+
+  function RgSelText(const rg: TRadioGroup): string;
+  begin
+    Result := rg.Items[rg.ItemIndex];
+  end;
+
+begin
+  Result := RgSelText(rgFitType) + ' looking ';
+  Result := Result + LowerCase(RgSelText(rgSex)) + ' ';
+  Result := Result + RgSelText(rgRace) + '.';
+  Result := ReplaceStr(Result, '&', '');
+end;
+
 procedure Tfrm_ToolTexGen.SetVisualCues;
 var
   oldC: string;
@@ -244,7 +286,9 @@ begin
       btn_TexGen.Caption := oldC;
       btn_TexGen.Enabled := true;
 
-      Application.MessageBox('Files exported succesfully.', 'Exporting done',
+      Application.MessageBox(
+        PWideChar('Files exported succesfully.'#13#10#13#10'Output:'#13#10 + SettingsAsMessage),
+        'Exporting done',
         MB_OK + MB_ICONINFORMATION + MB_TOPMOST);
     end;
 end;

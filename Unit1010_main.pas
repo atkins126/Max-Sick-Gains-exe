@@ -14,18 +14,6 @@ uses
   System.Math, System.IOUtils, Unit9020_Types, Winapi.MMSystem;
 
 type
-  TDropFile = procedure(Sender: TObject; fileName: string) of object;
-
-  TDropPanel = class(TPanel)
-    procedure WMDropFiles(var Message: TWMDropFiles); message WM_DROPFILES;
-    procedure CreateWnd; override;
-    procedure DestroyWnd; override;
-  private
-    FOnDropFile: TDropFile;
-  public
-    procedure AfterConstruction; override;
-    property OnDropFile: TDropFile read FOnDropFile write FOnDropFile;
-  end;
 
   TfrmMain = class(TForm)
     pgc1: TPageControl;
@@ -87,13 +75,6 @@ type
     Delete1: TMenuItem;
     tsOutput: TTabSheet;
     redtOutput: TRichEdit;
-    tsCreateTextures: TTabSheet;
-    img_TexLvl1: TImage;
-    img_TexLvlMax: TImage;
-    pnlTexDummy1: TPanel;
-    pnlTexDummy2: TPanel;
-    btn_TexGen: TButton;
-    pbProgress: TProgressBar;
     ools1: TMenuItem;
     actTexGen: TAction;
     exturegenerator1: TMenuItem;
@@ -110,23 +91,14 @@ type
     procedure btn1Click(Sender: TObject);
     procedure btn2Click(Sender: TObject);
     procedure dbedtBsChange(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
-    procedure btn_TexGenClick(Sender: TObject);
     procedure actTexGenExecute(Sender: TObject);
   private
-//    pnlTexLvl1: TDropPanel;
-//    pnlTexLvlMax: TDropPanel;
-//    procedure InitDropPnl(const pnl: TDropPanel; const img: TImage; const
-//      aParent: TPanel);
-//    procedure OnTexLvl1Drop(Sender: TObject; fileName: string);
-//    procedure OnTexLvlMaxDrop(Sender: TObject; fileName: string);
     procedure DisableCtrlDel(var Key: Word; Shift: TShiftState);
     procedure CheckDelAvailability;
     procedure SetBodyslideFromFile(const aField: string);
     procedure DbEdtCursorToLastPos(const edt: TCustomMaskEdit);
     function ActivePageAsTable: TTableName;
     procedure SetEdtHint(const edt: TCustomEdit; const func: TStrToStr);
-//    procedure LoadTgaFile(fileName: string; const imgTo: TImage);
   public
     { Public declarations }
   end;
@@ -185,18 +157,6 @@ begin
   DbEdtCursorToLastPos(dbedtmanBs);
 end;
 
-procedure TfrmMain.btn_TexGenClick(Sender: TObject);
-begin
-  Caption := 'Exporting files. Please wait.';
-  GenerateTextures(img_TexLvl1.Picture, img_TexLvlMax.Picture, 6,
-    'F:\Skyrim SE\MO2\mods\Max Sick Gains - Textures\textures\actors\character\Maxick\',
-    'FemTest', 256);
-
-  Application.MessageBox('Files exported succesfully.', 'Exporting done',
-    MB_OK + MB_ICONINFORMATION + MB_TOPMOST);
-  Caption := 'Maxick';
-end;
-
 procedure TfrmMain.CheckDelAvailability;
 begin
   if pgc1.ActivePage = tsFitStages then
@@ -248,40 +208,10 @@ begin
     Key := 0;
 end;
 
-procedure TfrmMain.FormCreate(Sender: TObject);
-begin
-//  pnlTexLvl1 := TDropPanel.Create(self);
-//  pnlTexLvl1.OnDropFile := OnTexLvl1Drop;
-//
-//  pnlTexLvlMax := TDropPanel.Create(self);
-//  pnlTexLvlMax.OnDropFile := OnTexLvlMaxDrop;
-//  InitDropPnl(pnlTexLvl1, img_TexLvl1, pnlTexDummy1);
-//  InitDropPnl(pnlTexLvlMax, img_TexLvlMax, pnlTexDummy2);
-end;
-
 procedure TfrmMain.FormShow(Sender: TObject);
 begin
   CheckDelAvailability;
 end;
-
-//procedure TfrmMain.InitDropPnl(const pnl: TDropPanel; const img: TImage; const
-//  aParent: TPanel);
-//begin
-//  pnl.Parent := aParent;
-//  pnl.Align := alClient;
-//  img.Parent := pnl;
-//  img.Align := alClient;
-//end;
-
-//procedure TfrmMain.OnTexLvl1Drop(Sender: TObject; fileName: string);
-//begin
-//  LoadTgaFile(fileName, img_TexLvl1);
-//end;
-//
-//procedure TfrmMain.OnTexLvlMaxDrop(Sender: TObject; fileName: string);
-//begin
-//  LoadTgaFile(fileName, img_TexLvlMax);
-//end;
 
 procedure TfrmMain.pgc1Change(Sender: TObject);
 begin
@@ -299,24 +229,6 @@ begin
   edt.Hint := func(edt.Text);
 end;
 
-//procedure TfrmMain.LoadTgaFile(fileName: string; const imgTo: TImage);
-//var
-//  IfFailedOpen: TProcedureNoParams;
-//  Validate: TBitmapForceValid;
-//begin
-//  if CompareText(ExtractFileExt(fileName), '.tga') <> 0 then
-//  begin
-//    Application.MessageBox('Only TGA are files supported.', 'Invalid extension',
-//      MB_OK + MB_ICONSTOP + MB_TOPMOST);
-//    Exit;
-//  end;
-//
-//  IfFailedOpen := TexNotOpened;
-//  Validate := Force24BppTga;
-//  LoadToBitmap(fileName, FIF_TARGA, imgTo.Picture.Bitmap, Handle, IfFailedOpen,
-//    Validate);
-//end;
-
 procedure TfrmMain.trckbr_PlyBsMaxWChange(Sender: TObject);
 begin
   trckbr_PlyBsMinW.Max := trckbr_PlyBsMaxW.Position;
@@ -325,46 +237,6 @@ end;
 procedure TfrmMain.trckbr_PlyBsMinWChange(Sender: TObject);
 begin
   trckbr_PlyBsMaxW.Min := trckbr_PlyBsMinW.Position;
-end;
-
-
-{ TDropPanel }
-
-procedure TDropPanel.AfterConstruction;
-begin
-  inherited;
-  Width := 250;
-  Height := 250;
-  Caption := 'Drag a tga file here';
-  BevelKind := bkSoft;
-  BevelOuter := bvNone;
-  Color := clActiveBorder;
-  StyleElements := [seFont, seBorder];
-end;
-
-procedure TDropPanel.CreateWnd;
-begin
-  inherited;
-  DragAcceptFiles(Handle, true);
-end;
-
-procedure TDropPanel.DestroyWnd;
-begin
-  DragAcceptFiles(Handle, false);
-  inherited;
-end;
-
-procedure TDropPanel.WMDropFiles(var Message: TWMDropFiles);
-var
-  nameLen: Integer;
-  fileName: string;
-begin
-  nameLen := DragQueryFile(Message.Drop, 0, nil, 0) + 1;
-  SetLength(fileName, nameLen);
-  DragQueryFile(Message.Drop, 0, Pointer(fileName), nameLen);
-  if Assigned(FOnDropFile) then
-    FOnDropFile(Self, Trim(fileName));
-  DragFinish(Message.Drop);
 end;
 
 end.

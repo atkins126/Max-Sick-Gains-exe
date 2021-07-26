@@ -15,7 +15,6 @@ object frmMain: TfrmMain
   Menu = mm1
   OldCreateOrder = False
   Position = poDesktopCenter
-  OnCreate = FormCreate
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -344,7 +343,7 @@ object frmMain: TfrmMain
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 106
+          Width = 177
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -360,6 +359,7 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
+          ExplicitWidth = 106
         end
         object dbgrd1: TDBGrid
           Left = 1
@@ -452,58 +452,6 @@ object frmMain: TfrmMain
           TickStyle = tsManual
           OnChange = trckbr_PlyBsMaxWChange
         end
-      end
-    end
-    object tsCreateTextures: TTabSheet
-      Caption = 'Create Textures'
-      ImageIndex = 3
-      object img_TexLvl1: TImage
-        Left = 175
-        Top = 105
-        Width = 127
-        Height = 113
-        Stretch = True
-      end
-      object img_TexLvlMax: TImage
-        Left = 252
-        Top = 63
-        Width = 92
-        Height = 99
-        Stretch = True
-      end
-      object pnlTexDummy1: TPanel
-        Left = 35
-        Top = 14
-        Width = 197
-        Height = 197
-        BevelKind = bkTile
-        BevelOuter = bvNone
-        TabOrder = 0
-      end
-      object pnlTexDummy2: TPanel
-        Left = 301
-        Top = 14
-        Width = 197
-        Height = 197
-        BevelKind = bkTile
-        BevelOuter = bvNone
-        TabOrder = 1
-      end
-      object btn_TexGen: TButton
-        Left = 245
-        Top = 273
-        Width = 75
-        Height = 25
-        Caption = 'btn_TexGen'
-        TabOrder = 2
-        OnClick = btn_TexGenClick
-      end
-      object pbProgress: TProgressBar
-        Left = 91
-        Top = 238
-        Width = 225
-        Height = 17
-        TabOrder = 3
       end
     end
     object tsOutput: TTabSheet
