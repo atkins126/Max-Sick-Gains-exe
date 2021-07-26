@@ -3,8 +3,7 @@ unit Unit5010_ExportBs;
 interface
 
 uses
-  System.Classes, System.StrUtils, System.SysUtils, System.RegularExpressions,
-  System.RegularExpressionsCore;
+  System.Classes, System.StrUtils, System.SysUtils;
 
 function BodyslideToLua(const aFileName: string): string;
 

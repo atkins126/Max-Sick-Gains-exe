@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, Data.DB, Data.Win.ADODB, Winapi.Windows,
-  System.IOUtils, System.StrUtils, Functional.Sequence;
+  System.IOUtils, System.StrUtils, Functional.Sequence, Unit9020_Types;
 
 type
   TTableName = (tnNone, tnFitStages, tnFitStagesPlayer);
@@ -46,14 +46,18 @@ type
     function MemoToLua(const aText: string): string;
     function FieldFrom(const aTbl: TCustomADODataSet; const aField: string):
       string;
-  public
+    function DataSetToLua(const aTable: TTableName; const fun: TVoidToStr):
+      string;
     function FitStageToLua: string;
+  public
+    function FitStagesToLua: string;
     procedure OpenFile(const aFileName: string);
     function IsAtFirst(const aTable: TTableName): Boolean;
     function FitStagesCurrIdx: Integer;
     procedure Edit(const aTable: TTableName; const aField: string; const aVal:
       Variant);
     procedure Append(const aTable: TTableName);
+    function Field(const aTable: TTableName; const aField: string): TField;
   end;
 
 var
@@ -62,9 +66,8 @@ var
 implementation
 
 uses
-  Vcl.Forms, Unit5010_ExportBs, Functions.Strings;
+  Vcl.Forms, Unit5010_ExportBs, Functions.Strings, Unit1010_main;
 {%CLASSGROUP 'Vcl.Controls.TControl'}
-
 {$R *.dfm}
 
 procedure Tdtmdl_Main.Append(const aTable: TTableName);
@@ -78,8 +81,7 @@ begin
   tbl.Post;
 
   cmd.CommandText := InsertCommand(aTable);
-  if cmd.CommandText <> '' then
-  begin
+  if cmd.CommandText <> '' then begin
     cmd.Execute;
     RefreshToLast(tbl);
   end;
@@ -97,7 +99,7 @@ begin
   case aTable of
     tnFitStages:
       Result :=
-        'INSERT INTO FitStages (iName, muscleDefType, muscleDefLvl, excludedRaces) VALUES ("New Stage", 1, 1, "Child")';
+        'INSERT INTO FitStages (iName, muscleDefType, muscleDefLvl, excludedRaces) VALUES ("New Stage", 0, 0, "Child")';
     tnFitStagesPlayer:
       Result := '';
   end;
@@ -123,11 +125,29 @@ begin
   OpenFile(AppPath + 'res\blankDB.mdb');
 end;
 
+function Tdtmdl_Main.DataSetToLua(const aTable: TTableName; const fun:
+  TVoidToStr): string;
+var
+  tbl: TDataSet;
+  bmk: TBookmark;
+begin
+  tbl := GetTable(aTable);
+  bmk := tbl.GetBookmark;
+  Result := '';
+  tbl.First;
+  while not tbl.Eof do begin
+    Result := Result + fun + #13#10;
+    tbl.Next;
+  end;
+  Result := DeleteLastComma(Trim(Result));
+  tbl.GotoBookmark(bmk);
+  tbl.FreeBookmark(bmk);
+end;
+
 procedure Tdtmdl_Main.Edit(const aTable: TTableName; const aField: string; const
   aVal: Variant);
 begin
-  with GetTable(aTable) do
-  begin
+  with GetTable(aTable) do begin
     Edit;
     FieldByName(aField).AsVariant := aVal;
     Post;
@@ -151,12 +171,17 @@ begin
   lines := TStringList.Create;
   try
     lines.Text := aText;
-    Result := TSeq.From(lines)
-      .Map<string>(EncloseStr('"'))
+    Result := TSeq.From(lines).Map<string>(EncloseStr('"'))
       .Fold<string>(ReduceStr(', '), '');
   finally
     lines.Free;
   end;
+end;
+
+function Tdtmdl_Main.Field(const aTable: TTableName; const aField: string):
+  TField;
+begin
+  Result := GetTable(aTable).FieldByName(aField);
 end;
 
 function Tdtmdl_Main.FieldFrom(const aTbl: TCustomADODataSet; const aField:
@@ -183,30 +208,32 @@ begin
   Result := tblFitStages.FieldByName('Id').AsInteger;
 end;
 
+function Tdtmdl_Main.FitStagesToLua: string;
+begin
+  Result := 'local fitStages = ' +
+    ToLuaTable(DataSetToLua(tnFitStages, FitStageToLua), false);
+end;
+
 function Tdtmdl_Main.FitStageToLua: string;
 var
   output: TStringList;
   tbl: TCustomADODataSet;
-const
-  bs =
-    'F:\Skyrim SE\MO2\mods\DM Bodyslide presets\CalienteTools\BodySlide\SliderPresets\DM Amazons 3BA Nude.xml';
+//const
+//  bs =
+//    'F:\Skyrim SE\MO2\mods\DM Bodyslide presets\CalienteTools\BodySlide\SliderPresets\DM Amazons 3BA Nude.xml';
 begin
   tbl := tblFitStages;
   output := TStringList.Create;
   try
     output.Add(FieldToLuaAssign(tbl, 'displayName'));
-    output.Add('femBs=' + ToLuaTable(
-      BodyslideToLua(bs)
-      ));
-    output.Add('manBs=' + ToLuaTable(
-      BodyslideToLua(FieldFrom(tbl, 'manBs'))
-      ));
-    output.Add(FieldToLuaAssign(tbl, 'muscleDefType'));
-    output.Add(FieldToLuaAssign(tbl, 'muscleDefLvl'));
-    output.Add('excludedRaces=' + ToLuaTable(
-      MemoToLua(FieldFrom(tbl, 'excludedRaces'))
-      ));
-    Result := output.Text;
+    output.Add('femBs=' + ToLuaTable(BodyslideToLua(FieldFrom(tbl, 'femBs'))));
+    output.Add('manBs=' + ToLuaTable(BodyslideToLua(FieldFrom(tbl, 'manBs'))));
+    output.Add(FieldToLuaAssign(tbl, 'muscleDefType', False, true));
+    output.Add(FieldToLuaAssign(tbl, 'muscleDefLvl', False, true));
+    output.Add('excludedRaces=' + ToLuaTable(MemoToLua(FieldFrom(tbl,
+      'excludedRaces')), False));
+    Result := Format('[%s] = %s', [FieldFrom(tbl, 'Id'),
+      ToLuaTable(Trim(output.Text))]);
   finally
     output.Free;
   end;
@@ -229,8 +256,7 @@ var
   i: Integer;
 begin
   conMain.Open;
-  for i := 0 to conMain.DataSetCount - 1 do
-  begin
+  for i := 0 to conMain.DataSetCount - 1 do begin
     conMain.DataSets[i].Open;
   end;
 end;
@@ -260,7 +286,7 @@ begin
   if tmp = '' then
     Result := AppPath + 'res\temp.mdb'
   else
-    Result := tmp + 'temp.mdb';
+    Result := tmp + 'maxick_temp.mdb';
 end;
 
 function Tdtmdl_Main.ToLuaTable(const s: string; const addComma: Boolean): string;

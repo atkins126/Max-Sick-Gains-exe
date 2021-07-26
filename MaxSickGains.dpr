@@ -19,8 +19,8 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+  TStyleManager.TrySetStyle('Glow');
   Application.Title := 'Max Sick Gains';
-  TStyleManager.TrySetStyle('Tablet Dark');
   Application.CreateForm(Tdtmdl_Main, dtmdl_Main);
   Application.CreateForm(TfrmMain, frmMain);
   Application.Run;

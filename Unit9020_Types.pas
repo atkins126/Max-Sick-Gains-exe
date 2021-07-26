@@ -8,6 +8,8 @@ uses
 type
   TStrToStr = reference to function(s: string): string;
 
+  TVoidToStr = reference to function(): string;
+
   TProcedureNoParams = reference to procedure;
 
   TBitmapValidation = reference to function(dib: PFIBITMAP): Boolean;

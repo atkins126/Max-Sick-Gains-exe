@@ -9,12 +9,11 @@ uses
   Vcl.Menus, Vcl.Mask, Vcl.DBCtrls, Vcl.WinXPanels, Vcl.Buttons,
   Vcl.Samples.Spin, Data.Win.ADODB, Unit9010_dataModule,
   Vcl.PlatformDefaultStyleActnCtrls, System.Actions, Vcl.ActnList, Vcl.ActnMan,
-  Vcl.ToolWin, Vcl.ActnCtrls, Vcl.StdActns, System.ImageList, Vcl.ImgList,
-  Winapi.ShellAPI, System.Types, Vcl.Imaging.pngimage, Vcl.Imaging.jpeg,
-  System.Math, System.IOUtils, Unit9020_Types, Winapi.MMSystem;
+  Vcl.StdActns, System.ImageList, Vcl.ImgList, System.Types,
+  Vcl.Imaging.pngimage, Vcl.Imaging.jpeg, System.Math, Unit9020_Types,
+  Vcl.WinXCtrls, Winapi.ShellAPI, Vcl.NumberBox, Vcl.Themes, System.StrUtils;
 
 type
-
   TfrmMain = class(TForm)
     pgc1: TPageControl;
     tsFitStages: TTabSheet;
@@ -22,22 +21,12 @@ type
     File1: TMenuItem;
     lbl3: TLabel;
     lbl4: TLabel;
-    pnl1: TPanel;
+    pnl1Nav: TPanel;
     lbl1: TLabel;
     dbgrd_fitStagesNav: TDBGrid;
     dbedt_fitStageDisplayName: TDBEdit;
-    pnl2: TPanel;
-    btn1: TSpeedButton;
-    dbedtfemBs: TDBEdit;
     stat1: TStatusBar;
-    lbl5: TLabel;
-    dbedtfemBsUrl: TDBEdit;
-    dbedtmanBsUrl: TDBEdit;
     lbl6: TLabel;
-    lbl7: TLabel;
-    pnl3: TPanel;
-    btn2: TSpeedButton;
-    dbedtmanBs: TDBEdit;
     lbl8: TLabel;
     lbl9: TLabel;
     dblkcbbmuscleDefType: TDBLookupComboBox;
@@ -78,8 +67,39 @@ type
     ools1: TMenuItem;
     actTexGen: TAction;
     exturegenerator1: TMenuItem;
-    procedure trckbr_PlyBsMinWChange(Sender: TObject);
-    procedure trckbr_PlyBsMaxWChange(Sender: TObject);
+    ilIcons16: TImageList;
+    lbl5: TLabel;
+    lbl7: TLabel;
+    btn_femBs: TSpeedButton;
+    dbedt_femBs: TDBEdit;
+    dbedt_femBsUrl: TDBEdit;
+    btn_femBsUrl: TSpeedButton;
+    dbedt_manBs: TDBEdit;
+    btn_manBs: TSpeedButton;
+    dbedt_manBsUrl: TDBEdit;
+    btn_manBsUrl: TSpeedButton;
+    nmbrbx1: TNumberBox;
+    heme1: TMenuItem;
+    LavenderClassico1: TMenuItem;
+    Glow1: TMenuItem;
+    AquaLightSate1: TMenuItem;
+    IcebergClassico1: TMenuItem;
+    Sky1: TMenuItem;
+    abletDark1: TMenuItem;
+    abletLight1: TMenuItem;
+    Windows10Blue1: TMenuItem;
+    Windows10Dark1: TMenuItem;
+    Green1: TMenuItem;
+    Windows10Purple1: TMenuItem;
+    Windows10SlateGray1: TMenuItem;
+    N1: TMenuItem;
+    Open1: TMenuItem;
+    SaveAs1: TMenuItem;
+    actSave: TAction;
+    Save1: TMenuItem;
+    N2: TMenuItem;
+    actGenerate: TAction;
+    Generate1: TMenuItem;
     procedure dbgrd_fitStagesNavKeyDown(Sender: TObject; var Key: Word; Shift:
       TShiftState);
     procedure actDBInsertExecute(Sender: TObject);
@@ -88,10 +108,14 @@ type
     procedure dbgrd_fitStagesNavColEnter(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure dbedt_fitStageDisplayNameChange(Sender: TObject);
-    procedure btn1Click(Sender: TObject);
-    procedure btn2Click(Sender: TObject);
+    procedure btn_femBsClick(Sender: TObject);
+    procedure btn_manBsClick(Sender: TObject);
     procedure dbedtBsChange(Sender: TObject);
     procedure actTexGenExecute(Sender: TObject);
+    procedure btn_femBsUrlClick(Sender: TObject);
+    procedure btn_manBsUrlClick(Sender: TObject);
+    procedure ChangeThemeClick(Sender: TObject);
+    procedure actGenerateExecute(Sender: TObject);
   private
     procedure DisableCtrlDel(var Key: Word; Shift: TShiftState);
     procedure CheckDelAvailability;
@@ -99,8 +123,8 @@ type
     procedure DbEdtCursorToLastPos(const edt: TCustomMaskEdit);
     function ActivePageAsTable: TTableName;
     procedure SetEdtHint(const edt: TCustomEdit; const func: TStrToStr);
+    procedure ShellOpen(const s: string);
   public
-    { Public declarations }
   end;
 
 var
@@ -109,22 +133,23 @@ var
 implementation
 
 uses
-  Unit5010_ExportBs, TargaImage, FreeImage, Unit7010_Textures, Unit1020_TexGen;
-
+  Unit5010_ExportBs, TargaImage, Unit1020_TexGen;
 
 {$R *.dfm}
 
 procedure TfrmMain.actDBDelExecute(Sender: TObject);
 begin
-//  Show
-  Caption := BodyslideToLua('F:\Skyrim SE\MO2\mods\DM Bodyslide presets\CalienteTools\BodySlide\SliderPresets\DM Amazons 3BA Nude.xml');
+  // Show
 end;
 
 procedure TfrmMain.actDBInsertExecute(Sender: TObject);
 begin
-  redtOutput.Text := dtmdl_Main.FitStageToLua;
-  Exit;
   dtmdl_Main.Append(ActivePageAsTable);
+end;
+
+procedure TfrmMain.actGenerateExecute(Sender: TObject);
+begin
+  redtOutput.Text := dtmdl_Main.FitStagesToLua;
 end;
 
 function TfrmMain.ActivePageAsTable: TTableName;
@@ -145,16 +170,26 @@ begin
   end;
 end;
 
-procedure TfrmMain.btn1Click(Sender: TObject);
+procedure TfrmMain.btn_femBsClick(Sender: TObject);
 begin
   SetBodyslideFromFile('femBs');
-  DbEdtCursorToLastPos(dbedtfemBs);
+  DbEdtCursorToLastPos(dbedt_femBs);
 end;
 
-procedure TfrmMain.btn2Click(Sender: TObject);
+procedure TfrmMain.btn_femBsUrlClick(Sender: TObject);
+begin
+  ShellOpen(dbedt_femBsUrl.EditText);
+end;
+
+procedure TfrmMain.btn_manBsClick(Sender: TObject);
 begin
   SetBodyslideFromFile('manBs');
-  DbEdtCursorToLastPos(dbedtmanBs);
+  DbEdtCursorToLastPos(dbedt_manBs);
+end;
+
+procedure TfrmMain.btn_manBsUrlClick(Sender: TObject);
+begin
+  ShellOpen(dbedt_manBsUrl.EditText);
 end;
 
 procedure TfrmMain.CheckDelAvailability;
@@ -213,6 +248,14 @@ begin
   CheckDelAvailability;
 end;
 
+procedure TfrmMain.ChangeThemeClick(Sender: TObject);
+var
+  theme: string;
+begin
+  theme := ReplaceStr((Sender as TMenuItem).Caption, '&', '');
+  TStyleManager.TrySetStyle(theme);
+end;
+
 procedure TfrmMain.pgc1Change(Sender: TObject);
 begin
   CheckDelAvailability;
@@ -229,14 +272,9 @@ begin
   edt.Hint := func(edt.Text);
 end;
 
-procedure TfrmMain.trckbr_PlyBsMaxWChange(Sender: TObject);
+procedure TfrmMain.ShellOpen(const s: string);
 begin
-  trckbr_PlyBsMinW.Max := trckbr_PlyBsMaxW.Position;
-end;
-
-procedure TfrmMain.trckbr_PlyBsMinWChange(Sender: TObject);
-begin
-  trckbr_PlyBsMaxW.Min := trckbr_PlyBsMinW.Position;
+  ShellExecute(0, 'OPEN', PWideChar(s), '', '', SW_SHOWNORMAL);
 end;
 
 end.

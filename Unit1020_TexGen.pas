@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
   Vcl.ComCtrls, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.WinXCtrls, Vcl.WinXPanels,
-  Winapi.ShellAPI, FreeImage, Unit9020_Types, System.Math, System.StrUtils;
+  Winapi.ShellAPI, FreeImage, Unit9020_Types, System.Math, System.StrUtils,
+  Vcl.Buttons;
 
 type
   TDropFile = procedure(Sender: TObject; fileName: string) of object;
@@ -45,11 +46,13 @@ type
     rgFitType: TRadioGroup;
     rgRes: TRadioGroup;
     opnDlg1: TFileOpenDialog;
+    btn3: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure btn_TexGenClick(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
     procedure btn1Click(Sender: TObject);
     procedure btn2Click(Sender: TObject);
+    procedure btn3Click(Sender: TObject);
   private
     pnlTexLvl1: TDropPanel;
     pnlTexLvlMax: TDropPanel;
@@ -69,6 +72,7 @@ type
     function MaxRes: Integer;
     function GetBtnProcessingCaption: string;
     function SettingsAsMessage: string;
+    function OutputDir: string;
   public
     { Public declarations }
   end;
@@ -139,22 +143,22 @@ begin
   LoadTgaFromDlg(img_LvlMax, lbl_fName2);
 end;
 
+procedure Tfrm_ToolTexGen.btn3Click(Sender: TObject);
+begin
+  ShellExecute(0, 'open', PWideChar(WideString(OutputDir)), '', '', SW_SHOW);
+end;
+
 procedure Tfrm_ToolTexGen.btnCloseClick(Sender: TObject);
 begin
   Close;
 end;
 
 procedure Tfrm_ToolTexGen.btn_TexGenClick(Sender: TObject);
-var
-  outDir: string;
 begin
   SetVisualCues;
 
-  outDir := TexOutDirFull + RaceDir;
-  ForceDirIntoExistance(outDir);
-
   GenerateTextures(img_Lvl1.Picture, img_LvlMax.Picture, maxMuscleDefLevels,
-    outDir, BaseFileName, MaxRes);
+    OutputDir, BaseFileName, MaxRes);
 
   RestoreVisualCues;
 end;
@@ -244,6 +248,12 @@ end;
 procedure Tfrm_ToolTexGen.OnTexLvlMaxDrop(Sender: TObject; fileName: string);
 begin
   LoadTgaFile(fileName, img_LvlMax, lbl_fName2);
+end;
+
+function Tfrm_ToolTexGen.OutputDir: string;
+begin
+  Result := TexOutDirFull + RaceDir;
+  ForceDirIntoExistance(Result);
 end;
 
 function Tfrm_ToolTexGen.RaceDir: string;
