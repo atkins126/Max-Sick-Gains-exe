@@ -75,20 +75,6 @@ type
     btn_manBs: TSpeedButton;
     dbedt_manBsUrl: TDBEdit;
     btn_manBsUrl: TSpeedButton;
-    heme1: TMenuItem;
-    LavenderClassico1: TMenuItem;
-    Glow1: TMenuItem;
-    AquaLightSate1: TMenuItem;
-    IcebergClassico1: TMenuItem;
-    Sky1: TMenuItem;
-    abletDark1: TMenuItem;
-    abletLight1: TMenuItem;
-    Windows10Blue1: TMenuItem;
-    Windows10Dark1: TMenuItem;
-    Green1: TMenuItem;
-    Windows10Purple1: TMenuItem;
-    Windows10SlateGray1: TMenuItem;
-    N1: TMenuItem;
     Open1: TMenuItem;
     SaveAs1: TMenuItem;
     actSave: TAction;
@@ -115,6 +101,11 @@ type
     dbtrckbrheadFinal: TDBTrackBar;
     lbl20: TLabel;
     imgJourney: TImage;
+    N3: TMenuItem;
+    actAppConfig: TAction;
+    Appconfiguration1: TMenuItem;
+    actClearConfig: TAction;
+    Clearconfiguration1: TMenuItem;
     procedure dbgrd_fitStagesNavKeyDown(Sender: TObject; var Key: Word; Shift:
       TShiftState);
     procedure actDBInsertExecute(Sender: TObject);
@@ -129,10 +120,13 @@ type
     procedure actTexGenExecute(Sender: TObject);
     procedure btn_femBsUrlClick(Sender: TObject);
     procedure btn_manBsUrlClick(Sender: TObject);
-    procedure ChangeThemeClick(Sender: TObject);
     procedure actGenerateExecute(Sender: TObject);
     procedure imgJourneyClick(Sender: TObject);
     procedure JourneyTrackbarExit(Sender: TObject);
+    procedure actAppConfigExecute(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure actClearConfigExecute(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     procedure DisableCtrlDel(var Key: Word; Shift: TShiftState);
     procedure CheckDelAvailability;
@@ -141,8 +135,10 @@ type
     function ActivePageAsTable: TTableName;
     procedure SetEdtHint(const edt: TCustomEdit; const func: TStrToStr);
     procedure ShellOpen(const s: string);
+    procedure TryDrawJourney;
   public
     procedure DrawPlayerJourney;
+    procedure ApplyConfig;
   end;
 
 var
@@ -151,18 +147,36 @@ var
 implementation
 
 uses
-  TargaImage, Unit1020_TexGen, Unit5020_DrawJourney;
+  TargaImage, Unit1020_TexGen, Unit5020_DrawJourney, Unit1030_Config;
 
 {$R *.dfm}
 
+procedure TfrmMain.actAppConfigExecute(Sender: TObject);
+begin
+  frmConfig := TfrmConfig.Create(Self);
+  try
+    frmConfig.ShowModal;
+  finally
+    frmConfig.Free;
+  end;
+end;
+
+procedure TfrmMain.actClearConfigExecute(Sender: TObject);
+begin
+  dtmdl_Main.ResetConfig;
+end;
+
 procedure TfrmMain.actDBDelExecute(Sender: TObject);
 begin
-  // Show
+  // Delete
+
+  TryDrawJourney;
 end;
 
 procedure TfrmMain.actDBInsertExecute(Sender: TObject);
 begin
   dtmdl_Main.Append(ActivePageAsTable);
+  TryDrawJourney;
 end;
 
 procedure TfrmMain.actGenerateExecute(Sender: TObject);
@@ -188,6 +202,11 @@ begin
   finally
     frm_ToolTexGen.Free;
   end;
+end;
+
+procedure TfrmMain.ApplyConfig;
+begin
+  TStyleManager.TrySetStyle(dtmdl_Main.Config(cfAppTheme).AsString);
 end;
 
 procedure TfrmMain.btn_femBsClick(Sender: TObject);
@@ -282,22 +301,27 @@ begin
   end;
 end;
 
+procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  dtmdl_Main.ConfigUpdate(cfLastTab, pgc1.TabIndex);
+end;
+
+procedure TfrmMain.FormCreate(Sender: TObject);
+begin
+  Application.HintHidePause := 6000;
+end;
+
 procedure TfrmMain.FormShow(Sender: TObject);
 begin
   CheckDelAvailability;
+  DrawPlayerJourney;
+  // This is done here to avoid OnShow errors. Don't move.
+  pgc1.TabIndex := dtmdl_Main.Config(cfLastTab).AsInteger;
 end;
 
 procedure TfrmMain.imgJourneyClick(Sender: TObject);
 begin
   DrawPlayerJourney;
-end;
-
-procedure TfrmMain.ChangeThemeClick(Sender: TObject);
-var
-  theme: string;
-begin
-  theme := ReplaceStr((Sender as TMenuItem).Caption, '&', '');
-  TStyleManager.TrySetStyle(theme);
 end;
 
 procedure TfrmMain.pgc1Change(Sender: TObject);
@@ -319,6 +343,12 @@ end;
 procedure TfrmMain.ShellOpen(const s: string);
 begin
   ShellExecute(0, 'OPEN', PWideChar(s), '', '', SW_SHOWNORMAL);
+end;
+
+procedure TfrmMain.TryDrawJourney;
+begin
+  if pgc1.ActivePage = tsPlayerStages then
+    DrawPlayerJourney;
 end;
 
 end.

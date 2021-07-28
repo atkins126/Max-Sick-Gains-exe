@@ -15,6 +15,8 @@ object frmMain: TfrmMain
   Menu = mm1
   OldCreateOrder = False
   Position = poDesktopCenter
+  OnClose = FormClose
+  OnCreate = FormCreate
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -183,12 +185,11 @@ object frmMain: TfrmMain
         Height = 413
         Align = alLeft
         TabOrder = 0
-        ExplicitHeight = 386
         object lbl1: TLabel
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 106
+          Width = 177
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -204,6 +205,7 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
+          ExplicitWidth = 106
         end
         object dbgrd_fitStagesNav: TDBGrid
           Left = 1
@@ -248,8 +250,6 @@ object frmMain: TfrmMain
         ListField = 'iName'
         ListSource = dtmdl_Main.dsFitLvls
         TabOrder = 8
-        ExplicitLeft = 310
-        ExplicitTop = 248
       end
       object dbmmoexcludedRaces: TDBMemo
         Left = 312
@@ -278,8 +278,6 @@ object frmMain: TfrmMain
         DataSource = dtmdl_Main.dsFitStages
         TabOrder = 3
         OnChange = dbedtBsChange
-        ExplicitLeft = 310
-        ExplicitTop = 78
       end
       object dbedt_femBsUrl: TDBEdit
         AlignWithMargins = True
@@ -295,8 +293,6 @@ object frmMain: TfrmMain
         DataField = 'femBsUrl'
         DataSource = dtmdl_Main.dsFitStages
         TabOrder = 4
-        ExplicitLeft = 310
-        ExplicitTop = 112
       end
       object dbedt_fitStageDisplayName: TDBEdit
         AlignWithMargins = True
@@ -313,8 +309,6 @@ object frmMain: TfrmMain
         DataSource = dtmdl_Main.dsFitStages
         TabOrder = 2
         OnChange = dbedt_fitStageDisplayNameChange
-        ExplicitLeft = 310
-        ExplicitTop = 44
       end
       object dbedt_fitStageName: TDBEdit
         AlignWithMargins = True
@@ -330,8 +324,6 @@ object frmMain: TfrmMain
         DataField = 'iName'
         DataSource = dtmdl_Main.dsFitStages
         TabOrder = 1
-        ExplicitLeft = 310
-        ExplicitTop = 10
       end
       object dbedt_manBs: TDBEdit
         AlignWithMargins = True
@@ -348,8 +340,6 @@ object frmMain: TfrmMain
         DataSource = dtmdl_Main.dsFitStages
         TabOrder = 5
         OnChange = dbedtBsChange
-        ExplicitLeft = 310
-        ExplicitTop = 146
       end
       object dbedt_manBsUrl: TDBEdit
         AlignWithMargins = True
@@ -365,8 +355,6 @@ object frmMain: TfrmMain
         DataField = 'manBsUrl'
         DataSource = dtmdl_Main.dsFitStages
         TabOrder = 6
-        ExplicitLeft = 310
-        ExplicitTop = 180
       end
       object dblkcbbmuscleDefType: TDBLookupComboBox
         AlignWithMargins = True
@@ -385,8 +373,6 @@ object frmMain: TfrmMain
         ListField = 'iName'
         ListSource = dtmdl_Main.dsFitTypes
         TabOrder = 7
-        ExplicitLeft = 310
-        ExplicitTop = 214
       end
     end
     object tsPlayerStages: TTabSheet
@@ -755,7 +741,7 @@ object frmMain: TfrmMain
       end
     end
     object Record1: TMenuItem
-      Caption = 'Record'
+      Caption = 'Data'
       object Insert2: TMenuItem
         Action = actDBInsert
       end
@@ -768,97 +754,14 @@ object frmMain: TfrmMain
       object exturegenerator1: TMenuItem
         Action = actTexGen
       end
-    end
-    object heme1: TMenuItem
-      Caption = 'App theme'
-      object AquaLightSate1: TMenuItem
-        AutoCheck = True
-        Caption = 'Aqua Light Slate'
-        GroupIndex = 1
-        RadioItem = True
-        OnClick = ChangeThemeClick
-      end
-      object IcebergClassico1: TMenuItem
-        AutoCheck = True
-        Caption = 'Iceberg Classico'
-        GroupIndex = 1
-        RadioItem = True
-        OnClick = ChangeThemeClick
-      end
-      object LavenderClassico1: TMenuItem
-        AutoCheck = True
-        Caption = 'Lavender Classico'
-        GroupIndex = 1
-        RadioItem = True
-        OnClick = ChangeThemeClick
-      end
-      object Sky1: TMenuItem
-        AutoCheck = True
-        Caption = 'Sky'
-        GroupIndex = 1
-        RadioItem = True
-        OnClick = ChangeThemeClick
-      end
-      object abletLight1: TMenuItem
-        AutoCheck = True
-        Caption = 'Tablet Light'
-        GroupIndex = 1
-        RadioItem = True
-        OnClick = ChangeThemeClick
-      end
-      object Windows10Blue1: TMenuItem
-        AutoCheck = True
-        Caption = 'Windows10 Blue'
-        GroupIndex = 1
-        RadioItem = True
-        OnClick = ChangeThemeClick
-      end
-      object Green1: TMenuItem
-        AutoCheck = True
-        Caption = 'Windows10 Green'
-        GroupIndex = 1
-        RadioItem = True
-        OnClick = ChangeThemeClick
-      end
-      object Windows10Purple1: TMenuItem
-        AutoCheck = True
-        Caption = 'Windows10 Purple'
-        GroupIndex = 1
-        RadioItem = True
-        OnClick = ChangeThemeClick
-      end
-      object N1: TMenuItem
+      object N3: TMenuItem
         Caption = '-'
-        GroupIndex = 1
       end
-      object Glow1: TMenuItem
-        AutoCheck = True
-        Caption = 'Glow'
-        Checked = True
-        GroupIndex = 1
-        RadioItem = True
-        OnClick = ChangeThemeClick
+      object Appconfiguration1: TMenuItem
+        Action = actAppConfig
       end
-      object abletDark1: TMenuItem
-        AutoCheck = True
-        Caption = 'Tablet Dark'
-        GroupIndex = 1
-        RadioItem = True
-        OnClick = ChangeThemeClick
-      end
-      object Windows10Dark1: TMenuItem
-        AutoCheck = True
-        Caption = 'Windows10 Dark'
-        GroupIndex = 1
-        RadioItem = True
-        OnClick = ChangeThemeClick
-      end
-      object Windows10SlateGray1: TMenuItem
-        AutoCheck = True
-        Caption = 'Windows10 SlateGray'
-        GroupIndex = 1
-        RadioItem = True
-        OnClick = ChangeThemeClick
+      object Clearconfiguration1: TMenuItem
+        Action = actClearConfig
       end
     end
   end
@@ -943,6 +846,20 @@ object frmMain: TfrmMain
       Hint = 'Exports all data so you can see this configuration in game'
       ShortCut = 16455
       OnExecute = actGenerateExecute
+    end
+    object actAppConfig: TAction
+      Category = 'Tools'
+      Caption = 'App configuration'
+      ShortCut = 115
+      OnExecute = actAppConfigExecute
+    end
+    object actClearConfig: TAction
+      Category = 'Tools'
+      Caption = 'Clear configuration'
+      Hint = 
+        'Restore configuration to defaults|Use this if some program updat' +
+        'e makes it act all weird.'
+      OnExecute = actClearConfigExecute
     end
   end
   object ilActions48: TImageList

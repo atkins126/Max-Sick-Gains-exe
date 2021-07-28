@@ -1,6 +1,7 @@
 object dtmdl_Main: Tdtmdl_Main
   OldCreateOrder = False
   OnCreate = DataModuleCreate
+  OnDestroy = DataModuleDestroy
   Height = 299
   Width = 525
   object dsFitStages: TDataSource
@@ -166,5 +167,37 @@ object dtmdl_Main: Tdtmdl_Main
       'SELECT * FROM QryPlayerJourney')
     Left = 112
     Top = 16
+  end
+  object cdsConfig: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'dtstprvdrConfig'
+    Left = 280
+    Top = 230
+    object bytfldMaxMuscleDefLevels: TByteField
+      FieldName = 'MaxMuscleDefLevels'
+    end
+    object strngfldConfigAppTheme: TStringField
+      FieldName = 'AppTheme'
+      Size = 50
+    end
+    object strngfldConfigModPath: TStringField
+      DisplayWidth = 2000
+      FieldName = 'ModPath'
+      Size = 2000
+    end
+    object strngfldConfigTexPath: TStringField
+      DisplayWidth = 2000
+      FieldName = 'TexPath'
+      Size = 2000
+    end
+    object intgrfldConfigLastTab: TIntegerField
+      FieldName = 'LastTab'
+    end
+  end
+  object dsConfig: TDataSource
+    DataSet = cdsConfig
+    Left = 280
+    Top = 180
   end
 end

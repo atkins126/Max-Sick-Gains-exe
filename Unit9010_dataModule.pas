@@ -3,12 +3,25 @@ unit Unit9010_dataModule;
 interface
 
 uses
-  System.SysUtils, System.Classes, Data.DB, Data.Win.ADODB, Winapi.Windows,
-  System.IOUtils, System.StrUtils, Functional.Sequence, Unit9020_Types,
-  System.Generics.Collections;
+  Winapi.Windows, Winapi.ShellAPI, System.SysUtils, System.Classes, Data.DB,
+  Data.Win.ADODB, System.IOUtils, System.StrUtils, Functional.Sequence,
+  Unit9020_Types, System.Generics.Collections, Datasnap.DBClient,
+  Datasnap.Provider;
+
+{$DEFINE OpenPathsInExplorer}
+const
+  AppFullName = 'Max Sick Gains for SSE';
 
 type
   TTableName = (tnNone, tnFitStages, tnPlayerStages);
+
+  TConfigField = (
+    // App configuration
+    cfAppTheme, cfLastTab,
+    // Paths
+    cfModPath, cfTexPath,
+    // Not directly accessible to user
+    cfMaxMuscleDefLevels);
 
   Tdtmdl_Main = class(TDataModule)
     dsFitStages: TDataSource;
@@ -43,11 +56,20 @@ type
     wrdfldPlayerStagesmuscleMin: TWordField;
     wrdfldPlayerStagesmuscleMax: TWordField;
     qryPlayerJourney: TADOQuery;
+    cdsConfig: TClientDataSet;
+    bytfldMaxMuscleDefLevels: TByteField;
+    strngfldConfigAppTheme: TStringField;
+    dsConfig: TDataSource;
+    strngfldConfigModPath: TStringField;
+    strngfldConfigTexPath: TStringField;
+    intgrfldConfigLastTab: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
+    procedure DataModuleDestroy(Sender: TObject);
   private
+    FCfgSavePoint: Int64;
     procedure CloseAll;
     function TempDB: string;
-    function AppPath: string;
+    function BlankDB: string;
     procedure CreateTemp(const aCopyFrom: string);
     procedure OpenAll;
     function GetTable(const aTable: TTableName): TCustomADODataSet;
@@ -64,7 +86,11 @@ type
     function DataSetToLua(const aTable: TTableName; const fun: TVoidToStr):
       string;
     function FitStageToLua: string;
+    procedure NewConfig;
+    function CfgFile: string;
+    function ConfigFieldToStr(const aField: TConfigField): string;
   public
+    function AppPath: string;
     function FitStagesToLua: string;
     procedure OpenFile(const aFileName: string);
     function IsAtFirst(const aTable: TTableName): Boolean;
@@ -75,6 +101,12 @@ type
     function Field(const aTable: TTableName; const aField: string): TField;
     function PlayerJourney: TList<TJourneyItem>;
     procedure Post(const aTable: TTableName);
+    function Config(aField: TConfigField): TField;
+    procedure ConfigUpdate(aField: TConfigField; val: Variant);
+    procedure CfgBackup;
+    procedure CfgRestore;
+    procedure LoadConfig;
+    procedure ResetConfig;
   end;
 
 var
@@ -125,12 +157,62 @@ end;
 
 function Tdtmdl_Main.AppPath: string;
 begin
-  Result := ExtractFilePath(Application.ExeName);
+  Result := IncludeTrailingPathDelimiter(TPath.GetHomePath) + AppFullName;
+  Result := IncludeTrailingPathDelimiter(Result);
+  ForceDirectories(Result);
+end;
+
+function Tdtmdl_Main.BlankDB: string;
+begin
+  Result := AppPath + 'blankDB.mdb';
+end;
+
+procedure Tdtmdl_Main.CfgBackup;
+begin
+  FCfgSavePoint := cdsConfig.SavePoint;
+end;
+
+function Tdtmdl_Main.CfgFile: string;
+begin
+  Result := AppPath + 'cfg.xml';
+end;
+
+procedure Tdtmdl_Main.CfgRestore;
+begin
+  cdsConfig.SavePoint := FCfgSavePoint;
 end;
 
 procedure Tdtmdl_Main.CloseAll;
 begin
   conMain.Close;
+end;
+
+function Tdtmdl_Main.Config(aField: TConfigField): TField;
+begin
+  Result := cdsConfig.FieldByName(ConfigFieldToStr(aField));
+end;
+
+function Tdtmdl_Main.ConfigFieldToStr(const aField: TConfigField): string;
+begin
+  case aField of
+    cfAppTheme:
+      Result := 'AppTheme';
+    cfLastTab:
+      Result := 'LastTab';
+    cfMaxMuscleDefLevels:
+      Result := 'MaxMuscleDefLevels';
+    cfModPath:
+      Result := 'ModPath';
+    cfTexPath:
+      Result := 'TexPath';
+  end;
+end;
+
+procedure Tdtmdl_Main.ConfigUpdate(aField: TConfigField; val: Variant);
+begin
+  cdsConfig.Edit;
+  Config(aField).AsVariant := val;
+  cdsConfig.Post;
 end;
 
 procedure Tdtmdl_Main.CreateTemp(const aCopyFrom: string);
@@ -140,7 +222,14 @@ end;
 
 procedure Tdtmdl_Main.DataModuleCreate(Sender: TObject);
 begin
-  OpenFile(AppPath + 'res\blankDB.mdb');
+  OpenFile(BlankDB);
+  LoadConfig;
+end;
+
+procedure Tdtmdl_Main.DataModuleDestroy(Sender: TObject);
+begin
+
+  cdsConfig.SaveToFile(CfgFile, dfXMLUTF8);
 end;
 
 function Tdtmdl_Main.DataSetToLua(const aTable: TTableName; const fun:
@@ -187,6 +276,18 @@ begin
   end;
 end;
 
+procedure Tdtmdl_Main.LoadConfig;
+begin
+  if not FileExists(CfgFile) then
+    NewConfig
+  else
+    cdsConfig.LoadFromFile(CfgFile);
+  frmMain.ApplyConfig;
+{$IF Defined(DEBUG) and Defined(OpenPathsInExplorer)}
+  ShellExecute(0, 'Open', PWideChar(AppPath), '', '', SW_SHOW);
+{$ENDIF}
+end;
+
 function Tdtmdl_Main.MemoToLua(const aText: string): string;
 var
   lines: TStringList;
@@ -198,6 +299,22 @@ begin
       .Fold<string>(ReduceStr(', '), '');
   finally
     lines.Free;
+  end;
+end;
+
+procedure Tdtmdl_Main.NewConfig;
+begin
+  with cdsConfig do begin
+    CreateDataSet;
+    Open;
+    Append;
+    Config(cfModPath).AsString := '';
+    Config(cfTexPath).AsString := '';
+    Config(cfAppTheme).AsString := 'Glossy';
+    Config(cfLastTab).AsInteger := 0;
+    Config(cfMaxMuscleDefLevels).AsInteger := 6;
+    Post;
+    SaveToFile(CfgFile, dfXMLUTF8);
   end;
 end;
 
@@ -241,9 +358,6 @@ function Tdtmdl_Main.FitStageToLua: string;
 var
   output: TStringList;
   tbl: TCustomADODataSet;
-//const
-//  bs =
-//    'F:\Skyrim SE\MO2\mods\DM Bodyslide presets\CalienteTools\BodySlide\SliderPresets\DM Amazons 3BA Nude.xml';
 begin
   tbl := tblFitStages;
   output := TStringList.Create;
@@ -290,7 +404,7 @@ const
       'Provider=Microsoft.Jet.OLEDB.4.0;Data Source=%s;Mode=ReadWrite;Persist Security Info=False';
 begin
   CloseAll;
-  CreateTemp(AppPath + 'res\blankDB.mdb');
+  CreateTemp(BlankDB);
   conMain.ConnectionString := Format(s, [TempDB]);
   OpenAll;
 end;
@@ -332,15 +446,25 @@ begin
   aTbl.Last;
 end;
 
+procedure Tdtmdl_Main.ResetConfig;
+begin
+  cdsConfig.EmptyDataSet;
+  DeleteFile(CfgFile);
+  LoadConfig;
+end;
+
 function Tdtmdl_Main.TempDB: string;
 var
   tmp: string;
 begin
-  tmp := TPath.GetTempPath;
+  tmp := IncludeTrailingPathDelimiter(TPath.GetTempPath);
   if tmp = '' then
-    Result := AppPath + 'res\temp.mdb'
-  else
-    Result := tmp + 'maxick_temp.mdb';
+    tmp := AppPath;
+  Result := tmp + AppFullName + '_temp.mdb';
+
+{$IF Defined(DEBUG) and Defined(OpenPathsInExplorer)}
+  ShellExecute(0, 'Open', PWideChar(tmp), '', '', SW_SHOW);
+{$ENDIF}
 end;
 
 function Tdtmdl_Main.ToLuaTable(const s: string; const addComma: Boolean): string;
