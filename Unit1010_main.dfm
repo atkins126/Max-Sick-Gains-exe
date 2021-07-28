@@ -4,8 +4,8 @@ object frmMain: TfrmMain
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Max Sick Gains'
-  ClientHeight = 433
-  ClientWidth = 626
+  ClientHeight = 460
+  ClientWidth = 629
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,36 +21,40 @@ object frmMain: TfrmMain
   object pgc1: TPageControl
     Left = 0
     Top = 0
-    Width = 626
-    Height = 414
-    ActivePage = tsOutput
+    Width = 629
+    Height = 441
+    ActivePage = tsPlayerStages
     Align = alClient
     TabOrder = 0
     OnChange = pgc1Change
     object tsFitStages: TTabSheet
       Caption = 'Fitness stages'
       DesignSize = (
-        618
-        386)
+        621
+        413)
       object lbl10: TLabel
-        Left = 200
-        Top = 282
+        Left = 201
+        Top = 302
         Width = 72
         Height = 13
         Anchors = []
         Caption = 'Excluded races'
+        ExplicitLeft = 200
+        ExplicitTop = 282
       end
       object lbl9: TLabel
-        Left = 200
-        Top = 252
+        Left = 201
+        Top = 270
         Width = 95
         Height = 13
         Anchors = []
         Caption = 'Allowed muscle def.'
+        ExplicitLeft = 200
+        ExplicitTop = 252
       end
       object btn_femBs: TSpeedButton
-        Left = 585
-        Top = 76
+        Left = 588
+        Top = 82
         Width = 24
         Height = 24
         Anchors = []
@@ -58,10 +62,12 @@ object frmMain: TfrmMain
         Images = ilIcons24
         Flat = True
         OnClick = btn_femBsClick
+        ExplicitLeft = 585
+        ExplicitTop = 76
       end
       object btn_femBsUrl: TSpeedButton
-        Left = 585
-        Top = 110
+        Left = 588
+        Top = 119
         Width = 24
         Height = 24
         Hint = 'Open in browser'
@@ -70,10 +76,12 @@ object frmMain: TfrmMain
         Images = ilIcons24
         Flat = True
         OnClick = btn_femBsUrlClick
+        ExplicitLeft = 585
+        ExplicitTop = 110
       end
       object btn_manBs: TSpeedButton
-        Left = 585
-        Top = 144
+        Left = 588
+        Top = 155
         Width = 24
         Height = 24
         Anchors = []
@@ -81,10 +89,12 @@ object frmMain: TfrmMain
         Images = ilIcons24
         Flat = True
         OnClick = btn_manBsClick
+        ExplicitLeft = 585
+        ExplicitTop = 144
       end
       object btn_manBsUrl: TSpeedButton
-        Left = 585
-        Top = 179
+        Left = 588
+        Top = 192
         Width = 24
         Height = 24
         Hint = 'Open in browser'
@@ -93,70 +103,87 @@ object frmMain: TfrmMain
         Images = ilIcons24
         Flat = True
         OnClick = btn_manBsUrlClick
+        ExplicitLeft = 585
+        ExplicitTop = 179
       end
       object lbl2: TLabel
-        Left = 200
-        Top = 10
+        Left = 201
+        Top = 11
         Width = 27
         Height = 13
         Anchors = []
         Caption = 'Name'
+        ExplicitLeft = 200
+        ExplicitTop = 10
       end
       object lbl3: TLabel
-        Left = 200
-        Top = 48
+        Left = 201
+        Top = 52
         Width = 63
         Height = 13
         Anchors = []
         Caption = 'Display name'
+        ExplicitLeft = 200
+        ExplicitTop = 48
       end
       object lbl4: TLabel
-        Left = 200
-        Top = 82
+        Left = 201
+        Top = 88
         Width = 72
         Height = 13
         Anchors = []
         Caption = 'Fem. Bodyslide'
+        ExplicitLeft = 200
+        ExplicitTop = 82
       end
       object lbl5: TLabel
-        Left = 200
-        Top = 116
+        Left = 201
+        Top = 125
         Width = 58
         Height = 13
         Anchors = []
         Caption = 'Fem. Bs. Url'
+        ExplicitLeft = 200
+        ExplicitTop = 116
       end
       object lbl6: TLabel
-        Left = 200
-        Top = 150
+        Left = 201
+        Top = 161
         Width = 68
         Height = 13
         Anchors = []
         Caption = 'Man Bodyslide'
+        ExplicitLeft = 200
+        ExplicitTop = 150
       end
       object lbl7: TLabel
-        Left = 200
-        Top = 184
+        Left = 201
+        Top = 197
         Width = 54
         Height = 13
         Anchors = []
         Caption = 'Man Bs. Url'
+        ExplicitLeft = 200
+        ExplicitTop = 184
       end
       object lbl8: TLabel
-        Left = 200
-        Top = 218
+        Left = 201
+        Top = 234
         Width = 79
         Height = 13
         Anchors = []
         Caption = 'Muscle definition'
+        ExplicitLeft = 200
+        ExplicitTop = 218
       end
       object pnl1Nav: TPanel
         Left = 0
         Top = 0
         Width = 185
-        Height = 386
+        Height = 413
         Align = alLeft
         TabOrder = 0
+        ExplicitHeight = 386
         object lbl1: TLabel
           AlignWithMargins = True
           Left = 4
@@ -182,7 +209,7 @@ object frmMain: TfrmMain
           Left = 1
           Top = 51
           Width = 183
-          Height = 334
+          Height = 361
           Align = alClient
           DataSource = dtmdl_Main.dsFitStages
           Options = [dgIndicator, dgConfirmDelete, dgTitleHotTrack]
@@ -206,8 +233,8 @@ object frmMain: TfrmMain
       end
       object dblkcbbmuscleDefLvl: TDBLookupComboBox
         AlignWithMargins = True
-        Left = 310
-        Top = 248
+        Left = 312
+        Top = 266
         Width = 299
         Height = 21
         Margins.Left = 0
@@ -221,12 +248,15 @@ object frmMain: TfrmMain
         ListField = 'iName'
         ListSource = dtmdl_Main.dsFitLvls
         TabOrder = 8
+        ExplicitLeft = 310
+        ExplicitTop = 248
       end
       object dbmmoexcludedRaces: TDBMemo
-        Left = 310
-        Top = 282
+        Left = 312
+        Top = 302
         Width = 299
-        Height = 99
+        Height = 109
+        Anchors = [akLeft, akTop, akRight, akBottom]
         DataField = 'excludedRaces'
         DataSource = dtmdl_Main.dsFitStages
         ScrollBars = ssVertical
@@ -235,8 +265,8 @@ object frmMain: TfrmMain
       end
       object dbedt_femBs: TDBEdit
         AlignWithMargins = True
-        Left = 310
-        Top = 78
+        Left = 312
+        Top = 84
         Width = 271
         Height = 21
         Margins.Left = 0
@@ -248,11 +278,13 @@ object frmMain: TfrmMain
         DataSource = dtmdl_Main.dsFitStages
         TabOrder = 3
         OnChange = dbedtBsChange
+        ExplicitLeft = 310
+        ExplicitTop = 78
       end
       object dbedt_femBsUrl: TDBEdit
         AlignWithMargins = True
-        Left = 310
-        Top = 112
+        Left = 312
+        Top = 121
         Width = 271
         Height = 21
         Margins.Left = 0
@@ -263,11 +295,13 @@ object frmMain: TfrmMain
         DataField = 'femBsUrl'
         DataSource = dtmdl_Main.dsFitStages
         TabOrder = 4
+        ExplicitLeft = 310
+        ExplicitTop = 112
       end
       object dbedt_fitStageDisplayName: TDBEdit
         AlignWithMargins = True
-        Left = 310
-        Top = 44
+        Left = 312
+        Top = 48
         Width = 299
         Height = 21
         Margins.Left = 0
@@ -279,11 +313,13 @@ object frmMain: TfrmMain
         DataSource = dtmdl_Main.dsFitStages
         TabOrder = 2
         OnChange = dbedt_fitStageDisplayNameChange
+        ExplicitLeft = 310
+        ExplicitTop = 44
       end
       object dbedt_fitStageName: TDBEdit
         AlignWithMargins = True
-        Left = 310
-        Top = 10
+        Left = 312
+        Top = 12
         Width = 299
         Height = 21
         Margins.Left = 0
@@ -294,11 +330,13 @@ object frmMain: TfrmMain
         DataField = 'iName'
         DataSource = dtmdl_Main.dsFitStages
         TabOrder = 1
+        ExplicitLeft = 310
+        ExplicitTop = 10
       end
       object dbedt_manBs: TDBEdit
         AlignWithMargins = True
-        Left = 310
-        Top = 146
+        Left = 312
+        Top = 157
         Width = 271
         Height = 21
         Margins.Left = 0
@@ -310,11 +348,13 @@ object frmMain: TfrmMain
         DataSource = dtmdl_Main.dsFitStages
         TabOrder = 5
         OnChange = dbedtBsChange
+        ExplicitLeft = 310
+        ExplicitTop = 146
       end
       object dbedt_manBsUrl: TDBEdit
         AlignWithMargins = True
-        Left = 310
-        Top = 180
+        Left = 312
+        Top = 194
         Width = 271
         Height = 21
         Margins.Left = 0
@@ -325,11 +365,13 @@ object frmMain: TfrmMain
         DataField = 'manBsUrl'
         DataSource = dtmdl_Main.dsFitStages
         TabOrder = 6
+        ExplicitLeft = 310
+        ExplicitTop = 180
       end
       object dblkcbbmuscleDefType: TDBLookupComboBox
         AlignWithMargins = True
-        Left = 310
-        Top = 214
+        Left = 312
+        Top = 230
         Width = 299
         Height = 21
         Margins.Left = 0
@@ -343,23 +385,46 @@ object frmMain: TfrmMain
         ListField = 'iName'
         ListSource = dtmdl_Main.dsFitTypes
         TabOrder = 7
+        ExplicitLeft = 310
+        ExplicitTop = 214
       end
     end
-    object ts2: TTabSheet
+    object tsPlayerStages: TTabSheet
       Caption = 'Player stages'
       ImageIndex = 1
+      object imgJourney: TImage
+        AlignWithMargins = True
+        Left = 3
+        Top = 367
+        Width = 615
+        Height = 43
+        Margins.Top = 8
+        Align = alBottom
+        Picture.Data = {
+          0954506E67496D61676589504E470D0A1A0A0000000D494844520000000C0000
+          00080802000000428689A6000000017352474200AECE1CE90000000467414D41
+          0000B18F0BFC61050000000970485973000019D6000019D60118D1CAED000000
+          1274455874536F66747761726500477265656E73686F745E5508050000001249
+          44415478DA633C1B13C34008308E2A0200DA010C3171DB49700000000049454E
+          44AE426082}
+        Stretch = True
+        OnClick = imgJourneyClick
+        ExplicitLeft = 0
+        ExplicitTop = 308
+        ExplicitWidth = 621
+      end
       object pnl4: TPanel
         Left = 0
         Top = 0
         Width = 185
-        Height = 386
+        Height = 359
         Align = alLeft
         TabOrder = 0
         object lbl11: TLabel
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 106
+          Width = 177
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -375,27 +440,36 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
+          ExplicitWidth = 106
         end
         object dbgrd1: TDBGrid
           Left = 1
           Top = 51
           Width = 183
-          Height = 334
+          Height = 307
           Align = alClient
-          Options = [dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+          DataSource = dtmdl_Main.dsPlayerStages
+          Options = [dgIndicator, dgConfirmDelete, dgTitleClick, dgTitleHotTrack]
           TabOrder = 0
           TitleFont.Charset = DEFAULT_CHARSET
           TitleFont.Color = clWindowText
           TitleFont.Height = -11
           TitleFont.Name = 'Tahoma'
           TitleFont.Style = []
+          Columns = <
+            item
+              Expanded = False
+              FieldName = 'FitnessStageName'
+              Width = 179
+              Visible = True
+            end>
         end
       end
       object grp1: TGroupBox
-        Left = 192
-        Top = 16
-        Width = 336
-        Height = 56
+        Left = 200
+        Top = 20
+        Width = 409
+        Height = 51
         Caption = 'Stage configuration'
         Padding.Left = 10
         Padding.Right = 10
@@ -403,82 +477,222 @@ object frmMain: TfrmMain
         TabOrder = 1
         object lbl12: TLabel
           AlignWithMargins = True
-          Left = 15
-          Top = 23
-          Width = 42
+          Left = 250
+          Top = 24
+          Width = 93
           Height = 13
           Margins.Top = 8
           Margins.Right = 6
-          Align = alLeft
-          Caption = 'Min days'
+          Caption = 'Min duration (days)'
           Constraints.MaxHeight = 13
-          ExplicitTop = 20
         end
-        object se1: TSpinEdit
-          AlignWithMargins = True
-          Left = 79
-          Top = 18
-          Width = 237
-          Height = 22
-          Margins.Right = 8
-          Align = alRight
-          Anchors = [akLeft, akTop, akRight, akBottom]
-          Constraints.MaxHeight = 22
-          Increment = 10
-          MaxLength = 4
-          MaxValue = 9999
-          MinValue = 1
+        object lbl13: TLabel
+          Left = 20
+          Top = 24
+          Width = 28
+          Height = 13
+          Caption = 'Stage'
+        end
+        object dblkcbbFitnessStage: TDBLookupComboBox
+          Left = 60
+          Top = 20
+          Width = 170
+          Height = 21
+          DataField = 'FitnessStage'
+          DataSource = dtmdl_Main.dsPlayerStages
+          KeyField = 'ID'
+          ListField = 'iName'
+          ListSource = dtmdl_Main.dsFitStages
           TabOrder = 0
-          Value = 20
+        end
+        object dbedtminDays: TDBEdit
+          Left = 350
+          Top = 20
+          Width = 40
+          Height = 21
+          DataField = 'minDays'
+          DataSource = dtmdl_Main.dsPlayerStages
+          TabOrder = 1
+          OnExit = JourneyTrackbarExit
         end
       end
       object grp2: TGroupBox
-        Left = 192
+        Left = 200
         Top = 80
-        Width = 337
-        Height = 121
+        Width = 411
+        Height = 221
         Caption = 'Bodyslide preset'
         TabOrder = 2
-        object trckbr_PlyBsMinW: TTrackBar
-          Left = 8
-          Top = 24
-          Width = 145
-          Height = 33
-          Hint = 'iduid'
+        object lbl14: TLabel
+          Left = 10
+          Top = 50
+          Width = 180
+          Height = 13
+          Alignment = taCenter
+          AutoSize = False
+          Caption = 'Starting weight'
+        end
+        object lbl15: TLabel
+          Left = 220
+          Top = 50
+          Width = 180
+          Height = 13
+          Alignment = taCenter
+          AutoSize = False
+          Caption = 'Ending weight'
+        end
+        object lbl16: TLabel
+          Left = 25
+          Top = 120
+          Width = 150
+          Height = 13
+          Alignment = taCenter
+          AutoSize = False
+          Caption = 'Starting muscle definiton'
+        end
+        object lbl17: TLabel
+          Left = 235
+          Top = 120
+          Width = 150
+          Height = 13
+          Alignment = taCenter
+          AutoSize = False
+          Caption = 'Ending muscle definiton'
+        end
+        object lbl18: TLabel
+          Left = 130
+          Top = 190
+          Width = 150
+          Height = 13
+          Alignment = taCenter
+          AutoSize = False
+          Caption = 'Blend at'
+        end
+        object dbtrckbrbsMin: TDBTrackBar
+          Left = 10
+          Top = 20
+          Width = 180
+          Height = 30
           Max = 100
-          ParentShowHint = False
+          Frequency = 10
           PositionToolTip = ptTop
-          ShowHint = False
           ShowSelRange = False
           TabOrder = 0
-          TickStyle = tsManual
+          OnExit = JourneyTrackbarExit
+          DataField = 'bsMin'
+          DataSource = dtmdl_Main.dsPlayerStages
         end
-        object trckbr_PlyBsMaxW: TTrackBar
-          Left = 184
-          Top = 24
-          Width = 145
-          Height = 33
+        object dbtrckbrbsMax: TDBTrackBar
+          Left = 220
+          Top = 20
+          Width = 180
+          Height = 30
           Max = 100
+          Frequency = 10
           Position = 100
           PositionToolTip = ptTop
           ShowSelRange = False
           TabOrder = 1
-          TickStyle = tsManual
+          OnExit = JourneyTrackbarExit
+          DataField = 'bsMax'
+          DataSource = dtmdl_Main.dsPlayerStages
+        end
+        object dbtrckbrmuscleMin: TDBTrackBar
+          Left = 25
+          Top = 90
+          Width = 150
+          Height = 30
+          Max = 6
+          Min = 1
+          Position = 1
+          PositionToolTip = ptTop
+          ShowSelRange = False
+          TabOrder = 2
+          DataField = 'muscleMin'
+          DataSource = dtmdl_Main.dsPlayerStages
+        end
+        object dbtrckbrmuscleMax: TDBTrackBar
+          Left = 235
+          Top = 90
+          Width = 150
+          Height = 30
+          Max = 6
+          Min = 1
+          Position = 6
+          PositionToolTip = ptTop
+          ShowSelRange = False
+          TabOrder = 3
+          DataField = 'muscleMax'
+          DataSource = dtmdl_Main.dsPlayerStages
+        end
+        object dbtrckbrblend: TDBTrackBar
+          Left = 130
+          Top = 160
+          Width = 150
+          Height = 30
+          Max = 40
+          Min = 5
+          Frequency = 5
+          Position = 30
+          PositionToolTip = ptTop
+          ShowSelRange = False
+          TabOrder = 4
+          OnExit = JourneyTrackbarExit
+          DataField = 'blend'
+          DataSource = dtmdl_Main.dsPlayerStages
         end
       end
-      object nmbrbx1: TNumberBox
-        Left = 310
-        Top = 250
-        Width = 121
-        Height = 21
-        LargeStep = 100.000000000000000000
-        MinValue = 1.000000000000000000
-        MaxValue = 999999.000000000000000000
-        SmallStep = 10.000000000000000000
+      object grp3: TGroupBox
+        Left = 200
+        Top = 310
+        Width = 411
+        Height = 51
+        Caption = 'Head resizing'
         TabOrder = 3
-        Value = 20.000000000000000000
-        SpinButtonOptions.Placement = nbspCompact
-        UseMouseWheel = True
+        object lbl19: TLabel
+          Left = 20
+          Top = 22
+          Width = 59
+          Height = 13
+          Caption = 'Starting size'
+        end
+        object lbl20: TLabel
+          Left = 223
+          Top = 22
+          Width = 53
+          Height = 13
+          Caption = 'Ending size'
+        end
+        object dbtrckbrheadInit: TDBTrackBar
+          Left = 80
+          Top = 18
+          Width = 120
+          Height = 30
+          Max = 130
+          Min = 70
+          Frequency = 10
+          Position = 100
+          PositionToolTip = ptTop
+          ShowSelRange = False
+          TabOrder = 0
+          DataField = 'headInit'
+          DataSource = dtmdl_Main.dsPlayerStages
+        end
+        object dbtrckbrheadFinal: TDBTrackBar
+          Left = 280
+          Top = 18
+          Width = 120
+          Height = 30
+          Max = 130
+          Min = 70
+          Frequency = 10
+          Position = 100
+          PositionToolTip = ptTop
+          ShowSelRange = False
+          TabOrder = 1
+          DataField = 'headFinal'
+          DataSource = dtmdl_Main.dsPlayerStages
+        end
       end
     end
     object tsOutput: TTabSheet
@@ -487,8 +701,8 @@ object frmMain: TfrmMain
       object redtOutput: TRichEdit
         Left = 0
         Top = 0
-        Width = 618
-        Height = 386
+        Width = 621
+        Height = 413
         Align = alClient
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
@@ -506,8 +720,8 @@ object frmMain: TfrmMain
   end
   object stat1: TStatusBar
     Left = 0
-    Top = 414
-    Width = 626
+    Top = 441
+    Width = 629
     Height = 19
     AutoHint = True
     Panels = <>

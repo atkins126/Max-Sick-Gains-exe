@@ -5,8 +5,8 @@ object dtmdl_Main: Tdtmdl_Main
   Width = 525
   object dsFitStages: TDataSource
     DataSet = tblFitStages
-    Left = 16
-    Top = 48
+    Left = 112
+    Top = 59
   end
   object conMain: TADOConnection
     Connected = True
@@ -17,7 +17,7 @@ object dtmdl_Main: Tdtmdl_Main
     LoginPrompt = False
     Mode = cmReadWrite
     Provider = 'Microsoft.Jet.OLEDB.4.0'
-    Left = 16
+    Left = 64
     Top = 16
   end
   object tblFitStages: TADOTable
@@ -25,7 +25,7 @@ object dtmdl_Main: Tdtmdl_Main
     Connection = conMain
     CursorType = ctStatic
     TableName = 'FitStages'
-    Left = 80
+    Left = 208
     Top = 16
     object atncfldFitStagesID: TAutoIncField
       FieldName = 'ID'
@@ -75,31 +75,96 @@ object dtmdl_Main: Tdtmdl_Main
   object tblFitTypes: TADOTable
     Connection = conMain
     TableName = 'FitnessTypes'
-    Left = 112
+    Left = 256
     Top = 16
   end
   object dsFitTypes: TDataSource
     DataSet = tblFitTypes
-    Left = 48
-    Top = 48
+    Left = 160
+    Top = 59
   end
   object tblFitLvls: TADOTable
     Active = True
     Connection = conMain
     CursorType = ctStatic
     TableName = 'FitnessLevels'
-    Left = 48
+    Left = 160
     Top = 16
   end
   object dsFitLvls: TDataSource
     DataSet = tblFitLvls
-    Left = 144
-    Top = 16
+    Left = 64
+    Top = 59
   end
   object cmd: TADOCommand
     Connection = conMain
     Parameters = <>
-    Left = 420
-    Top = 203
+    Left = 16
+    Top = 16
+  end
+  object tblPlayerStages: TADOTable
+    Active = True
+    Connection = conMain
+    CursorType = ctStatic
+    TableName = 'PlayerStages'
+    Left = 16
+    Top = 59
+    object atncfldPlayerStagesID: TAutoIncField
+      FieldName = 'ID'
+      ReadOnly = True
+    end
+    object intgrfldPlayerStagesFitnessStage: TIntegerField
+      FieldName = 'FitnessStage'
+    end
+    object intgrfldPlayerStagesminDays: TIntegerField
+      FieldName = 'minDays'
+      MaxValue = 99999999
+      MinValue = 1
+    end
+    object wrdfldPlayerStagesblend: TWordField
+      FieldName = 'blend'
+    end
+    object wrdfldPlayerStagesheadInit: TWordField
+      FieldName = 'headInit'
+    end
+    object wrdfldPlayerStagesheadFinal: TWordField
+      FieldName = 'headFinal'
+    end
+    object strngfldPlayerStagesFitnessStageName: TStringField
+      FieldKind = fkLookup
+      FieldName = 'FitnessStageName'
+      LookupDataSet = tblFitStages
+      LookupKeyFields = 'ID'
+      LookupResultField = 'iName'
+      KeyFields = 'FitnessStage'
+      Lookup = True
+    end
+    object wrdfldPlayerStagesbsMin: TWordField
+      FieldName = 'bsMin'
+    end
+    object wrdfldPlayerStagesbsMax: TWordField
+      FieldName = 'bsMax'
+    end
+    object wrdfldPlayerStagesmuscleMin: TWordField
+      FieldName = 'muscleMin'
+    end
+    object wrdfldPlayerStagesmuscleMax: TWordField
+      FieldName = 'muscleMax'
+    end
+  end
+  object dsPlayerStages: TDataSource
+    DataSet = tblPlayerStages
+    Left = 208
+    Top = 59
+  end
+  object qryPlayerJourney: TADOQuery
+    Active = True
+    Connection = conMain
+    CursorType = ctStatic
+    Parameters = <>
+    SQL.Strings = (
+      'SELECT * FROM QryPlayerJourney')
+    Left = 112
+    Top = 16
   end
 end

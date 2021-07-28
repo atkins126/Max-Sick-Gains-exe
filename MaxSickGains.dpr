@@ -12,7 +12,8 @@ uses
   Unit9020_Types in 'Unit9020_Types.pas',
   Unit7010_Textures in 'Unit7010_Textures.pas',
   Unit1020_TexGen in 'Unit1020_TexGen.pas' {frm_ToolTexGen},
-  Unit9005_globals in 'Unit9005_globals.pas';
+  Unit9005_globals in 'Unit9005_globals.pas',
+  Unit5020_DrawJourney in 'Unit5020_DrawJourney.pas';
 
 {$R *.res}
 

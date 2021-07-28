@@ -4,10 +4,11 @@ interface
 
 uses
   System.SysUtils, System.Classes, Data.DB, Data.Win.ADODB, Winapi.Windows,
-  System.IOUtils, System.StrUtils, Functional.Sequence, Unit9020_Types;
+  System.IOUtils, System.StrUtils, Functional.Sequence, Unit9020_Types,
+  System.Generics.Collections;
 
 type
-  TTableName = (tnNone, tnFitStages, tnFitStagesPlayer);
+  TTableName = (tnNone, tnFitStages, tnPlayerStages);
 
   Tdtmdl_Main = class(TDataModule)
     dsFitStages: TDataSource;
@@ -28,6 +29,20 @@ type
     tblFitLvls: TADOTable;
     dsFitLvls: TDataSource;
     cmd: TADOCommand;
+    tblPlayerStages: TADOTable;
+    dsPlayerStages: TDataSource;
+    atncfldPlayerStagesID: TAutoIncField;
+    intgrfldPlayerStagesFitnessStage: TIntegerField;
+    intgrfldPlayerStagesminDays: TIntegerField;
+    wrdfldPlayerStagesblend: TWordField;
+    wrdfldPlayerStagesheadInit: TWordField;
+    wrdfldPlayerStagesheadFinal: TWordField;
+    strngfldPlayerStagesFitnessStageName: TStringField;
+    wrdfldPlayerStagesbsMin: TWordField;
+    wrdfldPlayerStagesbsMax: TWordField;
+    wrdfldPlayerStagesmuscleMin: TWordField;
+    wrdfldPlayerStagesmuscleMax: TWordField;
+    qryPlayerJourney: TADOQuery;
     procedure DataModuleCreate(Sender: TObject);
   private
     procedure CloseAll;
@@ -58,6 +73,8 @@ type
       Variant);
     procedure Append(const aTable: TTableName);
     function Field(const aTable: TTableName; const aField: string): TField;
+    function PlayerJourney: TList<TJourneyItem>;
+    procedure Post(const aTable: TTableName);
   end;
 
 var
@@ -100,8 +117,9 @@ begin
     tnFitStages:
       Result :=
         'INSERT INTO FitStages (iName, muscleDefType, muscleDefLvl, excludedRaces) VALUES ("New Stage", 0, 0, "Child")';
-    tnFitStagesPlayer:
-      Result := '';
+    tnPlayerStages:
+      Result :=
+        'INSERT INTO PlayerStages (fitnessStage, minDays, bsMin, bsMax, muscleMin, muscleMax, blend, headInit, headFinal) VALUES (1, 20, 0, 100, 1, 6, 30, 100, 100)';
   end;
 end;
 
@@ -134,14 +152,19 @@ begin
   tbl := GetTable(aTable);
   bmk := tbl.GetBookmark;
   Result := '';
-  tbl.First;
-  while not tbl.Eof do begin
-    Result := Result + fun + #13#10;
-    tbl.Next;
+  tbl.DisableControls;
+  try
+    tbl.First;
+    while not tbl.Eof do begin
+      Result := Result + fun + #13#10;
+      tbl.Next;
+    end;
+    Result := DeleteLastComma(Trim(Result));
+    tbl.GotoBookmark(bmk);
+  finally
+    tbl.FreeBookmark(bmk);
+    tbl.EnableControls;
   end;
-  Result := DeleteLastComma(Trim(Result));
-  tbl.GotoBookmark(bmk);
-  tbl.FreeBookmark(bmk);
 end;
 
 procedure Tdtmdl_Main.Edit(const aTable: TTableName; const aField: string; const
@@ -244,8 +267,8 @@ begin
   case aTable of
     tnFitStages:
       Result := tblFitStages;
-    tnFitStagesPlayer:
-      raise Exception.Create('tnFitStagesPlayer not implemented');
+    tnPlayerStages:
+      Result := tblPlayerStages;
   else
     raise Exception.CreateFmt('Asked for some invalid table: %d.', [Integer(aTable)]);
   end;
@@ -270,6 +293,37 @@ begin
   CreateTemp(AppPath + 'res\blankDB.mdb');
   conMain.ConnectionString := Format(s, [TempDB]);
   OpenAll;
+end;
+
+function Tdtmdl_Main.PlayerJourney: TList<TJourneyItem>;
+var
+  j: TJourneyItem;
+begin
+  Result := TList<TJourneyItem>.Create;
+
+  with qryPlayerJourney do begin
+    Open;
+    First;
+    while not qryPlayerJourney.Eof do begin
+      j.fitStage := FieldByName('iName').AsString;
+      j.minDays := FieldByName('minDays').AsInteger;
+      j.blend := FieldByName('blend').AsInteger / 100;
+      j.startWeight := FieldByName('bsMin').AsInteger;
+      j.endWeight := FieldByName('bsMax').AsInteger;
+      Result.Add(j);
+      Next;
+    end;
+    Close;
+  end;
+end;
+
+procedure Tdtmdl_Main.Post(const aTable: TTableName);
+var
+  tbl: TCustomADODataSet;
+begin
+  tbl := GetTable(aTable);
+  tbl.Edit;
+  tbl.Post;
 end;
 
 procedure Tdtmdl_Main.RefreshToLast(aTbl: TCustomADODataSet);

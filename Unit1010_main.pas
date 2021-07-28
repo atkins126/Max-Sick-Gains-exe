@@ -6,12 +6,12 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
   Vcl.ComCtrls, Vcl.StdCtrls, Vcl.ExtCtrls, Data.DB, Vcl.Grids, Vcl.DBGrids,
-  Vcl.Menus, Vcl.Mask, Vcl.DBCtrls, Vcl.WinXPanels, Vcl.Buttons,
-  Vcl.Samples.Spin, Data.Win.ADODB, Unit9010_dataModule,
-  Vcl.PlatformDefaultStyleActnCtrls, System.Actions, Vcl.ActnList, Vcl.ActnMan,
-  Vcl.StdActns, System.ImageList, Vcl.ImgList, System.Types,
-  Vcl.Imaging.pngimage, Vcl.Imaging.jpeg, System.Math, Unit9020_Types,
-  Vcl.WinXCtrls, Winapi.ShellAPI, Vcl.NumberBox, Vcl.Themes, System.StrUtils;
+  Vcl.Menus, Vcl.Mask, Vcl.DBCtrls, Vcl.WinXPanels, Vcl.Buttons, Data.Win.ADODB,
+  Unit9010_dataModule, Vcl.PlatformDefaultStyleActnCtrls, System.Actions,
+  Vcl.ActnList, Vcl.ActnMan, Vcl.StdActns, System.ImageList, Vcl.ImgList,
+  System.Types, Vcl.Imaging.pngimage, Vcl.Imaging.jpeg, System.Math,
+  Unit9020_Types, Winapi.ShellAPI, Vcl.Themes, System.StrUtils,
+  DataAware.TDBTrackBar, System.Generics.Collections;
 
 type
   TfrmMain = class(TForm)
@@ -33,16 +33,13 @@ type
     dblkcbbmuscleDefLvl: TDBLookupComboBox;
     lbl10: TLabel;
     dbmmoexcludedRaces: TDBMemo;
-    ts2: TTabSheet;
+    tsPlayerStages: TTabSheet;
     pnl4: TPanel;
     lbl11: TLabel;
     dbgrd1: TDBGrid;
     grp1: TGroupBox;
     lbl12: TLabel;
-    se1: TSpinEdit;
     grp2: TGroupBox;
-    trckbr_PlyBsMinW: TTrackBar;
-    trckbr_PlyBsMaxW: TTrackBar;
     lbl2: TLabel;
     dbedt_fitStageName: TDBEdit;
     pmFitStages: TPopupMenu;
@@ -78,7 +75,6 @@ type
     btn_manBs: TSpeedButton;
     dbedt_manBsUrl: TDBEdit;
     btn_manBsUrl: TSpeedButton;
-    nmbrbx1: TNumberBox;
     heme1: TMenuItem;
     LavenderClassico1: TMenuItem;
     Glow1: TMenuItem;
@@ -100,6 +96,25 @@ type
     N2: TMenuItem;
     actGenerate: TAction;
     Generate1: TMenuItem;
+    dbtrckbrbsMin: TDBTrackBar;
+    lbl13: TLabel;
+    dblkcbbFitnessStage: TDBLookupComboBox;
+    dbedtminDays: TDBEdit;
+    dbtrckbrbsMax: TDBTrackBar;
+    lbl14: TLabel;
+    lbl15: TLabel;
+    dbtrckbrmuscleMin: TDBTrackBar;
+    dbtrckbrmuscleMax: TDBTrackBar;
+    lbl16: TLabel;
+    lbl17: TLabel;
+    dbtrckbrblend: TDBTrackBar;
+    lbl18: TLabel;
+    grp3: TGroupBox;
+    lbl19: TLabel;
+    dbtrckbrheadInit: TDBTrackBar;
+    dbtrckbrheadFinal: TDBTrackBar;
+    lbl20: TLabel;
+    imgJourney: TImage;
     procedure dbgrd_fitStagesNavKeyDown(Sender: TObject; var Key: Word; Shift:
       TShiftState);
     procedure actDBInsertExecute(Sender: TObject);
@@ -116,6 +131,8 @@ type
     procedure btn_manBsUrlClick(Sender: TObject);
     procedure ChangeThemeClick(Sender: TObject);
     procedure actGenerateExecute(Sender: TObject);
+    procedure imgJourneyClick(Sender: TObject);
+    procedure JourneyTrackbarExit(Sender: TObject);
   private
     procedure DisableCtrlDel(var Key: Word; Shift: TShiftState);
     procedure CheckDelAvailability;
@@ -125,6 +142,7 @@ type
     procedure SetEdtHint(const edt: TCustomEdit; const func: TStrToStr);
     procedure ShellOpen(const s: string);
   public
+    procedure DrawPlayerJourney;
   end;
 
 var
@@ -133,7 +151,7 @@ var
 implementation
 
 uses
-  Unit5010_ExportBs, TargaImage, Unit1020_TexGen;
+  TargaImage, Unit1020_TexGen, Unit5020_DrawJourney;
 
 {$R *.dfm}
 
@@ -156,6 +174,8 @@ function TfrmMain.ActivePageAsTable: TTableName;
 begin
   if pgc1.ActivePage = tsFitStages then
     Result := tnFitStages
+  else if pgc1.ActivePage = tsPlayerStages then
+    Result := tnPlayerStages
   else
     Result := tnNone;
 end;
@@ -237,15 +257,39 @@ begin
   DisableCtrlDel(Key, Shift)
 end;
 
+procedure TfrmMain.JourneyTrackbarExit(Sender: TObject);
+begin
+  DrawPlayerJourney;
+end;
+
 procedure TfrmMain.DisableCtrlDel(var Key: Word; Shift: TShiftState);
 begin
   if (Key = VK_DELETE) and (Shift = [ssCtrl]) then
     Key := 0;
 end;
 
+procedure TfrmMain.DrawPlayerJourney;
+var
+  aData: TList<TJourneyItem>;
+begin
+  dtmdl_Main.Post(tnPlayerStages);
+  aData := dtmdl_Main.PlayerJourney;
+  try
+    DrawJourney(imgJourney.Picture.Bitmap, imgJourney.ClientWidth - 1,
+      imgJourney.ClientHeight - 1, aData);
+  finally
+    aData.Free;
+  end;
+end;
+
 procedure TfrmMain.FormShow(Sender: TObject);
 begin
   CheckDelAvailability;
+end;
+
+procedure TfrmMain.imgJourneyClick(Sender: TObject);
+begin
+  DrawPlayerJourney;
 end;
 
 procedure TfrmMain.ChangeThemeClick(Sender: TObject);
