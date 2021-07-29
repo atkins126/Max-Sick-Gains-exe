@@ -39,7 +39,6 @@ begin
     temp := aData[i];
     temp.startInPixels := aData[i - 1].endInPixels;
     temp.endInPixels := temp.widthInPixels + temp.startInPixels;
-//    temp.blendInPixels := temp.startInPixels + temp.blendInPixels;
     aData[i] := temp;
   end;
 end;
@@ -139,13 +138,19 @@ begin
   Result := (h div 2) - (cnv.TextHeight(aText) div 2);
 end;
 
-procedure DrawTitle(const item: TJourneyItem; const cnv: TCanvas; const color:
-  TColor);
+function AlignBottom(const aText: string; const cnv: TCanvas; const h: Integer):
+  Integer;
+begin
+  Result := h - cnv.TextHeight(aText);
+end;
+
+procedure DrawTitle(const item: TJourneyItem; const cnv: TCanvas);
 var
   txt: string;
   start: Integer;
 begin
   cnv.font.Size := 9;
+  cnv.Font.Color := clWebLightgrey;
   txt := item.fitStage;
   start := (item.widthInPixels div 2) - (cnv.TextWidth(txt) div 2);
 
@@ -154,8 +159,33 @@ begin
     Exit;
 
   start := start + item.startInPixels;
-  cnv.Font.Color := color;
   cnv.TextOut(start, 1, txt);
+end;
+
+procedure DrawBsBoundaries(const item: TJourneyItem; const cnv: TCanvas; const h:
+  Integer);
+const
+  padding = 8;
+var
+  lTxt, rTxt: string;
+  lTxtEnd, rTxtStart, y: Integer;
+begin
+  cnv.Font.Size := 6;
+  cnv.Font.Color := clWebGold;
+
+  lTxt := item.startWeight.ToString;
+  lTxtEnd := cnv.TextWidth(lTxt) + padding;
+
+  rTxt := item.endWeight.ToString;
+  rTxtStart := AlignRight(rTxt, cnv, item.widthInPixels) - padding;
+
+  // If one text is on top the other, none will be drawn
+  if lTxtEnd >= rTxtStart then
+    Exit;
+
+  y := AlignBottom(lTxt, cnv, h);
+  cnv.TextOut(item.startInPixels + padding, y, lTxt);
+  cnv.TextOut(item.startInPixels + rTxtStart, y, rTxt);
 end;
 
 procedure DrawTotalDays(const cnv: TCanvas; const w, h: Integer; const days:
@@ -178,7 +208,6 @@ procedure DrawJourney(const cnv: TCanvas; const w, h: Integer; const aData:
 const
   bgCol = clWebIndianRed;
   blendCol = clWebDarkSlateBlue;
-  titleCol = clWebLightgrey;
 var
   points: TList<TJourneyItem>;
 begin
@@ -228,7 +257,8 @@ begin
     procedure(item: TJourneyItem)
     begin
       cnv.Brush.Style := bsClear;
-      DrawTitle(item, cnv, titleCol);
+      DrawTitle(item, cnv);
+      DrawBsBoundaries(item, cnv, h);
     end);
 
   // Total days

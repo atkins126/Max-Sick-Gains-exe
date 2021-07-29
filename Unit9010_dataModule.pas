@@ -8,7 +8,7 @@ uses
   Unit9020_Types, System.Generics.Collections, Datasnap.DBClient,
   Datasnap.Provider;
 
-{$DEFINE OpenPathsInExplorer}
+//{$DEFINE OpenPathsInExplorer}
 const
   AppFullName = 'Max Sick Gains for SSE';
 
@@ -435,9 +435,13 @@ procedure Tdtmdl_Main.Post(const aTable: TTableName);
 var
   tbl: TCustomADODataSet;
 begin
-  tbl := GetTable(aTable);
-  tbl.Edit;
-  tbl.Post;
+  try
+    tbl := GetTable(aTable);
+    tbl.Edit;
+    tbl.Post;
+  except
+    on E: Exception do  // Nothing. Used to avoid weird but inconsequential errors
+  end;
 end;
 
 procedure Tdtmdl_Main.RefreshToLast(aTbl: TCustomADODataSet);

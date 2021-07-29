@@ -25,7 +25,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 629
     Height = 441
-    ActivePage = tsPlayerStages
+    ActivePage = tsNPCs
     Align = alClient
     TabOrder = 0
     OnChange = pgc1Change
@@ -215,7 +215,7 @@ object frmMain: TfrmMain
           Align = alClient
           DataSource = dtmdl_Main.dsFitStages
           Options = [dgIndicator, dgConfirmDelete, dgTitleHotTrack]
-          PopupMenu = pmFitStages
+          PopupMenu = pmRecords
           TabOrder = 0
           TitleFont.Charset = DEFAULT_CHARSET
           TitleFont.Color = clWindowText
@@ -436,6 +436,7 @@ object frmMain: TfrmMain
           Align = alClient
           DataSource = dtmdl_Main.dsPlayerStages
           Options = [dgIndicator, dgConfirmDelete, dgTitleClick, dgTitleHotTrack]
+          PopupMenu = pmRecords
           TabOrder = 0
           TitleFont.Charset = DEFAULT_CHARSET
           TitleFont.Color = clWindowText
@@ -560,6 +561,7 @@ object frmMain: TfrmMain
           Width = 180
           Height = 30
           Max = 100
+          PopupMenu = pmTrackbar
           Frequency = 10
           PositionToolTip = ptTop
           ShowSelRange = False
@@ -574,6 +576,7 @@ object frmMain: TfrmMain
           Width = 180
           Height = 30
           Max = 100
+          PopupMenu = pmTrackbar
           Frequency = 10
           Position = 100
           PositionToolTip = ptTop
@@ -618,6 +621,7 @@ object frmMain: TfrmMain
           Height = 30
           Max = 40
           Min = 5
+          PopupMenu = pmTrackbar
           Frequency = 5
           Position = 30
           PositionToolTip = ptTop
@@ -656,6 +660,7 @@ object frmMain: TfrmMain
           Height = 30
           Max = 130
           Min = 70
+          PopupMenu = pmTrackbar
           Frequency = 10
           Position = 100
           PositionToolTip = ptTop
@@ -671,6 +676,7 @@ object frmMain: TfrmMain
           Height = 30
           Max = 130
           Min = 70
+          PopupMenu = pmTrackbar
           Frequency = 10
           Position = 100
           PositionToolTip = ptTop
@@ -680,6 +686,127 @@ object frmMain: TfrmMain
           DataSource = dtmdl_Main.dsPlayerStages
         end
       end
+    end
+    object tsNPCs: TTabSheet
+      Caption = 'NPCs'
+      ImageIndex = 3
+      object dbchk_ManageNPCs: TDBCheckBox
+        Left = 10
+        Top = 10
+        Width = 97
+        Height = 17
+        Caption = 'Manage NPCs'
+        TabOrder = 0
+      end
+      object grp4: TGroupBox
+        Left = 10
+        Top = 40
+        Width = 591
+        Height = 191
+        Caption = 'Appearance by class'
+        TabOrder = 1
+        object lbl21: TLabel
+          Left = 21
+          Top = 23
+          Width = 183
+          Height = 34
+          Margins.Top = 8
+          Margins.Bottom = 8
+          Alignment = taCenter
+          AutoSize = False
+          Caption = 'Classes'
+          Color = clNone
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          GlowSize = 10
+          ParentColor = False
+          ParentFont = False
+        end
+        object lbl22: TLabel
+          Left = 228
+          Top = 23
+          Width = 183
+          Height = 34
+          Margins.Top = 8
+          Margins.Bottom = 8
+          Alignment = taCenter
+          AutoSize = False
+          Caption = 'Fitness stages for this class'
+          Color = clNone
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          GlowSize = 10
+          ParentColor = False
+          ParentFont = False
+        end
+        object dbgrd2: TDBGrid
+          Left = 21
+          Top = 50
+          Width = 183
+          Height = 121
+          Options = [dgIndicator, dgConfirmDelete, dgTitleClick, dgTitleHotTrack]
+          PopupMenu = pmRecords
+          TabOrder = 0
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -11
+          TitleFont.Name = 'Tahoma'
+          TitleFont.Style = []
+          Columns = <
+            item
+              Expanded = False
+              FieldName = 'FitnessStageName'
+              Width = 179
+              Visible = True
+            end>
+        end
+        object dbgrd3: TDBGrid
+          Left = 228
+          Top = 50
+          Width = 183
+          Height = 121
+          Options = [dgIndicator, dgConfirmDelete, dgTitleClick, dgTitleHotTrack]
+          PopupMenu = pmRecords
+          TabOrder = 1
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -11
+          TitleFont.Name = 'Tahoma'
+          TitleFont.Style = []
+          Columns = <
+            item
+              Expanded = False
+              FieldName = 'FitnessStageName'
+              Width = 179
+              Visible = True
+            end>
+        end
+        object dbrgrp1: TDBRadioGroup
+          Left = 430
+          Top = 40
+          Width = 135
+          Height = 131
+          Caption = 'When  many matches'
+          Items.Strings = (
+            'First match'
+            'Take random')
+          TabOrder = 2
+        end
+      end
+    end
+    object tsMuscleDef: TTabSheet
+      Caption = 'Muscle definition'
+      ImageIndex = 4
+    end
+    object tsMCM: TTabSheet
+      Caption = 'MCM'
+      ImageIndex = 5
     end
     object tsOutput: TTabSheet
       Caption = 'Output'
@@ -717,8 +844,8 @@ object frmMain: TfrmMain
   end
   object mm1: TMainMenu
     Images = ilActions32
-    Left = 50
-    Top = 389
+    Left = 112
+    Top = 373
     object File1: TMenuItem
       Caption = 'File'
       object New1: TMenuItem
@@ -765,10 +892,10 @@ object frmMain: TfrmMain
       end
     end
   end
-  object pmFitStages: TPopupMenu
+  object pmRecords: TPopupMenu
     Images = ilActions32
-    Left = 84
-    Top = 389
+    Left = 160
+    Top = 373
     object Insert1: TMenuItem
       Action = actDBInsert
     end
@@ -794,7 +921,7 @@ object frmMain: TfrmMain
       end>
     Images = ilActions32
     Left = 16
-    Top = 355
+    Top = 330
     StyleName = 'Platform Default'
     object flpn1: TFileOpen
       Category = 'File'
@@ -861,13 +988,18 @@ object frmMain: TfrmMain
         'e makes it act all weird.'
       OnExecute = actClearConfigExecute
     end
+    object actTrackbarSet: TAction
+      Category = 'UI'
+      Caption = 'Set value'
+      OnExecute = actTrackbarSetExecute
+    end
   end
   object ilActions48: TImageList
     ColorDepth = cd32Bit
     Height = 48
     Width = 48
-    Left = 118
-    Top = 355
+    Left = 160
+    Top = 330
     Bitmap = {
       494C010102005000040030003000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000C00000003000000001002000000000000090
@@ -2076,15 +2208,15 @@ object frmMain: TfrmMain
         FileMask = '*.xml'
       end>
     Options = []
-    Left = 50
-    Top = 355
+    Left = 64
+    Top = 330
   end
   object ilIcons24: TImageList
     ColorDepth = cd32Bit
     Height = 24
     Width = 24
-    Left = 16
-    Top = 389
+    Left = 64
+    Top = 373
     Bitmap = {
       494C010104000800040018001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000003000000001002000000000000048
@@ -2691,8 +2823,8 @@ object frmMain: TfrmMain
     ColorDepth = cd32Bit
     Height = 32
     Width = 32
-    Left = 84
-    Top = 355
+    Left = 112
+    Top = 330
     Bitmap = {
       494C010103000800040020002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000002000000001002000000000000040
@@ -3231,8 +3363,8 @@ object frmMain: TfrmMain
   end
   object ilIcons16: TImageList
     ColorDepth = cd32Bit
-    Left = 152
-    Top = 355
+    Left = 16
+    Top = 373
     Bitmap = {
       494C010101000800040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
@@ -3372,5 +3504,12 @@ object frmMain: TfrmMain
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       000000000000}
+  end
+  object pmTrackbar: TPopupMenu
+    Left = 16
+    Top = 416
+    object Setvalue1: TMenuItem
+      Action = actTrackbarSet
+    end
   end
 end

@@ -7,9 +7,9 @@
    id="svg8"
    sodipodi:docname="folder.svg"
    inkscape:version="1.1 (c68e22c387, 2021-05-23)"
-   inkscape:export-filename="C:\Users\Osrail\Documents\Embarcadero\Studio\Projects\Max Sick Gains\resources\action icons\folder.png"
-   inkscape:export-xdpi="4.6079998"
-   inkscape:export-ydpi="4.6079998"
+   inkscape:export-filename=".\folder.png"
+   inkscape:export-xdpi="6.1440001"
+   inkscape:export-ydpi="6.1440001"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -57,7 +57,8 @@
        inkscape:color="rgb(0,0,255)" /></sodipodi:namedview><g
      inkscape:groupmode="layer"
      id="layer2"
-     inkscape:label="Layer 2"><rect
+     inkscape:label="Layer 2"
+     style="display:none"><rect
        style="fill:#e4ac00;fill-opacity:1"
        id="rect1312"
        width="500"

@@ -42,7 +42,7 @@ type
     grp2: TGroupBox;
     lbl2: TLabel;
     dbedt_fitStageName: TDBEdit;
-    pmFitStages: TPopupMenu;
+    pmRecords: TPopupMenu;
     actmgr1: TActionManager;
     flpn1: TFileOpen;
     flsvs1: TFileSaveAs;
@@ -106,6 +106,19 @@ type
     Appconfiguration1: TMenuItem;
     actClearConfig: TAction;
     Clearconfiguration1: TMenuItem;
+    pmTrackbar: TPopupMenu;
+    actTrackbarSet: TAction;
+    Setvalue1: TMenuItem;
+    tsNPCs: TTabSheet;
+    tsMuscleDef: TTabSheet;
+    tsMCM: TTabSheet;
+    dbgrd2: TDBGrid;
+    dbchk_ManageNPCs: TDBCheckBox;
+    dbgrd3: TDBGrid;
+    grp4: TGroupBox;
+    lbl21: TLabel;
+    lbl22: TLabel;
+    dbrgrp1: TDBRadioGroup;
     procedure dbgrd_fitStagesNavKeyDown(Sender: TObject; var Key: Word; Shift:
       TShiftState);
     procedure actDBInsertExecute(Sender: TObject);
@@ -127,6 +140,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure actClearConfigExecute(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure actTrackbarSetExecute(Sender: TObject);
   private
     procedure DisableCtrlDel(var Key: Word; Shift: TShiftState);
     procedure CheckDelAvailability;
@@ -202,6 +216,19 @@ begin
   finally
     frm_ToolTexGen.Free;
   end;
+end;
+
+procedure TfrmMain.actTrackbarSetExecute(Sender: TObject);
+var
+  trackbar: TTrackBar;
+  newPos: string;
+  val: Integer;
+begin
+  trackbar := pmTrackbar.PopupComponent as TTrackBar;
+  newPos := (Round(trackbar.Position / 10) * 10).ToString;
+  newPos := InputBox('Set the value you want', 'Value', newPos);
+  if TryStrToInt(newPos, val) then
+    trackbar.Position := val;
 end;
 
 procedure TfrmMain.ApplyConfig;
