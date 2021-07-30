@@ -13131,7 +13131,7 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
       Left = 8
       Top = 15
       Width = 118
-      Height = 67
+      Height = 56
       Margins.Right = 7
       Anchors = []
       Caption = 'Sex'
@@ -13143,9 +13143,9 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
     end
     object rgRace: TRadioGroup
       Left = 8
-      Top = 96
+      Top = 85
       Width = 118
-      Height = 91
+      Height = 76
       Caption = 'Race type'
       ItemIndex = 0
       Items.Strings = (
@@ -13156,9 +13156,9 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
     end
     object rgFitType: TRadioGroup
       Left = 8
-      Top = 201
+      Top = 175
       Width = 118
-      Height = 88
+      Height = 66
       Caption = 'Muscle definition'
       ItemIndex = 0
       Items.Strings = (
@@ -13169,9 +13169,9 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
     end
     object rgRes: TRadioGroup
       Left = 8
-      Top = 303
+      Top = 255
       Width = 118
-      Height = 147
+      Height = 141
       Caption = 'Resolution'
       ItemIndex = 3
       Items.Strings = (
@@ -13186,7 +13186,7 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
     end
     object btn3: TBitBtn
       Left = 8
-      Top = 464
+      Top = 410
       Width = 118
       Height = 25
       Caption = 'Open destination'

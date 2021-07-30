@@ -2,12 +2,12 @@ object dtmdl_Main: Tdtmdl_Main
   OldCreateOrder = False
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
-  Height = 299
-  Width = 525
+  Height = 394
+  Width = 443
   object dsFitStages: TDataSource
     DataSet = tblFitStages
-    Left = 112
-    Top = 59
+    Left = 84
+    Top = 145
   end
   object conMain: TADOConnection
     Connected = True
@@ -18,7 +18,7 @@ object dtmdl_Main: Tdtmdl_Main
     LoginPrompt = False
     Mode = cmReadWrite
     Provider = 'Microsoft.Jet.OLEDB.4.0'
-    Left = 64
+    Left = 84
     Top = 16
   end
   object tblFitStages: TADOTable
@@ -26,8 +26,8 @@ object dtmdl_Main: Tdtmdl_Main
     Connection = conMain
     CursorType = ctStatic
     TableName = 'FitStages'
-    Left = 208
-    Top = 16
+    Left = 84
+    Top = 59
     object atncfldFitStagesID: TAutoIncField
       FieldName = 'ID'
       ReadOnly = True
@@ -76,26 +76,26 @@ object dtmdl_Main: Tdtmdl_Main
   object tblFitTypes: TADOTable
     Connection = conMain
     TableName = 'FitnessTypes'
-    Left = 256
-    Top = 16
+    Left = 152
+    Top = 59
   end
   object dsFitTypes: TDataSource
     DataSet = tblFitTypes
-    Left = 160
-    Top = 59
+    Left = 152
+    Top = 145
   end
   object tblFitLvls: TADOTable
     Active = True
     Connection = conMain
     CursorType = ctStatic
     TableName = 'FitnessLevels'
-    Left = 160
-    Top = 16
+    Left = 16
+    Top = 59
   end
   object dsFitLvls: TDataSource
     DataSet = tblFitLvls
-    Left = 64
-    Top = 59
+    Left = 16
+    Top = 145
   end
   object cmd: TADOCommand
     Connection = conMain
@@ -108,7 +108,7 @@ object dtmdl_Main: Tdtmdl_Main
     Connection = conMain
     CursorType = ctStatic
     TableName = 'PlayerStages'
-    Left = 16
+    Left = 220
     Top = 59
     object atncfldPlayerStagesID: TAutoIncField
       FieldName = 'ID'
@@ -155,8 +155,8 @@ object dtmdl_Main: Tdtmdl_Main
   end
   object dsPlayerStages: TDataSource
     DataSet = tblPlayerStages
-    Left = 208
-    Top = 59
+    Left = 220
+    Top = 145
   end
   object qryPlayerJourney: TADOQuery
     Active = True
@@ -165,15 +165,15 @@ object dtmdl_Main: Tdtmdl_Main
     Parameters = <>
     SQL.Strings = (
       'SELECT * FROM QryPlayerJourney')
-    Left = 112
+    Left = 152
     Top = 16
   end
   object cdsConfig: TClientDataSet
     Aggregates = <>
     Params = <>
     ProviderName = 'dtstprvdrConfig'
-    Left = 280
-    Top = 230
+    Left = 84
+    Top = 102
     object bytfldMaxMuscleDefLevels: TByteField
       FieldName = 'MaxMuscleDefLevels'
     end
@@ -197,7 +197,33 @@ object dtmdl_Main: Tdtmdl_Main
   end
   object dsConfig: TDataSource
     DataSet = cdsConfig
-    Left = 280
-    Top = 180
+    Left = 220
+    Top = 102
+  end
+  object tblRaces: TADOTable
+    Active = True
+    Connection = conMain
+    CursorType = ctStatic
+    TableName = 'Races'
+    Left = 16
+    Top = 102
+  end
+  object dsRaces: TDataSource
+    DataSet = tblRaces
+    Left = 16
+    Top = 188
+  end
+  object tblAllNPCs: TADOTable
+    Active = True
+    Connection = conMain
+    CursorType = ctStatic
+    TableName = 'AllNPCs'
+    Left = 220
+    Top = 16
+  end
+  object dsAllNPCs: TDataSource
+    DataSet = tblAllNPCs
+    Left = 152
+    Top = 102
   end
 end

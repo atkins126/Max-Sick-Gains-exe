@@ -36,13 +36,11 @@ object frmMain: TfrmMain
         413)
       object lbl10: TLabel
         Left = 201
-        Top = 302
+        Top = 270
         Width = 72
         Height = 13
         Anchors = []
         Caption = 'Excluded races'
-        ExplicitLeft = 200
-        ExplicitTop = 282
       end
       object lbl9: TLabel
         Left = 201
@@ -51,6 +49,7 @@ object frmMain: TfrmMain
         Height = 13
         Anchors = []
         Caption = 'Allowed muscle def.'
+        Visible = False
         ExplicitLeft = 200
         ExplicitTop = 252
       end
@@ -189,7 +188,7 @@ object frmMain: TfrmMain
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 177
+          Width = 106
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -205,13 +204,13 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
-          ExplicitWidth = 106
         end
         object dbgrd_fitStagesNav: TDBGrid
           Left = 1
           Top = 51
           Width = 183
           Height = 361
+          Hint = 'Right click to add/delete data'
           Align = alClient
           DataSource = dtmdl_Main.dsFitStages
           Options = [dgIndicator, dgConfirmDelete, dgTitleHotTrack]
@@ -250,12 +249,13 @@ object frmMain: TfrmMain
         ListField = 'iName'
         ListSource = dtmdl_Main.dsFitLvls
         TabOrder = 8
+        Visible = False
       end
       object dbmmoexcludedRaces: TDBMemo
         Left = 312
-        Top = 302
+        Top = 266
         Width = 299
-        Height = 109
+        Height = 150
         Anchors = [akLeft, akTop, akRight, akBottom]
         DataField = 'excludedRaces'
         DataSource = dtmdl_Main.dsFitStages
@@ -410,7 +410,7 @@ object frmMain: TfrmMain
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 177
+          Width = 106
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -426,13 +426,13 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
-          ExplicitWidth = 106
         end
         object dbgrd1: TDBGrid
           Left = 1
           Top = 51
           Width = 183
           Height = 307
+          Hint = 'Right click to add/delete data'
           Align = alClient
           DataSource = dtmdl_Main.dsPlayerStages
           Options = [dgIndicator, dgConfirmDelete, dgTitleClick, dgTitleHotTrack]
@@ -687,6 +687,84 @@ object frmMain: TfrmMain
         end
       end
     end
+    object tsRaces: TTabSheet
+      Caption = 'Races'
+      ImageIndex = 6
+      object dbmmoraces: TDBMemo
+        Left = 210
+        Top = 30
+        Width = 391
+        Height = 201
+        Hint = 'Write only one race per line'
+        DataField = 'races'
+        DataSource = dtmdl_Main.dsRaces
+        ScrollBars = ssVertical
+        TabOrder = 0
+      end
+      object dbmmodescription: TDBMemo
+        Left = 210
+        Top = 250
+        Width = 391
+        Height = 161
+        DataField = 'description'
+        DataSource = dtmdl_Main.dsRaces
+        ReadOnly = True
+        TabOrder = 1
+      end
+      object pnl1: TPanel
+        Left = 0
+        Top = 0
+        Width = 185
+        Height = 413
+        Align = alLeft
+        TabOrder = 2
+        ExplicitLeft = 10
+        object lbl23: TLabel
+          AlignWithMargins = True
+          Left = 4
+          Top = 9
+          Width = 102
+          Height = 34
+          Margins.Top = 8
+          Margins.Bottom = 8
+          Align = alTop
+          Alignment = taCenter
+          Caption = 'Racial groups'
+          Color = clNone
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          GlowSize = 10
+          ParentColor = False
+          ParentFont = False
+        end
+        object dbgrd4: TDBGrid
+          Left = 1
+          Top = 51
+          Width = 183
+          Height = 361
+          Hint = 'No. You can'#39't add/delete racial groups.'
+          Align = alClient
+          DataSource = dtmdl_Main.dsRaces
+          Options = [dgIndicator, dgConfirmDelete, dgTitleClick, dgTitleHotTrack]
+          TabOrder = 0
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -11
+          TitleFont.Name = 'Tahoma'
+          TitleFont.Style = []
+          Columns = <
+            item
+              Expanded = False
+              FieldName = 'racialGroup'
+              Width = 179
+              Visible = True
+            end>
+        end
+      end
+    end
     object tsNPCs: TTabSheet
       Caption = 'NPCs'
       ImageIndex = 3
@@ -867,17 +945,11 @@ object frmMain: TfrmMain
         Action = actGenerate
       end
     end
-    object Record1: TMenuItem
-      Caption = 'Data'
-      object Insert2: TMenuItem
-        Action = actDBInsert
-      end
-      object Delete1: TMenuItem
-        Action = actDBDel
-      end
-    end
     object ools1: TMenuItem
       Caption = 'Tools'
+      object actImportNPCs1: TMenuItem
+        Action = actImportNPCs
+      end
       object exturegenerator1: TMenuItem
         Action = actTexGen
       end
@@ -992,6 +1064,11 @@ object frmMain: TfrmMain
       Category = 'UI'
       Caption = 'Set value'
       OnExecute = actTrackbarSetExecute
+    end
+    object actImportNPCs: TAction
+      Category = 'Tools'
+      Caption = 'Import NPCs'
+      OnExecute = actImportNPCsExecute
     end
   end
   object ilActions48: TImageList

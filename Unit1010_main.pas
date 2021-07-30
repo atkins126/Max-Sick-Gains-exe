@@ -56,9 +56,6 @@ type
     Insert1: TMenuItem;
     Action11: TMenuItem;
     ilActions32: TImageList;
-    Record1: TMenuItem;
-    Insert2: TMenuItem;
-    Delete1: TMenuItem;
     tsOutput: TTabSheet;
     redtOutput: TRichEdit;
     ools1: TMenuItem;
@@ -119,6 +116,14 @@ type
     lbl21: TLabel;
     lbl22: TLabel;
     dbrgrp1: TDBRadioGroup;
+    tsRaces: TTabSheet;
+    dbmmoraces: TDBMemo;
+    dbmmodescription: TDBMemo;
+    pnl1: TPanel;
+    lbl23: TLabel;
+    dbgrd4: TDBGrid;
+    actImportNPCs: TAction;
+    actImportNPCs1: TMenuItem;
     procedure dbgrd_fitStagesNavKeyDown(Sender: TObject; var Key: Word; Shift:
       TShiftState);
     procedure actDBInsertExecute(Sender: TObject);
@@ -141,6 +146,7 @@ type
     procedure actClearConfigExecute(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure actTrackbarSetExecute(Sender: TObject);
+    procedure actImportNPCsExecute(Sender: TObject);
   private
     procedure DisableCtrlDel(var Key: Word; Shift: TShiftState);
     procedure CheckDelAvailability;
@@ -161,7 +167,7 @@ var
 implementation
 
 uses
-  TargaImage, Unit1020_TexGen, Unit5020_DrawJourney, Unit1030_Config;
+  TargaImage, Unit1020_TexGen, Unit5020_DrawJourney, Unit1030_Config, Unit1040_ImportNPCs;
 
 {$R *.dfm}
 
@@ -196,6 +202,16 @@ end;
 procedure TfrmMain.actGenerateExecute(Sender: TObject);
 begin
   redtOutput.Text := dtmdl_Main.FitStagesToLua;
+end;
+
+procedure TfrmMain.actImportNPCsExecute(Sender: TObject);
+begin
+  frmImportNPCs := TfrmImportNPCs.Create(Self);
+  try
+    frmImportNPCs.ShowModal;
+  finally
+    frmImportNPCs.Release;
+  end;
 end;
 
 function TfrmMain.ActivePageAsTable: TTableName;

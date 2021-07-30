@@ -12,6 +12,8 @@ uses
 const
   AppFullName = 'Max Sick Gains for SSE';
 
+function AsDir(const aDir: string): string;
+
 type
   TTableName = (tnNone, tnFitStages, tnPlayerStages);
 
@@ -63,6 +65,10 @@ type
     strngfldConfigModPath: TStringField;
     strngfldConfigTexPath: TStringField;
     intgrfldConfigLastTab: TIntegerField;
+    tblRaces: TADOTable;
+    dsRaces: TDataSource;
+    tblAllNPCs: TADOTable;
+    dsAllNPCs: TDataSource;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
@@ -107,6 +113,9 @@ type
     procedure CfgRestore;
     procedure LoadConfig;
     procedure ResetConfig;
+    function GetTexOutFolder: string;
+    procedure ForceDirIntoExistance(const dirName: string);
+    procedure ExecuteSQL(const SQL: string);
   end;
 
 var
@@ -115,9 +124,15 @@ var
 implementation
 
 uses
-  Vcl.Forms, Unit5010_ExportBs, Functions.Strings, Unit1010_main;
+  Vcl.Forms, Unit5010_ExportBs, Functions.Strings, Unit1010_main,
+  Unit1030_Config;
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 {$R *.dfm}
+
+function AsDir(const aDir: string): string;
+begin
+  Result := IncludeTrailingPathDelimiter(aDir);
+end;
 
 procedure Tdtmdl_Main.Append(const aTable: TTableName);
 var
@@ -148,7 +163,7 @@ begin
   case aTable of
     tnFitStages:
       Result :=
-        'INSERT INTO FitStages (iName, muscleDefType, muscleDefLvl, excludedRaces) VALUES ("New Stage", 0, 0, "Child")';
+        'INSERT INTO FitStages (iName, muscleDefType, muscleDefLvl, excludedRaces) VALUES ("New Stage", 0, 0, "")';
     tnPlayerStages:
       Result :=
         'INSERT INTO PlayerStages (fitnessStage, minDays, bsMin, bsMax, muscleMin, muscleMax, blend, headInit, headFinal) VALUES (1, 20, 0, 100, 1, 6, 30, 100, 100)';
@@ -224,6 +239,9 @@ procedure Tdtmdl_Main.DataModuleCreate(Sender: TObject);
 begin
   OpenFile(BlankDB);
   LoadConfig;
+{$IF Defined(DEBUG) and Defined(OpenPathsInExplorer)}
+  ShellExecute(0, 'Open', PWideChar(ExtractFilePath(Application.ExeName)), '', '', SW_SHOW);
+{$ENDIF}
 end;
 
 procedure Tdtmdl_Main.DataModuleDestroy(Sender: TObject);
@@ -263,6 +281,14 @@ begin
     Edit;
     FieldByName(aField).AsVariant := aVal;
     Post;
+  end;
+end;
+
+procedure Tdtmdl_Main.ExecuteSQL(const SQL: string);
+begin
+  cmd.CommandText := SQL;
+  if cmd.CommandText <> '' then begin
+    cmd.Execute;
   end;
 end;
 
@@ -376,6 +402,16 @@ begin
   end;
 end;
 
+procedure Tdtmdl_Main.ForceDirIntoExistance(const dirName: string);
+begin
+  if not ForceDirectories(dirName) then
+    raise Exception.CreateFmt(
+      'Couldn''t create folder'#13#10'%s'#13#10#13#10'Try to manually create it or something.',
+      [dirName]
+    );
+
+end;
+
 function Tdtmdl_Main.GetTable(const aTable: TTableName): TCustomADODataSet;
 begin
   case aTable of
@@ -386,6 +422,36 @@ begin
   else
     raise Exception.CreateFmt('Asked for some invalid table: %d.', [Integer(aTable)]);
   end;
+end;
+
+function Tdtmdl_Main.GetTexOutFolder: string;
+var
+  texDir, modDir: string;
+  texExists, modExists: Boolean;
+begin
+  { TODO : Clean and factorize }
+  texDir := Config(cfTexPath).AsString;
+  modDir := Config(cfModPath).AsString;
+  texExists := DirectoryExists(texDir);
+  modExists := DirectoryExists(modDir);
+  while (not texExists) and (not modExists) do begin
+    Application.MessageBox('Output folder doesn''t exist.' + #13#10 +
+      'You need to setup a valid one before you can continue.',
+      'Invalid folder', MB_OK + MB_ICONWARNING + MB_TOPMOST);
+    frmConfig := TfrmConfig.Create(frmMain);
+    frmConfig.ShowModal;
+    frmConfig.Release;
+    texDir := Config(cfTexPath).AsString;
+    modDir := Config(cfModPath).AsString;
+    texExists := DirectoryExists(texDir);
+    modExists := DirectoryExists(modDir);
+  end;
+
+  if texExists then
+    Result := texDir
+  else
+    Result := modDir;
+  Result:= AsDir(Result) + 'textures\actors\character\Maxick\';
 end;
 
 procedure Tdtmdl_Main.OpenAll;

@@ -83,7 +83,7 @@ var
 implementation
 
 uses
-  Unit7010_Textures, Unit9005_globals;
+  Unit7010_Textures, Unit9005_globals, Unit9010_dataModule;
 
 {$R *.dfm}
 
@@ -157,7 +157,8 @@ procedure Tfrm_ToolTexGen.btn_TexGenClick(Sender: TObject);
 begin
   SetVisualCues;
 
-  GenerateTextures(img_Lvl1.Picture, img_LvlMax.Picture, maxMuscleDefLevels,
+  GenerateTextures(img_Lvl1.Picture, img_LvlMax.Picture,
+    dtmdl_Main.Config(cfMaxMuscleDefLevels).AsInteger,
     OutputDir, BaseFileName, MaxRes);
 
   RestoreVisualCues;
@@ -202,8 +203,7 @@ var
   Validate: TBitmapForceValid;
   loaded: Boolean;
 begin
-  if CompareText(ExtractFileExt(fileName), '.tga') <> 0 then
-  begin
+  if CompareText(ExtractFileExt(fileName), '.tga') <> 0 then begin
     Application.MessageBox('Only TGA are files supported.', 'Invalid extension',
       MB_OK + MB_ICONSTOP + MB_TOPMOST);
     Exit;
@@ -252,8 +252,8 @@ end;
 
 function Tfrm_ToolTexGen.OutputDir: string;
 begin
-  Result := TexOutDirFull + RaceDir;
-  ForceDirIntoExistance(Result);
+  Result := dtmdl_Main.GetTexOutFolder + RaceDir;
+  dtmdl_Main.ForceDirIntoExistance(Result);
 end;
 
 function Tfrm_ToolTexGen.RaceDir: string;
@@ -263,6 +263,12 @@ begin
       Result := 'Kha';
     2:
       Result := 'Arg';
+    3:
+      Result := 'Cus1';
+    4:
+      Result := 'Cus2';
+    5:
+      Result := 'Cus3';
   else
     Result := 'Hum';
   end;

@@ -14,7 +14,8 @@ uses
   Unit1020_TexGen in 'Unit1020_TexGen.pas' {frm_ToolTexGen},
   Unit9005_globals in 'Unit9005_globals.pas',
   Unit5020_DrawJourney in 'Unit5020_DrawJourney.pas',
-  Unit1030_Config in 'Unit1030_Config.pas' {frmConfig};
+  Unit1030_Config in 'Unit1030_Config.pas' {frmConfig},
+  Unit1040_ImportNPCs in 'Unit1040_ImportNPCs.pas' {frmImportNPCs};
 
 {$R *.res}
 
