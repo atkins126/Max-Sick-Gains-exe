@@ -11,7 +11,8 @@ uses
   Vcl.ActnList, Vcl.ActnMan, Vcl.StdActns, System.ImageList, Vcl.ImgList,
   System.Types, Vcl.Imaging.pngimage, Vcl.Imaging.jpeg, System.Math,
   Unit9020_Types, Winapi.ShellAPI, Vcl.Themes, System.StrUtils,
-  DataAware.TDBTrackBar, System.Generics.Collections;
+  DataAware.TDBTrackBar, System.Generics.Collections, System.Notification,
+  Unit3010_FilterImportedNPC;
 
 type
   TfrmMain = class(TForm)
@@ -109,13 +110,6 @@ type
     tsNPCs: TTabSheet;
     tsMuscleDef: TTabSheet;
     tsMCM: TTabSheet;
-    dbgrd2: TDBGrid;
-    dbchk_ManageNPCs: TDBCheckBox;
-    dbgrd3: TDBGrid;
-    grp4: TGroupBox;
-    lbl21: TLabel;
-    lbl22: TLabel;
-    dbrgrp1: TDBRadioGroup;
     tsRaces: TTabSheet;
     dbmmoraces: TDBMemo;
     dbmmodescription: TDBMemo;
@@ -124,7 +118,16 @@ type
     dbgrd4: TDBGrid;
     actImportNPCs: TAction;
     actImportNPCs1: TMenuItem;
-    procedure dbgrd_fitStagesNavKeyDown(Sender: TObject; var Key: Word; Shift:
+    Recentfiles1: TMenuItem;
+    N1: TMenuItem;
+    N4: TMenuItem;
+    cbbMcmPlayerProcessing: TComboBox;
+    cbbMcmNpcProcessing: TComboBox;
+    filterImportedNPC1: TfrmFilterImportedNPC;
+    stckpnl1: TStackPanel;
+    pnl2: TPanel;
+    dbgrd2: TDBGrid;
+    procedure dbgrd_NavKeyDown(Sender: TObject; var Key: Word; Shift:
       TShiftState);
     procedure actDBInsertExecute(Sender: TObject);
     procedure pgc1Change(Sender: TObject);
@@ -147,6 +150,10 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure actTrackbarSetExecute(Sender: TObject);
     procedure actImportNPCsExecute(Sender: TObject);
+    procedure flsvs1Accept(Sender: TObject);
+    procedure actSaveExecute(Sender: TObject);
+    procedure flpn1Accept(Sender: TObject);
+    procedure actFileNewExecute(Sender: TObject);
   private
     procedure DisableCtrlDel(var Key: Word; Shift: TShiftState);
     procedure CheckDelAvailability;
@@ -167,29 +174,26 @@ var
 implementation
 
 uses
-  TargaImage, Unit1020_TexGen, Unit5020_DrawJourney, Unit1030_Config, Unit1040_ImportNPCs;
+  TargaImage, Unit1020_TexGen, Unit5020_DrawJourney, Unit1030_Config,
+  Unit1040_ImportNPCs;
 
 {$R *.dfm}
 
 procedure TfrmMain.actAppConfigExecute(Sender: TObject);
 begin
-  frmConfig := TfrmConfig.Create(Self);
-  try
-    frmConfig.ShowModal;
-  finally
-    frmConfig.Free;
-  end;
+  TfrmConfig.Execute;
 end;
 
 procedure TfrmMain.actClearConfigExecute(Sender: TObject);
 begin
   dtmdl_Main.ResetConfig;
+  Application.MessageBox('Configuration was cleared successfully.', 'Success',
+    MB_OK + MB_ICONINFORMATION + MB_TOPMOST);
 end;
 
 procedure TfrmMain.actDBDelExecute(Sender: TObject);
 begin
-  // Delete
-
+  { TODO : Add delete code }
   TryDrawJourney;
 end;
 
@@ -199,6 +203,11 @@ begin
   TryDrawJourney;
 end;
 
+procedure TfrmMain.actFileNewExecute(Sender: TObject);
+begin
+  dtmdl_Main.OpenFile;  // Calling it without filename opens a new one from template
+end;
+
 procedure TfrmMain.actGenerateExecute(Sender: TObject);
 begin
   redtOutput.Text := dtmdl_Main.FitStagesToLua;
@@ -206,12 +215,7 @@ end;
 
 procedure TfrmMain.actImportNPCsExecute(Sender: TObject);
 begin
-  frmImportNPCs := TfrmImportNPCs.Create(Self);
-  try
-    frmImportNPCs.ShowModal;
-  finally
-    frmImportNPCs.Release;
-  end;
+  TfrmImportNPCs.Execute;
 end;
 
 function TfrmMain.ActivePageAsTable: TTableName;
@@ -222,6 +226,14 @@ begin
     Result := tnPlayerStages
   else
     Result := tnNone;
+end;
+
+procedure TfrmMain.actSaveExecute(Sender: TObject);
+begin
+  if dtmdl_Main.WorkingFile = '' then
+    flsvs1.Execute
+  else
+    dtmdl_Main.SaveFile(dtmdl_Main.WorkingFile);
 end;
 
 procedure TfrmMain.actTexGenExecute(Sender: TObject);
@@ -248,8 +260,12 @@ begin
 end;
 
 procedure TfrmMain.ApplyConfig;
+var
+  st: string;
 begin
-  TStyleManager.TrySetStyle(dtmdl_Main.Config(cfAppTheme).AsString);
+  st := dtmdl_Main.Config(cfAppTheme).AsString;
+  if st <> '' then
+    TStyleManager.TrySetStyle(st);
 end;
 
 procedure TfrmMain.btn_femBsClick(Sender: TObject);
@@ -313,8 +329,8 @@ begin
   CheckDelAvailability;
 end;
 
-procedure TfrmMain.dbgrd_fitStagesNavKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
+procedure TfrmMain.dbgrd_NavKeyDown(Sender: TObject; var Key: Word; Shift:
+  TShiftState);
 begin
   DisableCtrlDel(Key, Shift)
 end;
@@ -342,6 +358,18 @@ begin
   finally
     aData.Free;
   end;
+end;
+
+procedure TfrmMain.flpn1Accept(Sender: TObject);
+begin
+  dtmdl_Main.OpenFile(flpn1.Dialog.FileName);
+  { TODO : Add to recent files }
+end;
+
+procedure TfrmMain.flsvs1Accept(Sender: TObject);
+begin
+{ TODO : Add to recent files }
+  dtmdl_Main.SaveFile(flsvs1.Dialog.FileName);
 end;
 
 procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);

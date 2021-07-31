@@ -3,7 +3,7 @@ object frmConfig: TfrmConfig
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Configuration'
-  ClientHeight = 222
+  ClientHeight = 261
   ClientWidth = 449
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -15,35 +15,30 @@ object frmConfig: TfrmConfig
   Position = poOwnerFormCenter
   ShowHint = True
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object stat1: TStatusBar
     Left = 0
-    Top = 203
+    Top = 242
     Width = 449
     Height = 19
     Hint = 'Glow and below are dark themes'
     AutoHint = True
     Panels = <>
     SimplePanel = True
-    ExplicitTop = 250
-    ExplicitWidth = 645
   end
   object pnl2: TPanel
     Left = 0
     Top = 0
     Width = 449
-    Height = 203
+    Height = 242
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitLeft = 300
-    ExplicitTop = 130
-    ExplicitWidth = 185
-    ExplicitHeight = 41
     object rltvpnl1: TRelativePanel
       Left = 0
-      Top = 162
+      Top = 201
       Width = 449
       Height = 41
       ControlCollection = <
@@ -81,9 +76,6 @@ object frmConfig: TfrmConfig
       Padding.Right = 10
       Padding.Bottom = 10
       TabOrder = 0
-      ExplicitLeft = 340
-      ExplicitTop = 150
-      ExplicitWidth = 185
       DesignSize = (
         449
         41)
@@ -129,14 +121,10 @@ object frmConfig: TfrmConfig
       Left = 0
       Top = 0
       Width = 449
-      Height = 162
+      Height = 201
       ActivePage = tsPaths
       Align = alClient
       TabOrder = 1
-      ExplicitLeft = 70
-      ExplicitTop = 10
-      ExplicitWidth = 289
-      ExplicitHeight = 193
       object tsPaths: TTabSheet
         Caption = 'Paths'
         object lbl1: TLabel
@@ -148,7 +136,7 @@ object frmConfig: TfrmConfig
         end
         object lbl2: TLabel
           Left = 10
-          Top = 70
+          Top = 110
           Width = 175
           Height = 13
           Caption = 'Generated textures folder (optional)'
@@ -165,13 +153,30 @@ object frmConfig: TfrmConfig
         end
         object btnTexPath: TSpeedButton
           Left = 410
-          Top = 89
+          Top = 129
           Width = 23
           Height = 22
           ImageIndex = 0
           Images = il1
           Flat = True
           OnClick = btnTexPathClick
+        end
+        object lbl4: TLabel
+          Left = 10
+          Top = 60
+          Width = 180
+          Height = 13
+          Caption = 'Configuration output folder (optional)'
+        end
+        object btnLuaCfgPath: TSpeedButton
+          Left = 408
+          Top = 79
+          Width = 23
+          Height = 22
+          ImageIndex = 0
+          Images = il1
+          Flat = True
+          OnClick = btnLuaCfgPathClick
         end
         object dbedtModPath: TDBEdit
           Left = 10
@@ -183,12 +188,11 @@ object frmConfig: TfrmConfig
             'ration data will be output to this folder. This is NOT OPTIONAL.'
           DataField = 'ModPath'
           DataSource = dtmdl_Main.dsConfig
-          ReadOnly = True
           TabOrder = 0
         end
         object dbedtTexPath: TDBEdit
           Left = 10
-          Top = 90
+          Top = 130
           Width = 401
           Height = 21
           Hint = 
@@ -197,25 +201,38 @@ object frmConfig: TfrmConfig
             'm Max Sick Gains.exe'
           DataField = 'TexPath'
           DataSource = dtmdl_Main.dsConfig
-          ReadOnly = True
           TabOrder = 1
           OnChange = dbedtTexPathChange
+        end
+        object dbedtLuaCfgPath: TDBEdit
+          Left = 10
+          Top = 80
+          Width = 401
+          Height = 21
+          Hint = 
+            'Configuration files will be output to "{This Folder}\SKSE\Plugin' +
+            's\"|Use this to keep configuration in a separated folder from Ma' +
+            'x Sick Gains.exe'
+          DataField = 'LuaCfgPath'
+          DataSource = dtmdl_Main.dsConfig
+          TabOrder = 2
+          OnChange = dbedtLuaCfgPathChange
         end
       end
       object tsApp: TTabSheet
         Caption = 'App'
         ImageIndex = 1
         object lbl3: TLabel
-          Left = 21
-          Top = 20
+          Left = 25
+          Top = 54
           Width = 60
           Height = 13
           Caption = 'Visual theme'
         end
         object dbcbbAppTheme: TDBComboBox
-          Left = 21
-          Top = 40
-          Width = 361
+          Left = 25
+          Top = 76
+          Width = 390
           Height = 21
           Hint = 'Auric and below are dark themes'
           Style = csDropDownList
@@ -246,10 +263,10 @@ object frmConfig: TfrmConfig
     ColorDepth = cd32Bit
     Height = 24
     Width = 24
-    Left = 164
-    Top = 164
+    Left = 152
+    Top = 16
     Bitmap = {
-      494C010101001000040018001800FFFFFFFF2100FFFFFFFFFFFFFFFF424D3600
+      494C010101001000040018001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000001800000001002000000000000024
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -550,7 +567,8 @@ object frmConfig: TfrmConfig
       0000000000000100000000000000000000000700000000000000000000000700
       000000000000000000000700000000000000000000000F000000000000000000
       01FFFF00000000000000000001FFFF00000000000000000083FFFF0000000000
-      00000000FFFFFF000000000000000000}
+      00000000FFFFFF00000000000000000000000000000000000000000000000000
+      000000000000}
   end
   object opnDlgMod: TFileOpenDialog
     DefaultExtension = '.esp'
@@ -562,14 +580,14 @@ object frmConfig: TfrmConfig
         FileMask = 'Max Sick Gains.esp'
       end>
     Options = [fdoPathMustExist, fdoFileMustExist, fdoDontAddToRecent]
-    Left = 210
-    Top = 110
+    Left = 16
+    Top = 16
   end
-  object opnDlgTexPath: TFileOpenDialog
+  object opnDlgDirPath: TFileOpenDialog
     FavoriteLinks = <>
     FileTypes = <>
     Options = [fdoPickFolders, fdoPathMustExist]
-    Left = 220
-    Top = 120
+    Left = 84
+    Top = 16
   end
 end

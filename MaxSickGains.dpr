@@ -15,14 +15,16 @@ uses
   Unit9005_globals in 'Unit9005_globals.pas',
   Unit5020_DrawJourney in 'Unit5020_DrawJourney.pas',
   Unit1030_Config in 'Unit1030_Config.pas' {frmConfig},
-  Unit1040_ImportNPCs in 'Unit1040_ImportNPCs.pas' {frmImportNPCs};
+  Unit1040_ImportNPCs in 'Unit1040_ImportNPCs.pas' {frmImportNPCs},
+  Unit3010_FilterImportedNPC in 'Unit3010_FilterImportedNPC.pas' {frmFilterImportedNPC: TFrame},
+  Functions.Utils in 'Functions.Utils.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  TStyleManager.TrySetStyle('Glow');
+  TStyleManager.TrySetStyle('Iceberg Classico');
   Application.Title := 'Max Sick Gains';
   Application.CreateForm(Tdtmdl_Main, dtmdl_Main);
   Application.CreateForm(TfrmMain, frmMain);

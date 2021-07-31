@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.ShellAPI, System.SysUtils, System.Classes, Data.DB,
   Data.Win.ADODB, System.IOUtils, System.StrUtils, Functional.Sequence,
   Unit9020_Types, System.Generics.Collections, Datasnap.DBClient,
-  Datasnap.Provider;
+  Datasnap.Provider, Vcl.OleServer, JRO_TLB;
 
 //{$DEFINE OpenPathsInExplorer}
 const
@@ -15,13 +15,13 @@ const
 function AsDir(const aDir: string): string;
 
 type
-  TTableName = (tnNone, tnFitStages, tnPlayerStages);
+  TTableName = (tnNone, tnFitStages, tnPlayerStages, tnAllNPCs);
 
   TConfigField = (
     // App configuration
     cfAppTheme, cfLastTab,
     // Paths
-    cfModPath, cfTexPath,
+    cfModPath, cfTexPath, cfLuaCfgPath,
     // Not directly accessible to user
     cfMaxMuscleDefLevels);
 
@@ -69,53 +69,63 @@ type
     dsRaces: TDataSource;
     tblAllNPCs: TADOTable;
     dsAllNPCs: TDataSource;
+    qryAux: TADOQuery;
+    JE: TJetEngine;
+    strngfldConfigLuaCfgPath: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
     FCfgSavePoint: Int64;
-    procedure CloseAll;
-    function TempDB: string;
+    FWorkingFile: string;
     function BlankDB: string;
-    procedure CreateTemp(const aCopyFrom: string);
-    procedure OpenAll;
-    function GetTable(const aTable: TTableName): TCustomADODataSet;
-    procedure RefreshToLast(aTbl: TCustomADODataSet);
-    function InsertCommand(const aTable: TTableName): string;
-    procedure Refresh(aTbl: TCustomADODataSet);
+    function CfgFile: string;
+    function ConfigFieldToStr(const aField: TConfigField): string;
+    function DataSetToLua(const aTable: TTableName; const fun: TVoidToStr):
+      string;
+    function FieldFrom(const aTbl: TCustomADODataSet; const aField: string):
+      string;
     function FieldToLuaAssign(const aDataSet: TCustomADODataSet; const aFied:
       string; const isStr: Boolean = true; const addComma: Boolean = true):
       string;
-    function ToLuaTable(const s: string; const addComma: Boolean = true): string;
-    function MemoToLua(const aText: string): string;
-    function FieldFrom(const aTbl: TCustomADODataSet; const aField: string):
-      string;
-    function DataSetToLua(const aTable: TTableName; const fun: TVoidToStr):
-      string;
     function FitStageToLua: string;
+    function GetTable(const aTable: TTableName): TCustomADODataSet;
+    function InsertCommand(const aTable: TTableName): string;
+    function MemoToLua(const aText: string): string;
+    function TempDB: string;
+    function ToLuaTable(const s: string; const addComma: Boolean = true): string;
+    procedure CloseAll;
+    procedure CreateTemp(const aCopyFrom: string);
     procedure NewConfig;
-    function CfgFile: string;
-    function ConfigFieldToStr(const aField: TConfigField): string;
+    procedure OpenAll;
+    procedure PostAll;
+    procedure Refresh(aTbl: TCustomADODataSet);
+    procedure RefreshToLast(aTbl: TCustomADODataSet);
   public
     function AppPath: string;
-    function FitStagesToLua: string;
-    procedure OpenFile(const aFileName: string);
-    function IsAtFirst(const aTable: TTableName): Boolean;
-    function FitStagesCurrIdx: Integer;
-    procedure Edit(const aTable: TTableName; const aField: string; const aVal:
-      Variant);
-    procedure Append(const aTable: TTableName);
-    function Field(const aTable: TTableName; const aField: string): TField;
-    function PlayerJourney: TList<TJourneyItem>;
-    procedure Post(const aTable: TTableName);
     function Config(aField: TConfigField): TField;
-    procedure ConfigUpdate(aField: TConfigField; val: Variant);
+    function Field(const aTable: TTableName; const aField: string): TField;
+    function FitStagesCurrIdx: Integer;
+    function FitStagesToLua: string;
+    function GetTexOutFolder: string;
+    function IsAtFirst(const aTable: TTableName): Boolean;
+    function PlayerJourney: TList<TJourneyItem>;
+    function ValidRaces: string;
+    procedure Append(const aTable: TTableName);
     procedure CfgBackup;
     procedure CfgRestore;
-    procedure LoadConfig;
-    procedure ResetConfig;
-    function GetTexOutFolder: string;
-    procedure ForceDirIntoExistance(const dirName: string);
+    procedure ConfigUpdate(aField: TConfigField; val: Variant);
+    procedure Edit(const aTable: TTableName; const aField: string; const aVal:
+      Variant);
     procedure ExecuteSQL(const SQL: string);
+    procedure FilterTable(const aTable: TTableName; const aFilter: string);
+    procedure ForceDirIntoExistance(const dirName: string);
+    procedure LoadConfig;
+    procedure OpenFile(aFileName: string = '');
+    procedure Post(const aTable: TTableName);
+    procedure RefreshTable(const aTable: TTableName);
+    procedure ResetConfig;
+    procedure SaveFile(const aFileName: string);
+    property WorkingFile: string read FWorkingFile;
   end;
 
 var
@@ -220,6 +230,8 @@ begin
       Result := 'ModPath';
     cfTexPath:
       Result := 'TexPath';
+    cfLuaCfgPath:
+      Result := 'LuaCfgPath';
   end;
 end;
 
@@ -237,10 +249,11 @@ end;
 
 procedure Tdtmdl_Main.DataModuleCreate(Sender: TObject);
 begin
-  OpenFile(BlankDB);
+  OpenFile;
   LoadConfig;
 {$IF Defined(DEBUG) and Defined(OpenPathsInExplorer)}
-  ShellExecute(0, 'Open', PWideChar(ExtractFilePath(Application.ExeName)), '', '', SW_SHOW);
+  ShellExecute(0, 'Open', PWideChar(ExtractFilePath(Application.ExeName)), '',
+    '', SW_SHOW);
 {$ENDIF}
 end;
 
@@ -331,10 +344,12 @@ end;
 procedure Tdtmdl_Main.NewConfig;
 begin
   with cdsConfig do begin
+    Close;
     CreateDataSet;
     Open;
     Append;
     Config(cfModPath).AsString := '';
+    Config(cfLuaCfgPath).AsString := '';
     Config(cfTexPath).AsString := '';
     Config(cfAppTheme).AsString := 'Glossy';
     Config(cfLastTab).AsInteger := 0;
@@ -369,6 +384,18 @@ begin
     Result := Result + ',';
 end;
 
+procedure Tdtmdl_Main.FilterTable(const aTable: TTableName; const aFilter:
+  string);
+begin
+  with GetTable(aTable) do begin
+    Filtered := false;
+    Filter := aFilter;
+    if Trim(aFilter) = '' then
+      Exit;
+    Filtered := true;
+  end;
+end;
+
 function Tdtmdl_Main.FitStagesCurrIdx: Integer;
 begin
   Result := tblFitStages.FieldByName('Id').AsInteger;
@@ -385,6 +412,7 @@ var
   output: TStringList;
   tbl: TCustomADODataSet;
 begin
+  { TODO : Make this independent from currently selected record }
   tbl := tblFitStages;
   output := TStringList.Create;
   try
@@ -405,11 +433,8 @@ end;
 procedure Tdtmdl_Main.ForceDirIntoExistance(const dirName: string);
 begin
   if not ForceDirectories(dirName) then
-    raise Exception.CreateFmt(
-      'Couldn''t create folder'#13#10'%s'#13#10#13#10'Try to manually create it or something.',
-      [dirName]
-    );
-
+    raise Exception.CreateFmt('Couldn''t create folder'#13#10'%s'#13#10#13#10'Try to manually create it or something.',
+      [dirName]);
 end;
 
 function Tdtmdl_Main.GetTable(const aTable: TTableName): TCustomADODataSet;
@@ -419,6 +444,8 @@ begin
       Result := tblFitStages;
     tnPlayerStages:
       Result := tblPlayerStages;
+    tnAllNPCs:
+      Result := tblAllNPCs;
   else
     raise Exception.CreateFmt('Asked for some invalid table: %d.', [Integer(aTable)]);
   end;
@@ -451,7 +478,7 @@ begin
     Result := texDir
   else
     Result := modDir;
-  Result:= AsDir(Result) + 'textures\actors\character\Maxick\';
+  Result := AsDir(Result) + 'textures\actors\character\Maxick\';
 end;
 
 procedure Tdtmdl_Main.OpenAll;
@@ -464,13 +491,20 @@ begin
   end;
 end;
 
-procedure Tdtmdl_Main.OpenFile(const aFileName: string);
+procedure Tdtmdl_Main.OpenFile(aFileName: string);
 const
   s =
       'Provider=Microsoft.Jet.OLEDB.4.0;Data Source=%s;Mode=ReadWrite;Persist Security Info=False';
 begin
   CloseAll;
-  CreateTemp(BlankDB);
+  if not FileExists(aFileName) then begin
+    FWorkingFile := '';
+    aFileName := BlankDB;
+  end
+  else
+    FWorkingFile := aFileName;
+
+  CreateTemp(aFileName);
   conMain.ConnectionString := Format(s, [TempDB]);
   OpenAll;
 end;
@@ -506,7 +540,29 @@ begin
     tbl.Edit;
     tbl.Post;
   except
-    on E: Exception do  // Nothing. Used to avoid weird but inconsequential errors
+    on E: Exception do  // Nothing. Used to avoid weird but inconsequential errors when using DBTrackers
+  end;
+end;
+
+procedure Tdtmdl_Main.PostAll;
+var
+  i: Integer;
+begin
+  for i := 0 to conMain.DataSetCount - 1 do begin
+    with conMain.DataSets[i] do begin
+      if Active then begin
+        Edit;
+        Post;
+      end;
+    end;
+  end;
+end;
+
+procedure Tdtmdl_Main.RefreshTable(const aTable: TTableName);
+begin
+  with GetTable(aTable) do begin
+    Close;
+    Open;
   end;
 end;
 
@@ -518,9 +574,29 @@ end;
 
 procedure Tdtmdl_Main.ResetConfig;
 begin
-  cdsConfig.EmptyDataSet;
   DeleteFile(CfgFile);
+  cdsConfig.Open;
+  cdsConfig.EmptyDataSet;
   LoadConfig;
+end;
+
+procedure Tdtmdl_Main.SaveFile(const aFileName: string);
+var
+  dbSrc, dbDest, tmp: string;
+const
+  SProvider = 'Provider=Microsoft.Jet.OLEDB.4.0; Data Source=';
+begin
+  PostAll;
+  FWorkingFile := aFileName;
+  // Save compacted DB
+  tmp := FWorkingFile + '.tmp';
+  CopyFile(PWideChar(TempDB), PWideChar(tmp), false);
+  dbSrc := SProvider + tmp;
+  dbDest := SProvider + FWorkingFile;
+  if FileExists(FWorkingFile) then
+    DeleteFile(FWorkingFile);
+  JE.CompactDatabase(dbSrc, dbDest);
+  DeleteFile(tmp)
 end;
 
 function Tdtmdl_Main.TempDB: string;
@@ -540,6 +616,15 @@ end;
 function Tdtmdl_Main.ToLuaTable(const s: string; const addComma: Boolean): string;
 begin
   Result := '{'#13#10 + s + #13#10'}' + IfThen(addComma, ',', '');
+end;
+
+function Tdtmdl_Main.ValidRaces: string;
+begin
+  qryAux.Close;
+  qryAux.SQL.Text := 'SELECT * FROM QryValidRaces';
+  qryAux.Open;
+  Result := TSeq.From(qryAux)
+    .Fold<string>(ReduceStrField('validRaces', #13#10), '');
 end;
 
 end.

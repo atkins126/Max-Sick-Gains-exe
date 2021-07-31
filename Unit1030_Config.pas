@@ -30,7 +30,10 @@ type
     il1: TImageList;
     lbl3: TLabel;
     opnDlgMod: TFileOpenDialog;
-    opnDlgTexPath: TFileOpenDialog;
+    opnDlgDirPath: TFileOpenDialog;
+    dbedtLuaCfgPath: TDBEdit;
+    lbl4: TLabel;
+    btnLuaCfgPath: TSpeedButton;
     procedure btnCancelClick(Sender: TObject);
     procedure btnApplyClick(Sender: TObject);
     procedure btnOkClick(Sender: TObject);
@@ -38,12 +41,17 @@ type
     procedure btnModPathClick(Sender: TObject);
     procedure dbedtTexPathChange(Sender: TObject);
     procedure btnTexPathClick(Sender: TObject);
+    procedure btnLuaCfgPathClick(Sender: TObject);
+    procedure dbedtLuaCfgPathChange(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     procedure Apply;
     procedure SetPathByDlg(const aField: TConfigField; const dlg:
       TCustomFileDialog; const ProcessFunc: TFunc<string, string>);
+    function PathHint(path, fmt: string): string;
+    procedure ValidatePaths;
   public
-    { Public declarations }
+    class procedure Execute;
   end;
 
 var
@@ -52,9 +60,7 @@ var
 implementation
 
 uses
-  Data.DB;
-
-
+  Data.DB, Functions.Utils;
 
 {$R *.dfm}
 
@@ -75,22 +81,18 @@ begin
   Close;
 end;
 
+procedure TfrmConfig.btnLuaCfgPathClick(Sender: TObject);
+begin
+  SetPathByDlg(cfLuaCfgPath, opnDlgDirPath, Identity);
+end;
+
 procedure TfrmConfig.btnModPathClick(Sender: TObject);
-//var
-//  field: TField;
 begin
   SetPathByDlg(cfModPath, opnDlgMod,
     function(s: string): string
     begin
       Result := TPath.GetDirectoryName(opnDlgMod.FileName);
     end);
-//  if not opnDlgMod.Execute then
-//    Exit;
-//  field := dtmdl_Main.Config(cfModPath);
-//  field.DataSet.Edit;
-//  field.AsString := TPath.GetDirectoryName(opnDlgMod.FileName)
-//    + TPath.DirectorySeparatorChar;
-//  field.DataSet.Post;
 end;
 
 procedure TfrmConfig.btnOkClick(Sender: TObject);
@@ -101,29 +103,50 @@ end;
 
 procedure TfrmConfig.btnTexPathClick(Sender: TObject);
 begin
-  SetPathByDlg(cfTexPath, opnDlgTexPath,
-    function(s: string): string
-    begin
-      Result := s;
-    end);
+  SetPathByDlg(cfTexPath, opnDlgDirPath, Identity);
+end;
+
+procedure TfrmConfig.dbedtLuaCfgPathChange(Sender: TObject);
+const
+  f = 'Configuration files will be output to "%sSKSE\Plugins\"|' +
+    'Use this to keep configuration in a separated folder from Max Sick Gains.exe';
+begin
+  dbedtLuaCfgPath.Hint := PathHint(dbedtLuaCfgPath.EditText, f);
 end;
 
 procedure TfrmConfig.dbedtTexPathChange(Sender: TObject);
 const
-  f =
-    'Textures will be output to "%stextures\actors\character\Maxick\"|Use this to keep textures in a separated folder from Max Sick Gains.esp';
-var
-  path: string;
+  f = 'Textures will be output to "%stextures\actors\character\Maxick\"|' +
+    'Use this to keep textures in a separated folder from Max Sick Gains.esp';
 begin
-  path := dbedtTexPath.EditText;
-  if path = '' then
-    path := '{This Folder}';
-  dbedtTexPath.Hint := Format(f, [path]);
+  dbedtTexPath.Hint := PathHint(dbedtTexPath.EditText, f);
+end;
+
+class procedure TfrmConfig.Execute;
+begin
+  frmConfig := TfrmConfig.Create(nil);
+  try
+    frmConfig.ShowModal;
+  finally
+    frmConfig.Free;
+  end;
 end;
 
 procedure TfrmConfig.FormCreate(Sender: TObject);
 begin
   dtmdl_Main.CfgBackup;
+end;
+
+procedure TfrmConfig.FormDestroy(Sender: TObject);
+begin
+  ValidatePaths;
+end;
+
+function TfrmConfig.PathHint(path, fmt: string): string;
+begin
+  if path = '' then
+    path := '{This Folder}\';
+  Result := Format(fmt, [path]);
 end;
 
 procedure TfrmConfig.SetPathByDlg(const aField: TConfigField; const dlg:
@@ -137,6 +160,26 @@ begin
   field.DataSet.Edit;
   field.AsString := IncludeTrailingPathDelimiter(ProcessFunc(dlg.FileName));
   field.DataSet.Post;
+end;
+
+procedure TfrmConfig.ValidatePaths;
+
+  procedure AppendPathDelim(const cfg: TConfigField);
+  var
+    path: string;
+  begin
+    with dtmdl_Main do begin
+      path := Trim(Config(cfg).AsString);
+      if path <> '' then
+        path := IncludeTrailingPathDelimiter(path);
+      ConfigUpdate(cfg, path);
+    end;
+  end;
+
+begin
+  AppendPathDelim(cfModPath);
+  AppendPathDelim(cfLuaCfgPath);
+  AppendPathDelim(cfTexPath);
 end;
 
 end.

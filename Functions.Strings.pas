@@ -3,12 +3,14 @@ unit Functions.Strings;
 interface
 
 uses
-  System.StrUtils, Functional.FuncFactory, System.SysUtils;
+  System.StrUtils, Functional.FuncFactory, System.SysUtils, Data.DB;
 
 function FilterByContainsTxt(const aSubText: string): Functional.FuncFactory.TPredicate
   <string>;
 
 function ReduceStr(const aSeparator: string): TFoldFunc<string, string>;
+
+function ReduceStrField(const aField, aSeparator: string): TFoldFunc<TDataSet, string>;
 
 function EncloseStr(const delim: string; delim2: string = ''): TFunc<string,
   string>;
@@ -58,6 +60,16 @@ begin
     function(const input: string; const Accumulator: string): string
     begin
       Result := Accumulator + IfThen(Accumulator = '', '', aSeparator) + input;
+    end;
+end;
+
+function ReduceStrField(const aField, aSeparator: string):
+  TFoldFunc<TDataSet, string>;
+begin
+  Result :=
+    function(const input: TDataSet; const Accumulator: string): string
+    begin
+      Result := ReduceStr(aSeparator)(input.FieldByName(aField).AsString, Accumulator);
     end;
 end;
 

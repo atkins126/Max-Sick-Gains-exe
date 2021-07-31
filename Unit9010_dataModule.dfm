@@ -6,7 +6,7 @@ object dtmdl_Main: Tdtmdl_Main
   Width = 443
   object dsFitStages: TDataSource
     DataSet = tblFitStages
-    Left = 84
+    Left = 152
     Top = 145
   end
   object conMain: TADOConnection
@@ -26,7 +26,7 @@ object dtmdl_Main: Tdtmdl_Main
     Connection = conMain
     CursorType = ctStatic
     TableName = 'FitStages'
-    Left = 84
+    Left = 152
     Top = 59
     object atncfldFitStagesID: TAutoIncField
       FieldName = 'ID'
@@ -76,12 +76,12 @@ object dtmdl_Main: Tdtmdl_Main
   object tblFitTypes: TADOTable
     Connection = conMain
     TableName = 'FitnessTypes'
-    Left = 152
+    Left = 220
     Top = 59
   end
   object dsFitTypes: TDataSource
     DataSet = tblFitTypes
-    Left = 152
+    Left = 220
     Top = 145
   end
   object tblFitLvls: TADOTable
@@ -89,12 +89,12 @@ object dtmdl_Main: Tdtmdl_Main
     Connection = conMain
     CursorType = ctStatic
     TableName = 'FitnessLevels'
-    Left = 16
+    Left = 84
     Top = 59
   end
   object dsFitLvls: TDataSource
     DataSet = tblFitLvls
-    Left = 16
+    Left = 84
     Top = 145
   end
   object cmd: TADOCommand
@@ -108,8 +108,8 @@ object dtmdl_Main: Tdtmdl_Main
     Connection = conMain
     CursorType = ctStatic
     TableName = 'PlayerStages'
-    Left = 220
-    Top = 59
+    Left = 16
+    Top = 102
     object atncfldPlayerStagesID: TAutoIncField
       FieldName = 'ID'
       ReadOnly = True
@@ -155,8 +155,8 @@ object dtmdl_Main: Tdtmdl_Main
   end
   object dsPlayerStages: TDataSource
     DataSet = tblPlayerStages
-    Left = 220
-    Top = 145
+    Left = 16
+    Top = 188
   end
   object qryPlayerJourney: TADOQuery
     Active = True
@@ -165,14 +165,14 @@ object dtmdl_Main: Tdtmdl_Main
     Parameters = <>
     SQL.Strings = (
       'SELECT * FROM QryPlayerJourney')
-    Left = 152
+    Left = 220
     Top = 16
   end
   object cdsConfig: TClientDataSet
     Aggregates = <>
     Params = <>
     ProviderName = 'dtstprvdrConfig'
-    Left = 84
+    Left = 152
     Top = 102
     object bytfldMaxMuscleDefLevels: TByteField
       FieldName = 'MaxMuscleDefLevels'
@@ -194,23 +194,27 @@ object dtmdl_Main: Tdtmdl_Main
     object intgrfldConfigLastTab: TIntegerField
       FieldName = 'LastTab'
     end
+    object strngfldConfigLuaCfgPath: TStringField
+      FieldName = 'LuaCfgPath'
+      Size = 2000
+    end
   end
   object dsConfig: TDataSource
     DataSet = cdsConfig
-    Left = 220
-    Top = 102
+    Left = 16
+    Top = 145
   end
   object tblRaces: TADOTable
     Active = True
     Connection = conMain
     CursorType = ctStatic
     TableName = 'Races'
-    Left = 16
+    Left = 84
     Top = 102
   end
   object dsRaces: TDataSource
     DataSet = tblRaces
-    Left = 16
+    Left = 84
     Top = 188
   end
   object tblAllNPCs: TADOTable
@@ -218,12 +222,26 @@ object dtmdl_Main: Tdtmdl_Main
     Connection = conMain
     CursorType = ctStatic
     TableName = 'AllNPCs'
-    Left = 220
-    Top = 16
+    Left = 16
+    Top = 59
   end
   object dsAllNPCs: TDataSource
     DataSet = tblAllNPCs
-    Left = 152
+    Left = 220
     Top = 102
+  end
+  object qryAux: TADOQuery
+    Connection = conMain
+    Parameters = <>
+    SQL.Strings = (
+      'SELECT * FROM QryValidRaces')
+    Left = 152
+    Top = 16
+  end
+  object JE: TJetEngine
+    AutoConnect = False
+    ConnectKind = ckRunningOrNew
+    Left = 270
+    Top = 230
   end
 end
