@@ -17,6 +17,9 @@ function Force24BppTga(dib: PFIBITMAP): PFIBITMAP;
 procedure GenerateTextures(const bg, fg: TPicture; const fitnessLevels: Byte;
   dirName, baseFileName: string; const maxRes: Integer);
 
+procedure Blend(const canvas: TCanvas; const background, foreground: TGraphic;
+  const alpha: Byte);
+
 implementation
 
 uses
@@ -130,8 +133,7 @@ begin
   Result := False;
   // Load file
   dib := FreeImage_LoadU(FIF_TARGA, PWideChar(WideString(fileName)), 0);
-  if dib = nil then
-  begin
+  if dib = nil then begin
     OnFailedToOpen;
     Exit;
   end;
@@ -159,8 +161,7 @@ var
   BPP: LongWord;
 begin
   BPP := FreeImage_GetBPP(dib);
-  if BPP <> 24 then
-  begin
+  if BPP <> 24 then begin
     Result := FreeImage_ConvertTo24Bits(dib);
     FreeImage_Unload(dib);
   end

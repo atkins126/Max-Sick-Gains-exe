@@ -58,10 +58,10 @@ begin
   aClass := GetElementEditValues(LinksTo(ElementByPath(e, 'CNAM')),'EDID');
   if ContainsText(aClass, 'player')  then Exit;
 
-  // esm, id, nombre, clase, sexo, raza
+  // esm, id, name, class, sex, race
   esp := GetFileName(GetFile(e));
-  id := '0x' + ActualFixedFormID(e);
-  uId := esp + '|' + id;
+  id := ActualFixedFormID(e);
+  uId := esp + '|0x' + id;
   sex := GetElementEditValues(e, 'ACBS\Flags\Female');
 
   outputList.Append(
@@ -79,7 +79,6 @@ end;
 function Finalize: Integer;
 begin
   outputList.Sort;
-  // AddMessage(outputList.text);
   outputList.SaveToFile('Edit Scripts\___Maxick-NPCs.sql');
   outputList.Free;
 end;

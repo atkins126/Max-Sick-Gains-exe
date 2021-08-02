@@ -3,8 +3,8 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
   Top = 0
   BorderStyle = bsToolWindow
   Caption = 'Texture generator'
-  ClientHeight = 502
-  ClientWidth = 781
+  ClientHeight = 490
+  ClientWidth = 704
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12846,29 +12846,34 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
     000000000000}
   OldCreateOrder = False
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object stat1: TStatusBar
     Left = 0
-    Top = 483
-    Width = 781
+    Top = 471
+    Width = 704
     Height = 19
     Panels = <>
     SimplePanel = True
+    ExplicitTop = 483
+    ExplicitWidth = 781
   end
   object pnl1: TPanel
     Left = 134
     Top = 0
-    Width = 647
-    Height = 483
+    Width = 570
+    Height = 471
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 647
+    ExplicitHeight = 483
     object rltvpnl1: TRelativePanel
       AlignWithMargins = True
       Left = 0
-      Top = 387
-      Width = 647
+      Top = 375
+      Width = 570
       Height = 96
       Margins.Left = 0
       Margins.Top = 14
@@ -12902,12 +12907,14 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
       Padding.Right = 14
       Padding.Bottom = 7
       TabOrder = 1
+      ExplicitTop = 387
+      ExplicitWidth = 647
       DesignSize = (
-        647
+        570
         96)
       object btnClose: TButton
         AlignWithMargins = True
-        Left = 507
+        Left = 430
         Top = 57
         Width = 126
         Height = 25
@@ -12923,7 +12930,7 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
       end
       object btn_TexGen: TButton
         AlignWithMargins = True
-        Left = 130
+        Left = 91
         Top = 7
         Width = 359
         Height = 29
@@ -12939,8 +12946,8 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
     object rltvpnl2: TRelativePanel
       Left = 0
       Top = 0
-      Width = 647
-      Height = 373
+      Width = 570
+      Height = 361
       ControlCollection = <
         item
           Control = pnlTex1
@@ -12966,14 +12973,16 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
       Padding.Top = 14
       Padding.Right = 14
       TabOrder = 0
+      ExplicitWidth = 647
+      ExplicitHeight = 373
       DesignSize = (
-        647
-        373)
+        570
+        361)
       object pnlTex1: TPanel
         Left = 14
         Top = 14
-        Width = 300
-        Height = 359
+        Width = 257
+        Height = 347
         Margins.Left = 0
         Margins.Top = 0
         Margins.Right = 14
@@ -12983,11 +12992,12 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
         object img_Lvl1: TImage
           Left = 1
           Top = 1
-          Width = 298
-          Height = 298
+          Width = 255
+          Height = 255
           Align = alClient
           Center = True
           Stretch = True
+          OnClick = img_Lvl1Click
           ExplicitLeft = 0
           ExplicitTop = 0
           ExplicitWidth = 218
@@ -12995,13 +13005,16 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
         end
         object stckpnl1: TStackPanel
           Left = 1
-          Top = 299
-          Width = 298
-          Height = 59
+          Top = 256
+          Width = 255
+          Height = 90
           Align = alBottom
           AutoSize = True
           BevelOuter = bvNone
           ControlCollection = <
+            item
+              Control = trckbrFrom
+            end
             item
               Control = lbl_fName1
             end
@@ -13015,17 +13028,30 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
           Padding.Bottom = 7
           Spacing = 7
           TabOrder = 0
-          object lbl_fName1: TLabel
+          ExplicitTop = 288
+          ExplicitWidth = 298
+          object trckbrFrom: TTrackBar
             Left = 7
             Top = 7
-            Width = 284
+            Width = 241
+            Height = 24
+            Max = 255
+            ShowSelRange = False
+            TabOrder = 1
+            TickStyle = tsNone
+            OnChange = trckbrBlendChange
+          end
+          object lbl_fName1: TLabel
+            Left = 7
+            Top = 38
+            Width = 241
             Height = 13
             Alignment = taCenter
           end
           object btn1: TButton
             Left = 7
-            Top = 27
-            Width = 284
+            Top = 58
+            Width = 241
             Height = 25
             Caption = 'Open file'
             TabOrder = 0
@@ -13034,20 +13060,21 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
         end
       end
       object pnlTexMax: TPanel
-        Left = 333
+        Left = 299
         Top = 14
-        Width = 300
-        Height = 359
+        Width = 257
+        Height = 347
         Anchors = []
         TabOrder = 1
         object img_LvlMax: TImage
           Left = 1
           Top = 1
-          Width = 298
-          Height = 298
+          Width = 255
+          Height = 255
           Align = alClient
           Center = True
           Stretch = True
+          OnClick = img_LvlMaxClick
           ExplicitLeft = 175
           ExplicitTop = 140
           ExplicitWidth = 105
@@ -13055,13 +13082,16 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
         end
         object stckpnl2: TStackPanel
           Left = 1
-          Top = 299
-          Width = 298
-          Height = 59
+          Top = 256
+          Width = 255
+          Height = 90
           Align = alBottom
           AutoSize = True
           BevelOuter = bvNone
           ControlCollection = <
+            item
+              Control = trckbrTo
+            end
             item
               Control = lbl_fName2
             end
@@ -13075,17 +13105,31 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
           Padding.Bottom = 7
           Spacing = 7
           TabOrder = 0
-          object lbl_fName2: TLabel
+          ExplicitTop = 257
+          ExplicitWidth = 298
+          object trckbrTo: TTrackBar
             Left = 7
             Top = 7
-            Width = 284
+            Width = 241
+            Height = 24
+            Max = 255
+            Position = 255
+            ShowSelRange = False
+            TabOrder = 1
+            TickStyle = tsNone
+            OnChange = trckbrBlendChange
+          end
+          object lbl_fName2: TLabel
+            Left = 7
+            Top = 38
+            Width = 241
             Height = 13
             Alignment = taCenter
           end
           object btn2: TButton
             Left = 7
-            Top = 27
-            Width = 284
+            Top = 58
+            Width = 241
             Height = 25
             Caption = 'Open file'
             TabOrder = 0
@@ -13099,7 +13143,7 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
     Left = 0
     Top = 0
     Width = 134
-    Height = 483
+    Height = 471
     Align = alLeft
     ControlCollection = <
       item
@@ -13124,9 +13168,10 @@ object frm_ToolTexGen: Tfrm_ToolTexGen
     Padding.Bottom = 14
     Spacing = 14
     TabOrder = 0
+    ExplicitHeight = 483
     DesignSize = (
       134
-      483)
+      471)
     object rgSex: TRadioGroup
       Left = 8
       Top = 15

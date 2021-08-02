@@ -47,13 +47,21 @@ type
     rgRes: TRadioGroup;
     opnDlg1: TFileOpenDialog;
     btn3: TBitBtn;
+    trckbrFrom: TTrackBar;
+    trckbrTo: TTrackBar;
     procedure FormCreate(Sender: TObject);
     procedure btn_TexGenClick(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
     procedure btn1Click(Sender: TObject);
     procedure btn2Click(Sender: TObject);
     procedure btn3Click(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure trckbrBlendChange(Sender: TObject);
+    procedure img_Lvl1Click(Sender: TObject);
+    procedure img_LvlMaxClick(Sender: TObject);
   private
+    FTex1: TBitmap;
+    FTexMax: TBitmap;
     pnlTexLvl1: TDropPanel;
     pnlTexLvlMax: TDropPanel;
     RestoreVisualCues: TProcedureNoParams;
@@ -62,9 +70,9 @@ type
       aParent: TPanel);
     procedure OnTexLvl1Drop(Sender: TObject; fileName: string);
     procedure OnTexLvlMaxDrop(Sender: TObject; fileName: string);
-    procedure LoadTgaFile(fileName: string; const imgTo: TImage; const lbl:
-      TLabel);
-    procedure LoadTgaFromDlg(const imgTo: TImage; const lbl: TLabel);
+    procedure LoadTgaFile(fileName: string; const imgTo: TImage; const lbl: TLabel; const blendBmp: TBitmap; const alpha: Byte);
+    procedure LoadTgaFromDlg(const imgTo: TImage; const lbl: TLabel; const
+      blendBmp: TBitmap; const alpha: Byte);
     function RaceDir: string;
     function BaseFileName: string;
     function SexToStr: string;
@@ -73,6 +81,7 @@ type
     function GetBtnProcessingCaption: string;
     function SettingsAsMessage: string;
     function OutputDir: string;
+    procedure BlendTo(const imgTo: TImage; const alpha: Byte);
   public
     { Public declarations }
   end;
@@ -133,14 +142,40 @@ begin
   Result := SexToStr + MuscleDefToStr;
 end;
 
+procedure Tfrm_ToolTexGen.BlendTo(const imgTo: TImage; const alpha: Byte);
+
+  procedure Init(const pic, src: TPicture; const bmp: TBitmap);
+  begin
+    pic.Assign(src);
+    pic.Bitmap.Assign(bmp);
+  end;
+
+var
+  tmp1, tmp2: TPicture;
+begin
+  if (not Assigned(img_Lvl1.Picture.Graphic)) or
+    (not Assigned(img_LvlMax.Picture.Graphic)) then
+    Exit;
+  tmp1 := TPicture.Create;
+  Init(tmp1, img_Lvl1.Picture, FTex1);
+  tmp2 := TPicture.Create;
+  Init(tmp2, img_LvlMax.Picture, FTexMax);
+
+  Blend(tmp1.Bitmap.Canvas, tmp1.Graphic, tmp2.Graphic, alpha);
+  imgTo.Picture.Bitmap.Assign(tmp1.Bitmap);
+
+  tmp1.Free;
+  tmp2.Free;
+end;
+
 procedure Tfrm_ToolTexGen.btn1Click(Sender: TObject);
 begin
-  LoadTgaFromDlg(img_Lvl1, lbl_fName1);
+  LoadTgaFromDlg(img_Lvl1, lbl_fName1, FTex1, trckbrFrom.Position);
 end;
 
 procedure Tfrm_ToolTexGen.btn2Click(Sender: TObject);
 begin
-  LoadTgaFromDlg(img_LvlMax, lbl_fName2);
+  LoadTgaFromDlg(img_LvlMax, lbl_fName2, FTexMax, trckbrTo.Position);
 end;
 
 procedure Tfrm_ToolTexGen.btn3Click(Sender: TObject);
@@ -173,6 +208,17 @@ begin
   pnlTexLvlMax.OnDropFile := OnTexLvlMaxDrop;
   InitDropPnl(pnlTexLvl1, img_Lvl1, pnlTex1);
   InitDropPnl(pnlTexLvlMax, img_LvlMax, pnlTexMax);
+
+  FTex1 := TBitmap.Create;
+  FTexMax := TBitmap.Create;
+end;
+
+procedure Tfrm_ToolTexGen.FormDestroy(Sender: TObject);
+begin
+  pnlTexLvl1.Free;
+  pnlTexLvlMax.Free;
+  FTex1.Free;
+  FTexMax.Free;
 end;
 
 function Tfrm_ToolTexGen.GetBtnProcessingCaption: string;
@@ -187,6 +233,16 @@ begin
     Result := 'Exporting files. Please wait...';
 end;
 
+procedure Tfrm_ToolTexGen.img_Lvl1Click(Sender: TObject);
+begin
+  BlendTo(img_Lvl1, trckbrFrom.Position);
+end;
+
+procedure Tfrm_ToolTexGen.img_LvlMaxClick(Sender: TObject);
+begin
+  BlendTo(img_LvlMax, trckbrTo.Position);
+end;
+
 procedure Tfrm_ToolTexGen.InitDropPnl(const pnl: TDropPanel; const img: TImage;
   const aParent: TPanel);
 begin
@@ -196,8 +252,7 @@ begin
   img.Align := alClient;
 end;
 
-procedure Tfrm_ToolTexGen.LoadTgaFile(fileName: string; const imgTo: TImage;
-  const lbl: TLabel);
+procedure Tfrm_ToolTexGen.LoadTgaFile(fileName: string; const imgTo: TImage; const lbl: TLabel; const blendBmp: TBitmap; const alpha: Byte);
 var
   IfFailedOpen: TProcedureNoParams;
   Validate: TBitmapForceValid;
@@ -213,14 +268,17 @@ begin
   Validate := Force24BppTga;
   loaded := LoadToBitmap(fileName, FIF_TARGA, imgTo.Picture.Bitmap, Handle,
     IfFailedOpen, Validate);
+  blendBmp.Assign(imgTo.Picture.Bitmap);
   if loaded then
     lbl.Caption := ExtractFileName(fileName);
+  BlendTo(imgTo, alpha);
 end;
 
-procedure Tfrm_ToolTexGen.LoadTgaFromDlg(const imgTo: TImage; const lbl: TLabel);
+procedure Tfrm_ToolTexGen.LoadTgaFromDlg(const imgTo: TImage; const lbl: TLabel;
+  const blendBmp: TBitmap; const alpha: Byte);
 begin
   if opnDlg1.Execute then
-    LoadTgaFile(opnDlg1.FileName, imgTo, lbl);
+    LoadTgaFile(opnDlg1.FileName, imgTo, lbl, blendBmp, alpha);
 end;
 
 function Tfrm_ToolTexGen.MaxRes: Integer;
@@ -242,12 +300,12 @@ end;
 
 procedure Tfrm_ToolTexGen.OnTexLvl1Drop(Sender: TObject; fileName: string);
 begin
-  LoadTgaFile(fileName, img_Lvl1, lbl_fName1);
+  LoadTgaFile(fileName, img_Lvl1, lbl_fName1, FTex1, trckbrFrom.Position);
 end;
 
 procedure Tfrm_ToolTexGen.OnTexLvlMaxDrop(Sender: TObject; fileName: string);
 begin
-  LoadTgaFile(fileName, img_LvlMax, lbl_fName2);
+  LoadTgaFile(fileName, img_LvlMax, lbl_fName2, FTexMax, trckbrTo.Position);
 end;
 
 function Tfrm_ToolTexGen.OutputDir: string;
@@ -315,6 +373,12 @@ begin
     Result := 'Man'
   else
     Result := 'Fem';
+end;
+
+procedure Tfrm_ToolTexGen.trckbrBlendChange(Sender: TObject);
+begin
+  trckbrFrom.Max := trckbrTo.Position;
+  trckbrTo.Min := trckbrFrom.Position;
 end;
 
 end.
