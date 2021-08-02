@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.ShellAPI, System.SysUtils, System.Classes, Data.DB,
   Data.Win.ADODB, System.IOUtils, System.StrUtils, Functional.Sequence,
   Unit9020_Types, System.Generics.Collections, Datasnap.DBClient,
-  Datasnap.Provider, Vcl.OleServer, JRO_TLB;
+  Datasnap.Provider, Vcl.OleServer, JRO_TLB, System.Win.ComObj;
 
 //{$DEFINE OpenPathsInExplorer}
 const
@@ -15,7 +15,7 @@ const
 function AsDir(const aDir: string): string;
 
 type
-  TTableName = (tnNone, tnFitStages, tnPlayerStages, tnAllNPCs);
+  TTableName = (tnNone, tnFitStages, tnPlayerStages, tnAllNPCs, tnNPCs);
 
   TConfigField = (
     // App configuration
@@ -72,6 +72,21 @@ type
     qryAux: TADOQuery;
     JE: TJetEngine;
     strngfldConfigLuaCfgPath: TStringField;
+    tblNPCs: TADOTable;
+    atncfldNPCsID: TAutoIncField;
+    intgrfldNPCsNPCid: TIntegerField;
+    intgrfldNPCsfitStage: TIntegerField;
+    smlntfldNPCsweight: TSmallintField;
+    wrdfldNPCsmuscleDef: TWordField;
+    dsNPCs: TDataSource;
+    strngfldNPCsfullName: TStringField;
+    strngfldNPCsformID: TStringField;
+    strngfldNPCsesp: TStringField;
+    strngfldNPCsclass: TStringField;
+    strngfldNPCsrace: TStringField;
+    blnfldNPCsisFemale: TBooleanField;
+    strngfldNPCsfitStageLook: TStringField;
+    qryGenerate: TADOQuery;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
@@ -89,28 +104,32 @@ type
       string;
     function FitStageToLua: string;
     function GetTable(const aTable: TTableName): TCustomADODataSet;
-    function InsertCommand(const aTable: TTableName): string;
     function MemoToLua(const aText: string): string;
     function TempDB: string;
     function ToLuaTable(const s: string; const addComma: Boolean = true): string;
     procedure CloseAll;
     procedure CreateTemp(const aCopyFrom: string);
+    procedure EditPost(const aDataSet: TDataSet);
     procedure NewConfig;
     procedure OpenAll;
     procedure PostAll;
     procedure Refresh(aTbl: TCustomADODataSet);
     procedure RefreshToLast(aTbl: TCustomADODataSet);
   public
+    function AppendFitStage: string;
+    function AppendPlayerStage: string;
+    function AppendNPC(const aId: Integer): TFunc<string>;
     function AppPath: string;
     function Config(aField: TConfigField): TField;
     function Field(const aTable: TTableName; const aField: string): TField;
     function FitStagesCurrIdx: Integer;
     function FitStagesToLua: string;
+    function GenNPCs: string;
     function GetTexOutFolder: string;
     function IsAtFirst(const aTable: TTableName): Boolean;
     function PlayerJourney: TList<TJourneyItem>;
     function ValidRaces: string;
-    procedure Append(const aTable: TTableName);
+    procedure Append(const aTable: TTableName; const aCmd: TFunc<string>);
     procedure CfgBackup;
     procedure CfgRestore;
     procedure ConfigUpdate(aField: TConfigField; val: Variant);
@@ -144,17 +163,18 @@ begin
   Result := IncludeTrailingPathDelimiter(aDir);
 end;
 
-procedure Tdtmdl_Main.Append(const aTable: TTableName);
+procedure Tdtmdl_Main.Append(const aTable: TTableName; const aCmd: TFunc<string>);
 var
   tbl: TCustomADODataSet;
 begin
   tbl := GetTable(aTable);
+  if not Assigned(tbl) then
+    Exit;
   // Post to avoid annoying behavior of losing changes that were being
   // edited while adding a new record.
-  tbl.Edit;
-  tbl.Post;
+  EditPost(tbl);
 
-  cmd.CommandText := InsertCommand(aTable);
+  cmd.CommandText := aCmd();
   if cmd.CommandText <> '' then begin
     cmd.Execute;
     RefreshToLast(tbl);
@@ -167,17 +187,30 @@ begin
   aTbl.Open;
 end;
 
-function Tdtmdl_Main.InsertCommand(const aTable: TTableName): string;
+function Tdtmdl_Main.AppendFitStage: string;
 begin
-  Result := '';
-  case aTable of
-    tnFitStages:
-      Result :=
-        'INSERT INTO FitStages (iName, muscleDefType, muscleDefLvl, excludedRaces) VALUES ("New Stage", 0, 0, "")';
-    tnPlayerStages:
-      Result :=
-        'INSERT INTO PlayerStages (fitnessStage, minDays, bsMin, bsMax, muscleMin, muscleMax, blend, headInit, headFinal) VALUES (1, 20, 0, 100, 1, 6, 30, 100, 100)';
-  end;
+  Result :=
+    'INSERT INTO FitStages (iName, muscleDefType, muscleDefLvl, excludedRaces) ' +
+    'VALUES ("New Stage", 0, 0, "")';
+end;
+
+function Tdtmdl_Main.AppendNPC(const aId: Integer): TFunc<string>;
+begin
+  Result :=
+    function: string
+    begin
+      Result := Format(
+        'INSERT INTO NPCs (NPCid, fitStage, weight, muscleDef) VALUES (%d, 1, 101, 0)',
+        [aId]
+        );
+    end;
+end;
+
+function Tdtmdl_Main.AppendPlayerStage: string;
+begin
+  Result := 'INSERT INTO PlayerStages ' +
+    '(fitnessStage, minDays, bsMin, bsMax, muscleMin, muscleMax, blend, headInit, headFinal) ' +
+    'VALUES (1, 20, 0, 100, 1, 6, 30, 100, 100)';
 end;
 
 function Tdtmdl_Main.AppPath: string;
@@ -297,6 +330,16 @@ begin
   end;
 end;
 
+procedure Tdtmdl_Main.EditPost(const aDataSet: TDataSet);
+begin
+  with aDataSet do begin
+    if Active and (RecordCount > 0) then begin
+      Edit;
+      Post;
+    end;
+  end;
+end;
+
 procedure Tdtmdl_Main.ExecuteSQL(const SQL: string);
 begin
   cmd.CommandText := SQL;
@@ -403,7 +446,7 @@ end;
 
 function Tdtmdl_Main.FitStagesToLua: string;
 begin
-  Result := 'local fitStages = ' +
+  Result := 'database.fitStages = ' +
     ToLuaTable(DataSetToLua(tnFitStages, FitStageToLua), false);
 end;
 
@@ -412,7 +455,7 @@ var
   output: TStringList;
   tbl: TCustomADODataSet;
 begin
-  { TODO : Make this independent from currently selected record }
+  { TODO : Make this independent from currently selected record.. Clean and factorize. }
   tbl := tblFitStages;
   output := TStringList.Create;
   try
@@ -437,6 +480,115 @@ begin
       [dirName]);
 end;
 
+function LuaStr(const aVal: string): string;
+begin
+  Result := EncloseStr('"')(aVal);
+end;
+
+function LuaArray(const aIndex: string): string;
+begin
+  Result := EncloseStr('[', ']')(aIndex);
+end;
+
+function LuaTableDecl(const aTableId: string): string;
+begin
+  Result := LuaArray(aTableId);
+end;
+
+function LuaTableDeclStr(const aTableId: string): string;
+begin
+  Result := LuaTableDecl(LuaStr(aTableId));
+end;
+
+function LuaTableContents(const aContent: string): string;
+begin
+  Result := EncloseStr('{', '}')(aContent);
+end;
+
+function LuaTableNewLineContents(const aContent: string): string;
+begin
+  Result := EncloseStr('{'#13#10, #13#10'}')(aContent);
+end;
+
+function LuaAssign(const aVar, aVal: string): string;
+begin
+  Result := aVar + ' = ' + aVal;
+end;
+
+function strField(const ds: TDataSet; aField: string): string;
+begin
+  Result := ds.FieldByName(aField).AsString;
+end;
+
+function LuaAssignField(const ds: TDataSet; aField: string): string;
+begin
+  // Returns a string in the form aField = aField.asString;
+  // Use it when no processing is needed and field values will be used as is.
+  Result := LuaAssign(aField, strField(ds, aField));
+end;
+
+function LuaAssignRef(const ds: TDataSet; aField, aRef: string): string;
+begin
+  // Returns a string in the form aField = aRef[aField.asString];
+  Result := LuaAssign(aField, aRef + LuaArray(strField(ds, aField)));
+end;
+
+function JsonKey(const key: string): string;
+begin
+  Result := EncloseStr('"', '": ')(key);
+end;
+
+function JsonPair(const key, value: string): string;
+begin
+  Result := JsonKey(key) + value;
+end;
+
+function JsonPairField(const ds: TDataSet; const aField: string): string;
+begin
+  Result := JsonPair(aField, ds.FieldByName(aField).AsString);
+end;
+
+function JsonObject(const obj: string): string;
+begin
+  Result := EncloseStr('{', '}')(obj);
+end;
+
+function JsonMasterObject(const obj: string): string;
+begin
+  Result := EncloseStr('{'#13#10, #13#10'}')(obj);
+end;
+
+function GenNpc(ds: TDataSet): string;
+var
+  s: TArray<string>;
+  varDecl, varContent: string;
+begin
+  varDecl := '__formData|' + ds.FieldByName('uId').AsString;
+    { TODO : Check if weight needs to be divided by 100 }
+  s := TArray<string>.Create(
+    JsonPairField(ds, 'fitStage'),
+    JsonPairField(ds, 'weight'),
+    JsonPairField(ds, 'muscleDef')
+    );
+  varContent := TSeq.From<string>(s).Fold<string>(PrettyComma(), '');
+  Result := JsonPair(varDecl, JsonObject(varContent));
+end;
+
+function Tdtmdl_Main.GenNPCs: string;
+var
+  npcs, meta: string;
+begin
+  qryGenerate.Close;
+  qryGenerate.SQL.Text := 'SELECT * FROM GenNPCs';
+  qryGenerate.Open;
+  npcs := TSeq.From(qryGenerate)
+    .Map<string>(GenNpc)
+    .Fold<string>(CommaAndNL(), '');
+  meta := JsonPair('typeName', '"JFormMap"');
+  meta := JsonPair('__metaInfo', JsonObject(meta)) + ','#13#10;
+  Result := JsonMasterObject(meta + npcs);
+end;
+
 function Tdtmdl_Main.GetTable(const aTable: TTableName): TCustomADODataSet;
 begin
   case aTable of
@@ -446,8 +598,14 @@ begin
       Result := tblPlayerStages;
     tnAllNPCs:
       Result := tblAllNPCs;
+    tnNPCs:
+      Result := tblNPCs;
   else
+    {$IFDEF DEBUG}
     raise Exception.CreateFmt('Asked for some invalid table: %d.', [Integer(aTable)]);
+    {$ELSE}
+    Result := nil;
+    {$ENDIF}
   end;
 end;
 
@@ -535,27 +693,16 @@ procedure Tdtmdl_Main.Post(const aTable: TTableName);
 var
   tbl: TCustomADODataSet;
 begin
-  try
-    tbl := GetTable(aTable);
-    tbl.Edit;
-    tbl.Post;
-  except
-    on E: Exception do  // Nothing. Used to avoid weird but inconsequential errors when using DBTrackers
-  end;
+  tbl := GetTable(aTable);
+  EditPost(tbl)
 end;
 
 procedure Tdtmdl_Main.PostAll;
 var
   i: Integer;
 begin
-  for i := 0 to conMain.DataSetCount - 1 do begin
-    with conMain.DataSets[i] do begin
-      if Active then begin
-        Edit;
-        Post;
-      end;
-    end;
-  end;
+  for i := 0 to conMain.DataSetCount - 1 do
+    EditPost(conMain.DataSets[i]);
 end;
 
 procedure Tdtmdl_Main.RefreshTable(const aTable: TTableName);

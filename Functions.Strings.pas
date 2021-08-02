@@ -8,9 +8,14 @@ uses
 function FilterByContainsTxt(const aSubText: string): Functional.FuncFactory.TPredicate
   <string>;
 
+function PrettyComma: TFoldFunc<string, string>;
+
+function CommaAndNL: TFoldFunc<string, string>;
+
 function ReduceStr(const aSeparator: string): TFoldFunc<string, string>;
 
-function ReduceStrField(const aField, aSeparator: string): TFoldFunc<TDataSet, string>;
+function ReduceStrField(const aField, aSeparator: string): TFoldFunc<TDataSet,
+  string>;
 
 function EncloseStr(const delim: string; delim2: string = ''): TFunc<string,
   string>;
@@ -20,6 +25,16 @@ function DeleteLast(const aText, aSubText: string): string;
 function DeleteLastComma(const aText: string): string;
 
 implementation
+
+function CommaAndNL: TFoldFunc<string, string>;
+begin
+  Result := ReduceStr(','#13#10);
+end;
+
+function PrettyComma: TFoldFunc<string, string>;
+begin
+  Result := ReduceStr(', ');
+end;
 
 function DeleteLastComma(const aText: string): string;
 begin
@@ -63,13 +78,14 @@ begin
     end;
 end;
 
-function ReduceStrField(const aField, aSeparator: string):
-  TFoldFunc<TDataSet, string>;
+function ReduceStrField(const aField, aSeparator: string): TFoldFunc<TDataSet,
+  string>;
 begin
   Result :=
     function(const input: TDataSet; const Accumulator: string): string
     begin
-      Result := ReduceStr(aSeparator)(input.FieldByName(aField).AsString, Accumulator);
+      Result := ReduceStr(aSeparator)(input.FieldByName(aField).AsString,
+        Accumulator);
     end;
 end;
 

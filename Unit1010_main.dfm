@@ -700,7 +700,7 @@ object frmMain: TfrmMain
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 177
+          Width = 102
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -716,7 +716,6 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
-          ExplicitWidth = 102
         end
         object dbgrd4: TDBGrid
           Left = 1
@@ -751,7 +750,7 @@ object frmMain: TfrmMain
         Left = 0
         Top = 0
         Width = 621
-        Height = 71
+        Height = 51
         Align = alTop
         ControlCollection = <
           item
@@ -774,31 +773,97 @@ object frmMain: TfrmMain
       end
       object pnl2: TPanel
         Left = 0
-        Top = 71
+        Top = 51
         Width = 621
-        Height = 342
+        Height = 362
         Align = alClient
         Padding.Left = 15
         Padding.Top = 15
         Padding.Right = 15
         Padding.Bottom = 15
         TabOrder = 1
-        ExplicitLeft = 330
-        ExplicitTop = 190
-        ExplicitWidth = 141
-        ExplicitHeight = 1
-        object dbgrd2: TDBGrid
+        ExplicitTop = 71
+        ExplicitHeight = 342
+        object dbgrdNPCs: TDBGrid
           Left = 16
           Top = 16
           Width = 589
-          Height = 310
+          Height = 330
           Align = alClient
+          DataSource = dtmdl_Main.dsNPCs
+          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgTitleClick, dgTitleHotTrack]
+          PopupMenu = pmRecords
           TabOrder = 0
           TitleFont.Charset = DEFAULT_CHARSET
           TitleFont.Color = clWindowText
           TitleFont.Height = -11
           TitleFont.Name = 'Tahoma'
           TitleFont.Style = []
+          OnColEnter = dbgrdNPCsColEnter
+          OnKeyDown = dbgrd_NavKeyDown
+          Columns = <
+            item
+              Expanded = False
+              FieldName = 'esp'
+              Title.Caption = 'esp file'
+              Width = 70
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'formID'
+              Title.Caption = 'FormID'
+              Width = 45
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'fullName'
+              Title.Caption = 'Full name'
+              Width = 80
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'fitStageLook'
+              Title.Caption = 'Fitness stage'
+              Width = 110
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'weight'
+              Title.Caption = 'Weight'
+              Width = 50
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'muscleDef'
+              Title.Caption = 'Muscle def.'
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'class'
+              Title.Caption = 'Class'
+              Width = 90
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'race'
+              Title.Caption = 'Race'
+              Width = 70
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'isFemale'
+              Title.Caption = 'Is female?'
+              Width = 60
+              Visible = True
+            end>
         end
       end
     end
@@ -1043,6 +1108,15 @@ object frmMain: TfrmMain
       ImageIndex = 3
       ShortCut = 16464
       OnExecute = actImportNPCsExecute
+    end
+    object flpnBs: TFileOpen
+      Category = 'File'
+      Caption = '&Open...'
+      Dialog.DefaultExt = 'xml'
+      Dialog.Filter = 'Bodyslide presets (*.xml)|*.xml'
+      Hint = 'Open|Opens an existing file'
+      ImageIndex = 7
+      ShortCut = 16463
     end
   end
   object ilActions48: TImageList

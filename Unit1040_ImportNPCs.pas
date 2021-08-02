@@ -28,10 +28,12 @@ type
     procedure FormCreate(Sender: TObject);
     procedure btnClearFilterClick(Sender: TObject);
   private
-    { Private declarations }
+    procedure HideAcceptBtn;
+    procedure MakeSelectDlg;
+  protected
   public
     class procedure Execute;
-    procedure HideAcceptBtn;
+    class function Select: Integer;
   end;
 
 var
@@ -117,6 +119,30 @@ begin
   btnAccept.Visible := false;
   rltvpnl1.ControlCollection[0].LeftOf := btnClose;
   btnClose.Caption := '&Close';
+end;
+
+procedure TfrmImportNPCs.MakeSelectDlg;
+begin
+  Caption := 'Select the NPC you want to set values for';
+  btnImport.Visible := false;
+  btnSearch.Default := false;
+  btnAccept.Default := true;
+end;
+
+class function TfrmImportNPCs.Select: Integer;
+begin
+  frmImportNPCs := TfrmImportNPCs.Create(nil);
+  try
+    with frmImportNPCs do begin
+      MakeSelectDlg;
+      if ShowModal = mrOk then
+        Result := dtmdl_Main.tblAllNPCs.FieldByName('Id').AsInteger
+      else
+        Result := -1;
+    end;
+  finally
+    frmImportNPCs.Free;
+  end;
 end;
 
 end.

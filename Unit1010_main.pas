@@ -12,7 +12,7 @@ uses
   System.Types, Vcl.Imaging.pngimage, Vcl.Imaging.jpeg, System.Math,
   Unit9020_Types, Winapi.ShellAPI, Vcl.Themes, System.StrUtils,
   DataAware.TDBTrackBar, System.Generics.Collections, System.Notification,
-  Unit3010_FilterImportedNPC;
+  Unit3010_FilterImportedNPC, Winapi.OleDB, System.Win.ComObj;
 
 type
   TfrmMain = class(TForm)
@@ -126,7 +126,8 @@ type
     filterImportedNPC1: TfrmFilterImportedNPC;
     stckpnl1: TStackPanel;
     pnl2: TPanel;
-    dbgrd2: TDBGrid;
+    dbgrdNPCs: TDBGrid;
+    flpnBs: TFileOpen;
     procedure dbgrd_NavKeyDown(Sender: TObject; var Key: Word; Shift:
       TShiftState);
     procedure actDBInsertExecute(Sender: TObject);
@@ -154,6 +155,7 @@ type
     procedure actSaveExecute(Sender: TObject);
     procedure flpn1Accept(Sender: TObject);
     procedure actFileNewExecute(Sender: TObject);
+    procedure dbgrdNPCsColEnter(Sender: TObject);
   private
     procedure DisableCtrlDel(var Key: Word; Shift: TShiftState);
     procedure CheckDelAvailability;
@@ -162,7 +164,12 @@ type
     function ActivePageAsTable: TTableName;
     procedure SetEdtHint(const edt: TCustomEdit; const func: TStrToStr);
     procedure ShellOpen(const s: string);
-    procedure TryDrawJourney;
+    function InsertProcedure(const aTbl: TTableName): TProcedureNoParams;
+    function InsertProcMin(const aTbl: TTableName; const aCmd: TFunc<string>):
+      TProcedureNoParams;
+    function InsertProcPlayerStage(const aTbl: TTableName; const aCmd: TFunc<
+      string>): TProcedureNoParams;
+    function InsertProcNPC(const aTbl: TTableName): TProcedureNoParams;
   public
     procedure DrawPlayerJourney;
     procedure ApplyConfig;
@@ -175,7 +182,7 @@ implementation
 
 uses
   TargaImage, Unit1020_TexGen, Unit5020_DrawJourney, Unit1030_Config,
-  Unit1040_ImportNPCs;
+  Unit1040_ImportNPCs, Functions.Utils;
 
 {$R *.dfm}
 
@@ -194,13 +201,12 @@ end;
 procedure TfrmMain.actDBDelExecute(Sender: TObject);
 begin
   { TODO : Add delete code }
-  TryDrawJourney;
+//  TryDrawJourney;
 end;
 
 procedure TfrmMain.actDBInsertExecute(Sender: TObject);
 begin
-  dtmdl_Main.Append(ActivePageAsTable);
-  TryDrawJourney;
+  InsertProcedure(ActivePageAsTable)();
 end;
 
 procedure TfrmMain.actFileNewExecute(Sender: TObject);
@@ -210,7 +216,7 @@ end;
 
 procedure TfrmMain.actGenerateExecute(Sender: TObject);
 begin
-  redtOutput.Text := dtmdl_Main.FitStagesToLua;
+  redtOutput.Text := {dtmdl_Main.FitStagesToLua +} dtmdl_Main.GenNPCs;
 end;
 
 procedure TfrmMain.actImportNPCsExecute(Sender: TObject);
@@ -224,6 +230,8 @@ begin
     Result := tnFitStages
   else if pgc1.ActivePage = tsPlayerStages then
     Result := tnPlayerStages
+  else if pgc1.ActivePage = tsNPCs then
+    Result := tnNPCs
   else
     Result := tnNone;
 end;
@@ -324,6 +332,16 @@ begin
     end);
 end;
 
+procedure TfrmMain.dbgrdNPCsColEnter(Sender: TObject);
+begin
+  with dbgrdNPCs do begin
+    if (SelectedIndex < 3) or (SelectedIndex > 5) then
+      Options := Options - [dgEditing, dgAlwaysShowEditor]
+    else
+      Options := Options + [dgEditing, dgAlwaysShowEditor]
+  end;
+end;
+
 procedure TfrmMain.dbgrd_fitStagesNavColEnter(Sender: TObject);
 begin
   CheckDelAvailability;
@@ -395,6 +413,57 @@ begin
   DrawPlayerJourney;
 end;
 
+function TfrmMain.InsertProcedure(const aTbl: TTableName): TProcedureNoParams;
+begin
+  case aTbl of
+    tnFitStages:
+      Result := InsertProcMin(aTbl, dtmdl_Main.AppendFitStage);
+    tnPlayerStages:
+      Result := InsertProcPlayerStage(aTbl, dtmdl_Main.AppendPlayerStage);
+    tnNPCs:
+      Result := InsertProcNPC(aTbl);
+  else
+    Result := Identity;
+  end;
+end;
+
+function TfrmMain.InsertProcMin(const aTbl: TTableName; const aCmd: TFunc<string
+  >): TProcedureNoParams;
+begin
+  Result :=
+    procedure
+    begin
+      dtmdl_Main.Append(aTbl, aCmd);
+    end;
+end;
+
+function TfrmMain.InsertProcNPC(const aTbl: TTableName): TProcedureNoParams;
+begin
+  Result :=
+    procedure
+    var
+      npcId: Integer;
+    begin
+      npcId := TfrmImportNPCs.Select;
+      if npcId = -1 then
+        Exit;
+      InsertProcMin(aTbl, dtmdl_Main.AppendNPC(npcId))();
+      dtmdl_Main.RefreshTable(aTbl);
+//        dtmdl_Main.tblNPCs.Sort := '';
+    end;
+end;
+
+function TfrmMain.InsertProcPlayerStage(const aTbl: TTableName; const aCmd:
+  TFunc<string>): TProcedureNoParams;
+begin
+  Result :=
+    procedure
+    begin
+      InsertProcMin(aTbl, aCmd)();
+      DrawPlayerJourney;
+    end;
+end;
+
 procedure TfrmMain.pgc1Change(Sender: TObject);
 begin
   CheckDelAvailability;
@@ -402,8 +471,8 @@ end;
 
 procedure TfrmMain.SetBodyslideFromFile(const aField: string);
 begin
-  if flpn1.Execute then
-    dtmdl_Main.Edit(tnFitStages, aField, flpn1.Dialog.FileName);
+  if flpnBs.Execute then
+    dtmdl_Main.Edit(tnFitStages, aField, flpnBs.Dialog.FileName);
 end;
 
 procedure TfrmMain.SetEdtHint(const edt: TCustomEdit; const func: TStrToStr);
@@ -414,12 +483,6 @@ end;
 procedure TfrmMain.ShellOpen(const s: string);
 begin
   ShellExecute(0, 'OPEN', PWideChar(s), '', '', SW_SHOWNORMAL);
-end;
-
-procedure TfrmMain.TryDrawJourney;
-begin
-  if pgc1.ActivePage = tsPlayerStages then
-    DrawPlayerJourney;
 end;
 
 end.

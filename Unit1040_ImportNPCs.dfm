@@ -203,6 +203,7 @@ object frmImportNPCs: TfrmImportNPCs
       Anchors = []
       Cancel = True
       Caption = '&Cancel'
+      ModalResult = 2
       TabOrder = 1
       OnClick = btnCloseClick
     end
@@ -213,6 +214,7 @@ object frmImportNPCs: TfrmImportNPCs
       Height = 25
       Anchors = []
       Caption = '&Accept'
+      ModalResult = 1
       TabOrder = 2
     end
   end
