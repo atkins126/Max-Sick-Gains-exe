@@ -127,7 +127,7 @@ type
     stckpnl1: TStackPanel;
     pnl2: TPanel;
     dbgrdNPCs: TDBGrid;
-    flpnBs: TFileOpen;
+    opnDlgBs: TFileOpenDialog;
     procedure dbgrd_NavKeyDown(Sender: TObject; var Key: Word; Shift:
       TShiftState);
     procedure actDBInsertExecute(Sender: TObject);
@@ -216,7 +216,11 @@ end;
 
 procedure TfrmMain.actGenerateExecute(Sender: TObject);
 begin
-  redtOutput.Text := {dtmdl_Main.FitStagesToLua +} dtmdl_Main.GenNPCs;
+  redtOutput.Text := dtmdl_Main.GenerateAllModData;
+  if redtOutput.Text = '' then
+    Application.MessageBox('Mod data was successfully generated.' + #13#10 +
+      'Max Sick Gains can now be played in Skyrim.', 'Success', MB_OK +
+      MB_ICONINFORMATION + MB_TOPMOST);
 end;
 
 procedure TfrmMain.actImportNPCsExecute(Sender: TObject);
@@ -449,6 +453,7 @@ begin
         Exit;
       InsertProcMin(aTbl, dtmdl_Main.AppendNPC(npcId))();
       dtmdl_Main.RefreshTable(aTbl);
+      { TODO : Sort table }
 //        dtmdl_Main.tblNPCs.Sort := '';
     end;
 end;
@@ -470,9 +475,13 @@ begin
 end;
 
 procedure TfrmMain.SetBodyslideFromFile(const aField: string);
+var
+  defDir: string;
 begin
-  if flpnBs.Execute then
-    dtmdl_Main.Edit(tnFitStages, aField, flpnBs.Dialog.FileName);
+  defDir := dtmdl_Main.Field(tnFitStages, aField).AsString;
+  opnDlgBs.DefaultFolder := ExtractFilePath(defDir);
+  if opnDlgBs.Execute then
+    dtmdl_Main.Edit(tnFitStages, aField, opnDlgBs.FileName);
 end;
 
 procedure TfrmMain.SetEdtHint(const edt: TCustomEdit; const func: TStrToStr);

@@ -25,7 +25,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 629
     Height = 441
-    ActivePage = tsNPCs
+    ActivePage = tsFitStages
     Align = alClient
     TabOrder = 0
     OnChange = pgc1Change
@@ -782,8 +782,6 @@ object frmMain: TfrmMain
         Padding.Right = 15
         Padding.Bottom = 15
         TabOrder = 1
-        ExplicitTop = 71
-        ExplicitHeight = 342
         object dbgrdNPCs: TDBGrid
           Left = 16
           Top = 16
@@ -1108,15 +1106,6 @@ object frmMain: TfrmMain
       ImageIndex = 3
       ShortCut = 16464
       OnExecute = actImportNPCsExecute
-    end
-    object flpnBs: TFileOpen
-      Category = 'File'
-      Caption = '&Open...'
-      Dialog.DefaultExt = 'xml'
-      Dialog.Filter = 'Bodyslide presets (*.xml)|*.xml'
-      Hint = 'Open|Opens an existing file'
-      ImageIndex = 7
-      ShortCut = 16463
     end
   end
   object ilActions48: TImageList
@@ -4164,5 +4153,16 @@ object frmMain: TfrmMain
     object Setvalue1: TMenuItem
       Action = actTrackbarSet
     end
+  end
+  object opnDlgBs: TFileOpenDialog
+    FavoriteLinks = <>
+    FileTypes = <
+      item
+        DisplayName = 'Bodyslide presets (*.xml)'
+        FileMask = '*.xml'
+      end>
+    Options = []
+    Left = 300
+    Top = 240
   end
 end

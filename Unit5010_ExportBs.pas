@@ -86,7 +86,7 @@ var
   rawData: TDictionary<string, TBsVals>;
   onlySliders: TPredicate<string>;
   slidersToDict: TProc<string>;
-  commaSeparate: TFoldFunc<string, string>;
+//  commaSeparate: TFoldFunc<string, string>;
 begin
   Result := '';
   if not FileExists(aFileName) then
@@ -97,7 +97,7 @@ begin
   rawData := TDictionary<string, TBsVals>.Create;
   // Functions
   onlySliders := FilterByContainsTxt('<SetSlider');
-  commaSeparate := ReduceStr(','#13#10);
+//  commaSeparate := ReduceStr(','#13#10);
   slidersToDict := xmlLineToDict(rawData);
 
   try
@@ -106,7 +106,7 @@ begin
       .Filter(onlySliders)
       .ForEach(slidersToDict);
     DictToStrList(rawData, l);
-    Result := TSeq.From(l).Fold<string>(commaSeparate, '');
+    Result := TSeq.From(l).Fold<string>(PrettyComma(), '');
   finally
     l.Free;
     rawData.Free

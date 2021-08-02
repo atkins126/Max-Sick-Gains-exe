@@ -95,26 +95,21 @@ type
     function BlankDB: string;
     function CfgFile: string;
     function ConfigFieldToStr(const aField: TConfigField): string;
-    function DataSetToLua(const aTable: TTableName; const fun: TVoidToStr):
-      string;
     function FieldFrom(const aTbl: TCustomADODataSet; const aField: string):
       string;
-    function FieldToLuaAssign(const aDataSet: TCustomADODataSet; const aFied:
-      string; const isStr: Boolean = true; const addComma: Boolean = true):
-      string;
-    function FitStageToLua: string;
+    function GetConfiguredPath(const aCfgField: TConfigField): string;
     function GetTable(const aTable: TTableName): TCustomADODataSet;
-    function MemoToLua(const aText: string): string;
     function TempDB: string;
-    function ToLuaTable(const s: string; const addComma: Boolean = true): string;
     procedure CloseAll;
     procedure CreateTemp(const aCopyFrom: string);
+    procedure GenQuery(const sql: string);
     procedure EditPost(const aDataSet: TDataSet);
     procedure NewConfig;
     procedure OpenAll;
     procedure PostAll;
     procedure Refresh(aTbl: TCustomADODataSet);
     procedure RefreshToLast(aTbl: TCustomADODataSet);
+    procedure StringToFile(const txt, aFile: string);
   public
     function AppendFitStage: string;
     function AppendPlayerStage: string;
@@ -124,8 +119,13 @@ type
     function Field(const aTable: TTableName; const aField: string): TField;
     function FitStagesCurrIdx: Integer;
     function FitStagesToLua: string;
+    function GenerateAllModData: string;
+    function GenerateLuaDatabase: string;
     function GenNPCs: string;
+    function GenFitStages: string;
     function GetTexOutFolder: string;
+    function GetCfgOutFolder: string;
+    function GetLuaOutFolder: string;
     function IsAtFirst(const aTable: TTableName): Boolean;
     function PlayerJourney: TList<TJourneyItem>;
     function ValidRaces: string;
@@ -154,7 +154,7 @@ implementation
 
 uses
   Vcl.Forms, Unit5010_ExportBs, Functions.Strings, Unit1010_main,
-  Unit1030_Config;
+  Unit1030_Config, Unit9015_GenMod;
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 {$R *.dfm}
 
@@ -296,30 +296,6 @@ begin
   cdsConfig.SaveToFile(CfgFile, dfXMLUTF8);
 end;
 
-function Tdtmdl_Main.DataSetToLua(const aTable: TTableName; const fun:
-  TVoidToStr): string;
-var
-  tbl: TDataSet;
-  bmk: TBookmark;
-begin
-  tbl := GetTable(aTable);
-  bmk := tbl.GetBookmark;
-  Result := '';
-  tbl.DisableControls;
-  try
-    tbl.First;
-    while not tbl.Eof do begin
-      Result := Result + fun + #13#10;
-      tbl.Next;
-    end;
-    Result := DeleteLastComma(Trim(Result));
-    tbl.GotoBookmark(bmk);
-  finally
-    tbl.FreeBookmark(bmk);
-    tbl.EnableControls;
-  end;
-end;
-
 procedure Tdtmdl_Main.Edit(const aTable: TTableName; const aField: string; const
   aVal: Variant);
 begin
@@ -370,20 +346,6 @@ begin
 {$ENDIF}
 end;
 
-function Tdtmdl_Main.MemoToLua(const aText: string): string;
-var
-  lines: TStringList;
-begin
-  lines := TStringList.Create;
-  try
-    lines.Text := aText;
-    Result := TSeq.From(lines).Map<string>(EncloseStr('"'))
-      .Fold<string>(ReduceStr(', '), '');
-  finally
-    lines.Free;
-  end;
-end;
-
 procedure Tdtmdl_Main.NewConfig;
 begin
   with cdsConfig do begin
@@ -414,19 +376,6 @@ begin
   Result := aTbl.FieldByName(aField).AsString;
 end;
 
-function Tdtmdl_Main.FieldToLuaAssign(const aDataSet: TCustomADODataSet; const
-  aFied: string; const isStr, addComma: Boolean): string;
-var
-  val: string;
-begin
-  val := FieldFrom(aDataSet, aFied);
-  if isStr then
-    val := '"' + val + '"';
-  Result := Format('%s=%s', [aFied, val]);
-  if addComma then
-    Result := Result + ',';
-end;
-
 procedure Tdtmdl_Main.FilterTable(const aTable: TTableName; const aFilter:
   string);
 begin
@@ -446,31 +395,8 @@ end;
 
 function Tdtmdl_Main.FitStagesToLua: string;
 begin
-  Result := 'database.fitStages = ' +
-    ToLuaTable(DataSetToLua(tnFitStages, FitStageToLua), false);
-end;
-
-function Tdtmdl_Main.FitStageToLua: string;
-var
-  output: TStringList;
-  tbl: TCustomADODataSet;
-begin
-  { TODO : Make this independent from currently selected record.. Clean and factorize. }
-  tbl := tblFitStages;
-  output := TStringList.Create;
-  try
-    output.Add(FieldToLuaAssign(tbl, 'displayName'));
-    output.Add('femBs=' + ToLuaTable(BodyslideToLua(FieldFrom(tbl, 'femBs'))));
-    output.Add('manBs=' + ToLuaTable(BodyslideToLua(FieldFrom(tbl, 'manBs'))));
-    output.Add(FieldToLuaAssign(tbl, 'muscleDefType', False, true));
-    output.Add(FieldToLuaAssign(tbl, 'muscleDefLvl', False, true));
-    output.Add('excludedRaces=' + ToLuaTable(MemoToLua(FieldFrom(tbl,
-      'excludedRaces')), False));
-    Result := Format('[%s] = %s', [FieldFrom(tbl, 'Id'),
-      ToLuaTable(Trim(output.Text))]);
-  finally
-    output.Free;
-  end;
+//  Result := 'database.fitStages = ' +
+//    ToLuaTable(DataSetToLua(tnFitStages, FitStageToLua), false);
 end;
 
 procedure Tdtmdl_Main.ForceDirIntoExistance(const dirName: string);
@@ -480,113 +406,94 @@ begin
       [dirName]);
 end;
 
-function LuaStr(const aVal: string): string;
+function Tdtmdl_Main.GenerateAllModData: string;
 begin
-  Result := EncloseStr('"')(aVal);
+  ForceDirIntoExistance(GetCfgOutFolder);
+  ForceDirIntoExistance(GetLuaOutFolder);
+  StringToFile(dtmdl_Main.GenNPCs, GetCfgOutFolder + 'npcs.json');
+  StringToFile(GenerateLuaDatabase, GetLuaOutFolder + 'database.lua');
+  // Outputs warnings
+  Result := '';
 end;
 
-function LuaArray(const aIndex: string): string;
+function Tdtmdl_Main.GenerateLuaDatabase: string;
 begin
-  Result := EncloseStr('[', ']')(aIndex);
+  Result := TSeq.From<string>(
+    TArray<string>.Create(
+    'local database = {}',
+    'database.' + GenFitStages,
+    'return database'
+    )
+    )
+    .Fold<string>(ReduceStr(#13#10#13#10), '');
 end;
 
-function LuaTableDecl(const aTableId: string): string;
+function Tdtmdl_Main.GenFitStages: string;
 begin
-  Result := LuaArray(aTableId);
-end;
-
-function LuaTableDeclStr(const aTableId: string): string;
-begin
-  Result := LuaTableDecl(LuaStr(aTableId));
-end;
-
-function LuaTableContents(const aContent: string): string;
-begin
-  Result := EncloseStr('{', '}')(aContent);
-end;
-
-function LuaTableNewLineContents(const aContent: string): string;
-begin
-  Result := EncloseStr('{'#13#10, #13#10'}')(aContent);
-end;
-
-function LuaAssign(const aVar, aVal: string): string;
-begin
-  Result := aVar + ' = ' + aVal;
-end;
-
-function strField(const ds: TDataSet; aField: string): string;
-begin
-  Result := ds.FieldByName(aField).AsString;
-end;
-
-function LuaAssignField(const ds: TDataSet; aField: string): string;
-begin
-  // Returns a string in the form aField = aField.asString;
-  // Use it when no processing is needed and field values will be used as is.
-  Result := LuaAssign(aField, strField(ds, aField));
-end;
-
-function LuaAssignRef(const ds: TDataSet; aField, aRef: string): string;
-begin
-  // Returns a string in the form aField = aRef[aField.asString];
-  Result := LuaAssign(aField, aRef + LuaArray(strField(ds, aField)));
-end;
-
-function JsonKey(const key: string): string;
-begin
-  Result := EncloseStr('"', '": ')(key);
-end;
-
-function JsonPair(const key, value: string): string;
-begin
-  Result := JsonKey(key) + value;
-end;
-
-function JsonPairField(const ds: TDataSet; const aField: string): string;
-begin
-  Result := JsonPair(aField, ds.FieldByName(aField).AsString);
-end;
-
-function JsonObject(const obj: string): string;
-begin
-  Result := EncloseStr('{', '}')(obj);
-end;
-
-function JsonMasterObject(const obj: string): string;
-begin
-  Result := EncloseStr('{'#13#10, #13#10'}')(obj);
-end;
-
-function GenNpc(ds: TDataSet): string;
-var
-  s: TArray<string>;
-  varDecl, varContent: string;
-begin
-  varDecl := '__formData|' + ds.FieldByName('uId').AsString;
-    { TODO : Check if weight needs to be divided by 100 }
-  s := TArray<string>.Create(
-    JsonPairField(ds, 'fitStage'),
-    JsonPairField(ds, 'weight'),
-    JsonPairField(ds, 'muscleDef')
-    );
-  varContent := TSeq.From<string>(s).Fold<string>(PrettyComma(), '');
-  Result := JsonPair(varDecl, JsonObject(varContent));
+  GenQuery('SELECT * FROM FitStages');
+  Result := TSeq.From(qryGenerate)
+    .Map<string>(GenFitStage)
+    .Fold<string>(CommaAndNL(), '');
+  Result := LuaAssign('fitStages', LuaTableNewLineContents(Result));
 end;
 
 function Tdtmdl_Main.GenNPCs: string;
 var
   npcs, meta: string;
 begin
-  qryGenerate.Close;
-  qryGenerate.SQL.Text := 'SELECT * FROM GenNPCs';
-  qryGenerate.Open;
+  GenQuery('SELECT * FROM GenNPCs');
   npcs := TSeq.From(qryGenerate)
     .Map<string>(GenNpc)
     .Fold<string>(CommaAndNL(), '');
   meta := JsonPair('typeName', '"JFormMap"');
   meta := JsonPair('__metaInfo', JsonObject(meta)) + ','#13#10;
   Result := JsonMasterObject(meta + npcs);
+end;
+
+procedure Tdtmdl_Main.GenQuery(const sql: string);
+begin
+  qryGenerate.Close;
+  qryGenerate.SQL.Text := sql;
+  qryGenerate.Open;
+end;
+
+function Tdtmdl_Main.GetCfgOutFolder: string;
+begin
+  Result := AsDir(GetConfiguredPath(cfLuaCfgPath)) + 'SKSE\Plugins\Maxick\';
+end;
+
+function Tdtmdl_Main.GetConfiguredPath(const aCfgField: TConfigField): string;
+var
+  modDir, altDir: string;
+  modExists, altExists: Boolean;
+begin
+  altDir := Config(aCfgField).AsString;
+  modDir := Config(cfModPath).AsString;
+  altExists := DirectoryExists(altDir);
+  modExists := DirectoryExists(modDir);
+  while (not altExists) and (not modExists) do begin
+    Application.MessageBox('Output folder doesn''t exist.' + #13#10 +
+      'You need to setup a valid one before you can continue.',
+      'Invalid folder', MB_OK + MB_ICONWARNING + MB_TOPMOST);
+    frmConfig := TfrmConfig.Create(frmMain);
+    frmConfig.ShowModal;
+    frmConfig.Free;
+    altDir := Config(aCfgField).AsString;
+    modDir := Config(cfModPath).AsString;
+    altExists := DirectoryExists(altDir);
+    modExists := DirectoryExists(modDir);
+  end;
+
+  if altExists then
+    Result := altDir
+  else
+    Result := modDir;
+end;
+
+function Tdtmdl_Main.GetLuaOutFolder: string;
+begin
+  Result := AsDir(GetConfiguredPath(cfLuaCfgPath)) +
+    'SKSE\Plugins\JCData\lua\maxick\';
 end;
 
 function Tdtmdl_Main.GetTable(const aTable: TTableName): TCustomADODataSet;
@@ -610,33 +517,9 @@ begin
 end;
 
 function Tdtmdl_Main.GetTexOutFolder: string;
-var
-  texDir, modDir: string;
-  texExists, modExists: Boolean;
 begin
-  { TODO : Clean and factorize }
-  texDir := Config(cfTexPath).AsString;
-  modDir := Config(cfModPath).AsString;
-  texExists := DirectoryExists(texDir);
-  modExists := DirectoryExists(modDir);
-  while (not texExists) and (not modExists) do begin
-    Application.MessageBox('Output folder doesn''t exist.' + #13#10 +
-      'You need to setup a valid one before you can continue.',
-      'Invalid folder', MB_OK + MB_ICONWARNING + MB_TOPMOST);
-    frmConfig := TfrmConfig.Create(frmMain);
-    frmConfig.ShowModal;
-    frmConfig.Release;
-    texDir := Config(cfTexPath).AsString;
-    modDir := Config(cfModPath).AsString;
-    texExists := DirectoryExists(texDir);
-    modExists := DirectoryExists(modDir);
-  end;
-
-  if texExists then
-    Result := texDir
-  else
-    Result := modDir;
-  Result := AsDir(Result) + 'textures\actors\character\Maxick\';
+  Result := AsDir(GetConfiguredPath(cfTexPath)) +
+    'textures\actors\character\Maxick\';
 end;
 
 procedure Tdtmdl_Main.OpenAll;
@@ -746,6 +629,19 @@ begin
   DeleteFile(tmp)
 end;
 
+procedure Tdtmdl_Main.StringToFile(const txt, aFile: string);
+var
+  output: TStringList;
+begin
+  output := TStringList.Create;
+  try
+    output.Text := txt;
+    output.SaveToFile(aFile);
+  finally
+    output.Free;
+  end;
+end;
+
 function Tdtmdl_Main.TempDB: string;
 var
   tmp: string;
@@ -758,11 +654,6 @@ begin
 {$IF Defined(DEBUG) and Defined(OpenPathsInExplorer)}
   ShellExecute(0, 'Open', PWideChar(tmp), '', '', SW_SHOW);
 {$ENDIF}
-end;
-
-function Tdtmdl_Main.ToLuaTable(const s: string; const addComma: Boolean): string;
-begin
-  Result := '{'#13#10 + s + #13#10'}' + IfThen(addComma, ',', '');
 end;
 
 function Tdtmdl_Main.ValidRaces: string;

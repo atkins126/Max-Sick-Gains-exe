@@ -17,7 +17,8 @@ uses
   Unit1030_Config in 'Unit1030_Config.pas' {frmConfig},
   Unit1040_ImportNPCs in 'Unit1040_ImportNPCs.pas' {frmImportNPCs},
   Unit3010_FilterImportedNPC in 'Unit3010_FilterImportedNPC.pas' {frmFilterImportedNPC: TFrame},
-  Functions.Utils in 'Functions.Utils.pas';
+  Functions.Utils in 'Functions.Utils.pas',
+  Unit9015_GenMod in 'Unit9015_GenMod.pas';
 
 {$R *.res}
 
