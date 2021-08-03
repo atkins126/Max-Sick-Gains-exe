@@ -15,7 +15,8 @@ const
 function AsDir(const aDir: string): string;
 
 type
-  TTableName = (tnNone, tnFitStages, tnPlayerStages, tnAllNPCs, tnNPCs);
+  TTableName = (tnNone, tnFitStages, tnPlayerStages, tnAllNPCs, tnNPCs,
+    tnClassArchetypes, tnSingletons);
 
   TConfigField = (
     // App configuration
@@ -95,6 +96,10 @@ type
     blnfldNPCsisFemale1: TBooleanField;
     intgrfldNPCsmuscleDefType: TIntegerField;
     strngfldNPCsmuscleDefTypeName1: TStringField;
+    tblClassArchetypes: TADOTable;
+    tblSingletons: TADOTable;
+    dsClassArchetypes: TDataSource;
+    dsSingletons: TDataSource;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
@@ -117,6 +122,7 @@ type
     procedure RefreshToLast(aTbl: TCustomADODataSet);
     procedure StringToFile(const txt, aFile: string);
   public
+    function AppendClassArchetype: string;
     function AppendFitStage: string;
     function AppendPlayerStage: string;
     function AppendNPC(const aId: Integer): TFunc<string>;
@@ -133,6 +139,7 @@ type
     function GetCfgOutFolder: string;
     function GetLuaOutFolder: string;
     function IsAtFirst(const aTable: TTableName): Boolean;
+    function TableIsEmpty(const aTable: TTableName): Boolean;
     function PlayerJourney: TList<TJourneyItem>;
     function ValidRaces: string;
     procedure Append(const aTable: TTableName; const aCmd: TFunc<string>);
@@ -198,6 +205,13 @@ procedure Tdtmdl_Main.Refresh(aTbl: TCustomADODataSet);
 begin
   aTbl.Close;
   aTbl.Open;
+end;
+
+function Tdtmdl_Main.AppendClassArchetype: string;
+begin
+  Result :=
+    'INSERT INTO ClassArchetypes (iName, classes, fitStage) ' +
+    'VALUES ("New archetype", "", 1)';
 end;
 
 function Tdtmdl_Main.AppendFitStage: string;
@@ -514,6 +528,10 @@ begin
       Result := tblAllNPCs;
     tnNPCs:
       Result := qryNPCs;
+    tnClassArchetypes:
+      Result := tblClassArchetypes;
+    tnSingletons:
+      Result := tblSingletons;
   else
     {$IFDEF DEBUG}
     raise Exception.CreateFmt('Asked for some invalid table: %d.', [Integer(aTable)]);
@@ -647,6 +665,11 @@ begin
   finally
     output.Free;
   end;
+end;
+
+function Tdtmdl_Main.TableIsEmpty(const aTable: TTableName): Boolean;
+begin
+  Result := GetTable(aTable).RecordCount < 1;
 end;
 
 function Tdtmdl_Main.TempDB: string;

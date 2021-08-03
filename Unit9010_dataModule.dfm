@@ -6,7 +6,7 @@ object dtmdl_Main: Tdtmdl_Main
   Width = 443
   object dsFitStages: TDataSource
     DataSet = tblFitStages
-    Left = 16
+    Left = 220
     Top = 188
   end
   object conMain: TADOConnection
@@ -26,8 +26,8 @@ object dtmdl_Main: Tdtmdl_Main
     Connection = conMain
     CursorType = ctStatic
     TableName = 'FitStages'
-    Left = 220
-    Top = 59
+    Left = 84
+    Top = 102
     object atncfldFitStagesID: TAutoIncField
       FieldName = 'ID'
       ReadOnly = True
@@ -78,26 +78,26 @@ object dtmdl_Main: Tdtmdl_Main
     Connection = conMain
     CursorType = ctStatic
     TableName = 'FitnessTypes'
-    Left = 16
+    Left = 152
     Top = 102
   end
   object dsFitTypes: TDataSource
     DataSet = tblFitTypes
-    Left = 84
-    Top = 188
+    Left = 16
+    Top = 231
   end
   object tblFitLvls: TADOTable
     Active = True
     Connection = conMain
     CursorType = ctStatic
     TableName = 'FitnessLevels'
-    Left = 152
-    Top = 59
+    Left = 16
+    Top = 102
   end
   object dsFitLvls: TDataSource
     DataSet = tblFitLvls
-    Left = 220
-    Top = 145
+    Left = 152
+    Top = 188
   end
   object cmd: TADOCommand
     Connection = conMain
@@ -109,7 +109,7 @@ object dtmdl_Main: Tdtmdl_Main
     Connection = conMain
     CursorType = ctStatic
     TableName = 'PlayerStages'
-    Left = 152
+    Left = 220
     Top = 102
     object atncfldPlayerStagesID: TAutoIncField
       FieldName = 'ID'
@@ -156,8 +156,8 @@ object dtmdl_Main: Tdtmdl_Main
   end
   object dsPlayerStages: TDataSource
     DataSet = tblPlayerStages
-    Left = 220
-    Top = 188
+    Left = 152
+    Top = 231
   end
   object qryPlayerJourney: TADOQuery
     Connection = conMain
@@ -165,14 +165,14 @@ object dtmdl_Main: Tdtmdl_Main
     Parameters = <>
     SQL.Strings = (
       'SELECT * FROM QryPlayerJourney')
-    Left = 16
+    Left = 84
     Top = 59
   end
   object cdsConfig: TClientDataSet
     Aggregates = <>
     Params = <>
     ProviderName = 'dtstprvdrConfig'
-    Left = 16
+    Left = 152
     Top = 145
     object bytfldMaxMuscleDefLevels: TByteField
       FieldName = 'MaxMuscleDefLevels'
@@ -201,15 +201,15 @@ object dtmdl_Main: Tdtmdl_Main
   end
   object dsConfig: TDataSource
     DataSet = cdsConfig
-    Left = 152
-    Top = 145
+    Left = 84
+    Top = 188
   end
   object tblRaces: TADOTable
     Connection = conMain
     CursorType = ctStatic
     TableName = 'Races'
-    Left = 220
-    Top = 102
+    Left = 16
+    Top = 145
     object tblRacesID: TAutoIncField
       FieldName = 'ID'
       ReadOnly = True
@@ -233,7 +233,7 @@ object dtmdl_Main: Tdtmdl_Main
   end
   object dsRaces: TDataSource
     DataSet = tblRaces
-    Left = 16
+    Left = 220
     Top = 231
   end
   object tblAllNPCs: TADOTable
@@ -241,12 +241,12 @@ object dtmdl_Main: Tdtmdl_Main
     Connection = conMain
     CursorType = ctStatic
     TableName = 'AllNPCs'
-    Left = 84
+    Left = 152
     Top = 59
   end
   object dsAllNPCs: TDataSource
     DataSet = tblAllNPCs
-    Left = 84
+    Left = 220
     Top = 145
   end
   object qryAux: TADOQuery
@@ -261,12 +261,12 @@ object dtmdl_Main: Tdtmdl_Main
     AutoConnect = False
     ConnectKind = ckRunningOrNew
     Left = 84
-    Top = 231
+    Top = 274
   end
   object dsNPCs: TDataSource
     DataSet = qryNPCs
-    Left = 152
-    Top = 188
+    Left = 84
+    Top = 231
   end
   object qryGenerate: TADOQuery
     Connection = conMain
@@ -285,8 +285,8 @@ object dtmdl_Main: Tdtmdl_Main
       
         'SELECT * FROM NPCs, AllNPCs WHERE NPCs.NPCId = AllNPCs.id ORDER ' +
         'BY fullName')
-    Left = 230
-    Top = 260
+    Left = 16
+    Top = 59
     object atncfldNPCsNPCsID: TAutoIncField
       FieldName = 'NPCs.ID'
       ReadOnly = True
@@ -353,5 +353,31 @@ object dtmdl_Main: Tdtmdl_Main
       Size = 30
       Lookup = True
     end
+  end
+  object tblClassArchetypes: TADOTable
+    Active = True
+    Connection = conMain
+    CursorType = ctStatic
+    TableName = 'ClassArchetypes'
+    Left = 220
+    Top = 59
+  end
+  object tblSingletons: TADOTable
+    Active = True
+    Connection = conMain
+    CursorType = ctStatic
+    TableName = 'Singletons'
+    Left = 84
+    Top = 145
+  end
+  object dsClassArchetypes: TDataSource
+    DataSet = tblClassArchetypes
+    Left = 16
+    Top = 188
+  end
+  object dsSingletons: TDataSource
+    DataSet = tblSingletons
+    Left = 16
+    Top = 274
   end
 end

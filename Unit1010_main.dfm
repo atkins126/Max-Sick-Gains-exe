@@ -15,6 +15,8 @@ object frmMain: TfrmMain
   Menu = mm1
   OldCreateOrder = False
   Position = poDesktopCenter
+  ScreenSnap = True
+  ShowHint = True
   OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
@@ -25,7 +27,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 629
     Height = 441
-    ActivePage = tsNPCs
+    ActivePage = tsClasses
     Align = alClient
     TabOrder = 0
     OnChange = pgc1Change
@@ -224,7 +226,7 @@ object frmMain: TfrmMain
         KeyField = 'ID'
         ListField = 'iName'
         ListSource = dtmdl_Main.dsFitLvls
-        TabOrder = 8
+        TabOrder = 9
         Visible = False
       end
       object dbmmoexcludedRaces: TDBMemo
@@ -236,7 +238,7 @@ object frmMain: TfrmMain
         DataField = 'excludedRaces'
         DataSource = dtmdl_Main.dsFitStages
         ScrollBars = ssVertical
-        TabOrder = 9
+        TabOrder = 8
         WordWrap = False
       end
       object dbedt_femBs: TDBEdit
@@ -386,7 +388,7 @@ object frmMain: TfrmMain
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 177
+          Width = 106
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -402,7 +404,6 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
-          ExplicitWidth = 106
         end
         object dbgrd1: TDBGrid
           Left = 1
@@ -683,7 +684,7 @@ object frmMain: TfrmMain
         DataField = 'races'
         DataSource = dtmdl_Main.dsRaces
         ScrollBars = ssVertical
-        TabOrder = 0
+        TabOrder = 1
       end
       object dbmmodescription: TDBMemo
         Left = 210
@@ -693,7 +694,7 @@ object frmMain: TfrmMain
         DataField = 'description'
         DataSource = dtmdl_Main.dsRaces
         ReadOnly = True
-        TabOrder = 1
+        TabOrder = 2
       end
       object pnl1: TPanel
         Left = 0
@@ -701,7 +702,7 @@ object frmMain: TfrmMain
         Width = 185
         Height = 413
         Align = alLeft
-        TabOrder = 2
+        TabOrder = 0
         object lbl23: TLabel
           AlignWithMargins = True
           Left = 4
@@ -762,7 +763,7 @@ object frmMain: TfrmMain
         Padding.Top = 15
         Padding.Right = 15
         Padding.Bottom = 15
-        TabOrder = 0
+        TabOrder = 1
         object rltvpnl1: TRelativePanel
           Left = 16
           Top = 16
@@ -962,7 +963,7 @@ object frmMain: TfrmMain
           object dbtxtclass: TDBText
             Left = 240
             Top = 2
-            Width = 49
+            Width = 3
             Height = 13
             Anchors = []
             AutoSize = True
@@ -972,7 +973,7 @@ object frmMain: TfrmMain
           object dbtxtrace: TDBText
             Left = 240
             Top = 20
-            Width = 47
+            Width = 3
             Height = 13
             Anchors = []
             AutoSize = True
@@ -982,7 +983,7 @@ object frmMain: TfrmMain
           object dbtxtisFemale: TDBText
             Left = 240
             Top = 38
-            Width = 67
+            Width = 3
             Height = 13
             Anchors = []
             AutoSize = True
@@ -1059,12 +1060,10 @@ object frmMain: TfrmMain
               Hint = 
                 'NPC will look as if they was this weight|Don'#39't fret. This won'#39't ' +
                 'cause neck seams AT ALL.'
-              Enabled = False
               Max = 101
               Min = -1
               PopupMenu = pmTrackbar
               Frequency = 10
-              Position = -1
               ShowSelRange = False
               TabOrder = 0
               OnChange = dbtrckbrweightChange
@@ -1112,10 +1111,8 @@ object frmMain: TfrmMain
               Top = 20
               Width = 161
               Height = 31
-              Enabled = False
               Max = 6
               Min = -1
-              Position = -1
               ShowSelRange = False
               TabOrder = 0
               OnChange = dbtrckbrmuscleDefChange
@@ -1131,12 +1128,12 @@ object frmMain: TfrmMain
         Width = 185
         Height = 362
         Align = alLeft
-        TabOrder = 1
+        TabOrder = 0
         object lbl21: TLabel
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 177
+          Width = 50
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -1152,7 +1149,6 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
-          ExplicitWidth = 50
         end
         object dbgrd2: TDBGrid
           Left = 1
@@ -1201,6 +1197,278 @@ object frmMain: TfrmMain
           TabOrder = 0
           ExplicitLeft = 4
           ExplicitTop = 16
+          inherited edtFormId: TEdit
+            TabOrder = 2
+          end
+          inherited edtEsp: TEdit
+            TabOrder = 3
+          end
+          inherited edtName: TEdit
+            TabOrder = 4
+          end
+          inherited cbbClass: TComboBox
+            TabOrder = 5
+          end
+          inherited cbbRace: TComboBox
+            TabOrder = 6
+          end
+          inherited cbbSex: TComboBox
+            TabOrder = 7
+          end
+          inherited btnSearch: TButton
+            TabOrder = 0
+          end
+          inherited btnClear: TButton
+            TabOrder = 1
+          end
+        end
+      end
+    end
+    object tsClasses: TTabSheet
+      Caption = 'Classes'
+      ImageIndex = 7
+      object pnl6: TPanel
+        Left = 0
+        Top = 0
+        Width = 185
+        Height = 413
+        Align = alLeft
+        TabOrder = 0
+        object lbl35: TLabel
+          AlignWithMargins = True
+          Left = 4
+          Top = 9
+          Width = 177
+          Height = 34
+          Margins.Top = 8
+          Margins.Bottom = 8
+          Align = alTop
+          Alignment = taCenter
+          Caption = 'Archetypes'
+          Color = clNone
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          GlowSize = 10
+          ParentColor = False
+          ParentFont = False
+          ExplicitWidth = 89
+        end
+        object dbgrd3: TDBGrid
+          Left = 1
+          Top = 51
+          Width = 183
+          Height = 361
+          Hint = 'Right click to add/delete data'
+          Align = alClient
+          DataSource = dtmdl_Main.dsClassArchetypes
+          Options = [dgIndicator, dgConfirmDelete, dgTitleClick, dgTitleHotTrack]
+          PopupMenu = pmRecords
+          TabOrder = 0
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -11
+          TitleFont.Name = 'Tahoma'
+          TitleFont.Style = []
+          OnKeyDown = dbgrd_NavKeyDown
+          Columns = <
+            item
+              Expanded = False
+              FieldName = 'iName'
+              Width = 179
+              Visible = True
+            end>
+        end
+      end
+      object stckpnl2: TStackPanel
+        Left = 185
+        Top = 0
+        Width = 251
+        Height = 413
+        Align = alClient
+        ControlCollection = <
+          item
+            Control = lbl39
+          end
+          item
+            Control = dbedtiName
+          end
+          item
+            Control = lbl37
+          end
+          item
+            Control = dbmmoclasses
+          end
+          item
+            Control = lbl38
+          end
+          item
+            Control = dblkcbbfitStage1
+          end
+          item
+            Control = bvl1
+            HorizontalPositioning = sphpFill
+            VerticalPositioning = spvpFill
+          end>
+        HorizontalPositioning = sphpFill
+        Padding.Left = 15
+        Padding.Top = 15
+        Padding.Right = 15
+        Padding.Bottom = 15
+        Spacing = 5
+        TabOrder = 1
+        object lbl39: TLabel
+          Left = 16
+          Top = 16
+          Width = 219
+          Height = 13
+          Caption = 'Name'
+        end
+        object dbedtiName: TDBEdit
+          AlignWithMargins = True
+          Left = 16
+          Top = 34
+          Width = 219
+          Height = 21
+          Margins.Left = 0
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 10
+          DataField = 'iName'
+          DataSource = dtmdl_Main.dsClassArchetypes
+          TabOrder = 0
+        end
+        object lbl37: TLabel
+          Left = 16
+          Top = 70
+          Width = 219
+          Height = 13
+          Caption = 'Classes'
+        end
+        object dbmmoclasses: TDBMemo
+          AlignWithMargins = True
+          Left = 16
+          Top = 88
+          Width = 219
+          Height = 187
+          Hint = 
+            'Right click for easy setting|NPCs belonging to these classes wil' +
+            'l get the same settings applied.'
+          Margins.Left = 0
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 10
+          DataField = 'classes'
+          DataSource = dtmdl_Main.dsClassArchetypes
+          PopupMenu = pmGetClasses
+          ScrollBars = ssVertical
+          TabOrder = 1
+        end
+        object lbl38: TLabel
+          Left = 16
+          Top = 290
+          Width = 219
+          Height = 13
+          Caption = 'Fitness stage'
+        end
+        object dblkcbbfitStage1: TDBLookupComboBox
+          AlignWithMargins = True
+          Left = 16
+          Top = 308
+          Width = 219
+          Height = 21
+          Hint = 
+            'Fitness stage associated with this archetype|Classes above will ' +
+            'get this Fitness stage applied when found.'
+          Margins.Left = 0
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 10
+          DataField = 'fitStage'
+          DataSource = dtmdl_Main.dsClassArchetypes
+          KeyField = 'ID'
+          ListField = 'iName'
+          ListSource = dtmdl_Main.dsFitStages
+          TabOrder = 2
+        end
+        object bvl1: TBevel
+          Left = 16
+          Top = 344
+          Width = 219
+          Height = 83
+        end
+      end
+      object stckpnl3: TStackPanel
+        Left = 436
+        Top = 0
+        Height = 413
+        Align = alRight
+        ControlCollection = <
+          item
+            Control = lbl36
+            HorizontalPositioning = sphpFill
+            VerticalPositioning = spvpTop
+          end
+          item
+            Control = dbmmoknownClasses
+            HorizontalPositioning = sphpFill
+            VerticalPositioning = spvpFill
+          end
+          item
+            Control = bvl2
+          end>
+        HorizontalPositioning = sphpFill
+        Padding.Left = 10
+        Padding.Right = 10
+        Spacing = 0
+        TabOrder = 2
+        object lbl36: TLabel
+          AlignWithMargins = True
+          Left = 14
+          Top = 9
+          Width = 157
+          Height = 34
+          Margins.Top = 8
+          Margins.Bottom = 8
+          Align = alTop
+          Alignment = taCenter
+          Caption = 'Known classes'
+          Color = clNone
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          GlowSize = 10
+          ParentColor = False
+          ParentFont = False
+        end
+        object dbmmoknownClasses: TDBMemo
+          AlignWithMargins = True
+          Left = 11
+          Top = 51
+          Width = 163
+          Height = 230
+          Hint = 
+            'One class per line|Write here classes you want to have convenien' +
+            't access to. Won'#39't affect anything, as a matter of fact.'
+          Margins.Left = 0
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 15
+          Align = alClient
+          DataField = 'knownClasses'
+          DataSource = dtmdl_Main.dsSingletons
+          ScrollBars = ssBoth
+          TabOrder = 0
+        end
+        object bvl2: TBevel
+          Left = 11
+          Top = 296
+          Width = 163
+          Height = 130
         end
       end
     end
@@ -4503,5 +4771,13 @@ object frmMain: TfrmMain
     Options = []
     Left = 152
     Top = 287
+  end
+  object pmGetClasses: TPopupMenu
+    Left = 359
+    Top = 194
+    object Getclasses1: TMenuItem
+      Caption = 'Get classes'
+      OnClick = Getclasses1Click
+    end
   end
 end

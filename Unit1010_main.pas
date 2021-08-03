@@ -12,7 +12,8 @@ uses
   System.Types, Vcl.Imaging.pngimage, Vcl.Imaging.jpeg, System.Math,
   Unit9020_Types, Winapi.ShellAPI, Vcl.Themes, System.StrUtils,
   DataAware.TDBTrackBar, System.Generics.Collections, System.Notification,
-  Unit3010_FilterImportedNPC, Winapi.OleDB, System.Win.ComObj, Vcl.WinXCtrls;
+  Unit3010_FilterImportedNPC, Winapi.OleDB, System.Win.ComObj, Vcl.WinXCtrls,
+  Vcl.JumpList;
 
 type
   TfrmMain = class(TForm)
@@ -156,6 +157,24 @@ type
     lbl34: TLabel;
     lbl_NPCWeight: TLabel;
     lbl_NPCMuscleDef: TLabel;
+    tsClasses: TTabSheet;
+    pnl6: TPanel;
+    lbl35: TLabel;
+    dbgrd3: TDBGrid;
+    lbl36: TLabel;
+    dbmmoknownClasses: TDBMemo;
+    stckpnl2: TStackPanel;
+    lbl37: TLabel;
+    dbmmoclasses: TDBMemo;
+    lbl38: TLabel;
+    dblkcbbfitStage1: TDBLookupComboBox;
+    bvl1: TBevel;
+    stckpnl3: TStackPanel;
+    bvl2: TBevel;
+    lbl39: TLabel;
+    dbedtiName: TDBEdit;
+    pmGetClasses: TPopupMenu;
+    Getclasses1: TMenuItem;
     procedure dbgrd_NavKeyDown(Sender: TObject; var Key: Word; Shift:
       TShiftState);
     procedure actDBInsertExecute(Sender: TObject);
@@ -185,6 +204,7 @@ type
     procedure actFileNewExecute(Sender: TObject);
     procedure dbtrckbrmuscleDefChange(Sender: TObject);
     procedure dbtrckbrweightChange(Sender: TObject);
+    procedure Getclasses1Click(Sender: TObject);
   private
     procedure DisableCtrlDel(var Key: Word; Shift: TShiftState);
     procedure CheckDelAvailability;
@@ -211,7 +231,7 @@ implementation
 
 uses
   TargaImage, Unit1020_TexGen, Unit5020_DrawJourney, Unit1030_Config,
-  Unit1040_ImportNPCs, Functions.Utils;
+  Unit1040_ImportNPCs, Functions.Utils, Unit1050_GetClasses, Functions.Strings;
 
 {$R *.dfm}
 
@@ -230,7 +250,7 @@ end;
 procedure TfrmMain.actDBDelExecute(Sender: TObject);
 begin
   { TODO : Add delete code }
-//  TryDrawJourney;
+  // TryDrawJourney;
 end;
 
 procedure TfrmMain.actDBInsertExecute(Sender: TObject);
@@ -240,7 +260,8 @@ end;
 
 procedure TfrmMain.actFileNewExecute(Sender: TObject);
 begin
-  dtmdl_Main.OpenFile;  // Calling it without filename opens a new one from template
+  dtmdl_Main.OpenFile;
+  // Calling it without filename opens a new one from template
 end;
 
 procedure TfrmMain.actGenerateExecute(Sender: TObject);
@@ -248,8 +269,8 @@ begin
   redtOutput.Text := dtmdl_Main.GenerateAllModData;
   if redtOutput.Text = '' then
     Application.MessageBox('Mod data was successfully generated.' + #13#10 +
-      'Max Sick Gains can now be played in Skyrim.', 'Success', MB_OK +
-      MB_ICONINFORMATION + MB_TOPMOST);
+      'Max Sick Gains can now be played in Skyrim.', 'Success',
+      MB_OK + MB_ICONINFORMATION + MB_TOPMOST);
 end;
 
 procedure TfrmMain.actImportNPCsExecute(Sender: TObject);
@@ -265,6 +286,8 @@ begin
     Result := tnPlayerStages
   else if pgc1.ActivePage = tsNPCs then
     Result := tnNPCs
+  else if pgc1.ActivePage = tsClasses then
+    Result := tnClassArchetypes
   else
     Result := tnNone;
 end;
@@ -450,7 +473,7 @@ end;
 
 procedure TfrmMain.flsvs1Accept(Sender: TObject);
 begin
-{ TODO : Add to recent files }
+  { TODO : Add to recent files }
   dtmdl_Main.SaveFile(flsvs1.Dialog.FileName);
 end;
 
@@ -473,6 +496,19 @@ begin
   pgc1.TabIndex := dtmdl_Main.Config(cfLastTab).AsInteger;
 end;
 
+procedure TfrmMain.Getclasses1Click(Sender: TObject);
+var
+  txt: string;
+begin
+  txt := TfrmGetClasses.Execute(dbmmoclasses.Text);
+  if txt <> '' then begin
+    if dtmdl_Main.TableIsEmpty(tnClassArchetypes) then
+      actDBInsertExecute(nil);
+    txt := SortNLSeparatedStr(dbmmoclasses.Text + #13#10 + txt);
+    dtmdl_Main.Edit(tnClassArchetypes, 'classes', Trim(txt));
+  end;
+end;
+
 procedure TfrmMain.imgJourneyClick(Sender: TObject);
 begin
   DrawPlayerJourney;
@@ -487,6 +523,8 @@ begin
       Result := InsertProcPlayerStage(aTbl, dtmdl_Main.AppendPlayerStage);
     tnNPCs:
       Result := InsertProcNPC(aTbl);
+    tnClassArchetypes:
+      Result := InsertProcMin(aTbl, dtmdl_Main.AppendClassArchetype);
   else
     Result := Identity;
   end;
@@ -514,8 +552,6 @@ begin
         Exit;
       InsertProcMin(aTbl, dtmdl_Main.AppendNPC(npcId))();
       dtmdl_Main.RefreshTable(aTbl);
-      { TODO : Sort table }
-//        dtmdl_Main.tblNPCs.Sort := '';
     end;
 end;
 
