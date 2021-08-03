@@ -1,11 +1,9 @@
 object frmMain: TfrmMain
   Left = 0
   Top = 0
-  BorderIcons = [biSystemMenu, biMinimize]
-  BorderStyle = bsSingle
   Caption = 'Max Sick Gains'
-  ClientHeight = 460
-  ClientWidth = 629
+  ClientHeight = 450
+  ClientWidth = 619
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,154 +17,36 @@ object frmMain: TfrmMain
   ShowHint = True
   OnClose = FormClose
   OnCreate = FormCreate
+  OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object pgc1: TPageControl
     Left = 0
     Top = 0
-    Width = 629
-    Height = 441
-    ActivePage = tsNPCs
+    Width = 619
+    Height = 431
+    ActivePage = tsFitStages
     Align = alClient
     TabOrder = 0
     OnChange = pgc1Change
+    ExplicitWidth = 629
+    ExplicitHeight = 441
     object tsFitStages: TTabSheet
       Caption = 'Fitness stages'
-      DesignSize = (
-        621
-        413)
-      object lbl10: TLabel
-        Left = 201
-        Top = 290
-        Width = 72
-        Height = 13
-        Anchors = []
-        Caption = 'Excluded races'
-      end
-      object lbl9: TLabel
-        Left = 201
-        Top = 290
-        Width = 95
-        Height = 13
-        Anchors = []
-        Caption = 'Allowed muscle def.'
-        Visible = False
-      end
-      object btn_femBs: TSpeedButton
-        Left = 588
-        Top = 102
-        Width = 24
-        Height = 24
-        Anchors = []
-        ImageIndex = 1
-        Images = ilIcons24
-        Flat = True
-        OnClick = btn_femBsClick
-      end
-      object btn_femBsUrl: TSpeedButton
-        Left = 588
-        Top = 139
-        Width = 24
-        Height = 24
-        Hint = 'Open in browser'
-        Anchors = []
-        ImageIndex = 3
-        Images = ilIcons24
-        Flat = True
-        OnClick = btn_femBsUrlClick
-      end
-      object btn_manBs: TSpeedButton
-        Left = 588
-        Top = 175
-        Width = 24
-        Height = 24
-        Anchors = []
-        ImageIndex = 1
-        Images = ilIcons24
-        Flat = True
-        OnClick = btn_manBsClick
-      end
-      object btn_manBsUrl: TSpeedButton
-        Left = 588
-        Top = 212
-        Width = 24
-        Height = 24
-        Hint = 'Open in browser'
-        Anchors = []
-        ImageIndex = 3
-        Images = ilIcons24
-        Flat = True
-        OnClick = btn_manBsUrlClick
-      end
-      object lbl2: TLabel
-        Left = 201
-        Top = 31
-        Width = 27
-        Height = 13
-        Anchors = []
-        Caption = 'Name'
-      end
-      object lbl3: TLabel
-        Left = 201
-        Top = 72
-        Width = 63
-        Height = 13
-        Anchors = []
-        Caption = 'Display name'
-      end
-      object lbl4: TLabel
-        Left = 201
-        Top = 108
-        Width = 72
-        Height = 13
-        Anchors = []
-        Caption = 'Fem. Bodyslide'
-      end
-      object lbl5: TLabel
-        Left = 201
-        Top = 145
-        Width = 58
-        Height = 13
-        Anchors = []
-        Caption = 'Fem. Bs. Url'
-      end
-      object lbl6: TLabel
-        Left = 201
-        Top = 181
-        Width = 68
-        Height = 13
-        Anchors = []
-        Caption = 'Man Bodyslide'
-      end
-      object lbl7: TLabel
-        Left = 201
-        Top = 217
-        Width = 54
-        Height = 13
-        Anchors = []
-        Caption = 'Man Bs. Url'
-      end
-      object lbl8: TLabel
-        Left = 201
-        Top = 254
-        Width = 79
-        Height = 13
-        Anchors = []
-        Caption = 'Muscle definition'
-      end
       object pnl1Nav: TPanel
         Left = 0
         Top = 0
         Width = 185
-        Height = 413
+        Height = 403
         Align = alLeft
         TabOrder = 0
+        ExplicitHeight = 413
         object lbl1: TLabel
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 106
+          Width = 177
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -182,12 +62,13 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
+          ExplicitWidth = 106
         end
         object dbgrd_fitStagesNav: TDBGrid
           Left = 1
           Top = 51
           Width = 183
-          Height = 361
+          Height = 351
           Hint = 'Right click to add/delete data'
           Align = alClient
           DataSource = dtmdl_Main.dsFitStages
@@ -210,147 +91,396 @@ object frmMain: TfrmMain
             end>
         end
       end
-      object dblkcbbmuscleDefLvl: TDBLookupComboBox
-        AlignWithMargins = True
-        Left = 312
-        Top = 286
-        Width = 299
-        Height = 21
+      object pnl8: TPanel
+        Left = 185
+        Top = 0
+        Width = 426
+        Height = 403
         Margins.Left = 0
         Margins.Top = 0
         Margins.Right = 0
-        Margins.Bottom = 7
-        Anchors = []
-        DataField = 'muscleDefLvl'
-        DataSource = dtmdl_Main.dsFitStages
-        KeyField = 'ID'
-        ListField = 'iName'
-        ListSource = dtmdl_Main.dsFitLvls
-        TabOrder = 9
-        Visible = False
-      end
-      object dbmmoexcludedRaces: TDBMemo
-        Left = 312
-        Top = 286
-        Width = 299
-        Height = 120
-        Anchors = [akLeft, akTop, akRight, akBottom]
-        DataField = 'excludedRaces'
-        DataSource = dtmdl_Main.dsFitStages
-        ScrollBars = ssVertical
-        TabOrder = 8
-        WordWrap = False
-      end
-      object dbedt_femBs: TDBEdit
-        AlignWithMargins = True
-        Left = 312
-        Top = 104
-        Width = 271
-        Height = 21
-        Margins.Left = 0
-        Margins.Top = 0
-        Margins.Right = 0
-        Margins.Bottom = 7
-        Anchors = []
-        DataField = 'femBs'
-        DataSource = dtmdl_Main.dsFitStages
-        TabOrder = 3
-        OnChange = dbedtBsChange
-      end
-      object dbedt_femBsUrl: TDBEdit
-        AlignWithMargins = True
-        Left = 312
-        Top = 141
-        Width = 271
-        Height = 21
-        Margins.Left = 0
-        Margins.Top = 0
-        Margins.Right = 0
-        Margins.Bottom = 7
-        Anchors = []
-        DataField = 'femBsUrl'
-        DataSource = dtmdl_Main.dsFitStages
-        TabOrder = 4
-      end
-      object dbedt_fitStageDisplayName: TDBEdit
-        AlignWithMargins = True
-        Left = 312
-        Top = 68
-        Width = 299
-        Height = 21
-        Margins.Left = 0
-        Margins.Top = 0
-        Margins.Right = 0
-        Margins.Bottom = 7
-        Anchors = []
-        DataField = 'displayName'
-        DataSource = dtmdl_Main.dsFitStages
-        TabOrder = 2
-        OnChange = dbedt_fitStageDisplayNameChange
-      end
-      object dbedt_fitStageName: TDBEdit
-        AlignWithMargins = True
-        Left = 312
-        Top = 32
-        Width = 299
-        Height = 21
-        Margins.Left = 0
-        Margins.Top = 0
-        Margins.Right = 0
-        Margins.Bottom = 7
-        Anchors = []
-        DataField = 'iName'
-        DataSource = dtmdl_Main.dsFitStages
+        Margins.Bottom = 0
+        Align = alClient
+        Caption = 'pnl8'
+        Padding.Left = 15
+        Padding.Top = 25
+        Padding.Right = 15
+        Padding.Bottom = 15
+        ShowCaption = False
         TabOrder = 1
-      end
-      object dbedt_manBs: TDBEdit
-        AlignWithMargins = True
-        Left = 312
-        Top = 177
-        Width = 271
-        Height = 21
-        Margins.Left = 0
-        Margins.Top = 0
-        Margins.Right = 0
-        Margins.Bottom = 7
-        Anchors = []
-        DataField = 'manBs'
-        DataSource = dtmdl_Main.dsFitStages
-        TabOrder = 5
-        OnChange = dbedtBsChange
-      end
-      object dbedt_manBsUrl: TDBEdit
-        AlignWithMargins = True
-        Left = 312
-        Top = 214
-        Width = 271
-        Height = 21
-        Margins.Left = 0
-        Margins.Top = 0
-        Margins.Right = 0
-        Margins.Bottom = 7
-        Anchors = []
-        DataField = 'manBsUrl'
-        DataSource = dtmdl_Main.dsFitStages
-        TabOrder = 6
-      end
-      object dblkcbbmuscleDefType: TDBLookupComboBox
-        AlignWithMargins = True
-        Left = 312
-        Top = 250
-        Width = 299
-        Height = 21
-        Margins.Left = 0
-        Margins.Top = 0
-        Margins.Right = 0
-        Margins.Bottom = 7
-        Anchors = []
-        DataField = 'muscleDefType'
-        DataSource = dtmdl_Main.dsFitStages
-        KeyField = 'ID'
-        ListField = 'iName'
-        ListSource = dtmdl_Main.dsFitTypes
-        TabOrder = 7
+        ExplicitLeft = 220
+        ExplicitTop = 190
+        ExplicitWidth = 185
+        ExplicitHeight = 41
+        object grdpnl1: TGridPanel
+          Left = 16
+          Top = 26
+          Width = 394
+          Height = 361
+          Align = alClient
+          BevelOuter = bvNone
+          ColumnCollection = <
+            item
+              SizeStyle = ssAbsolute
+              Value = 100.000000000000000000
+            end
+            item
+              Value = 100.000000000000000000
+            end>
+          ControlCollection = <
+            item
+              Column = 0
+              Control = lbl2
+              Row = 0
+            end
+            item
+              Column = 1
+              Control = dbedt_fitStageName
+              Row = 0
+            end
+            item
+              Column = 0
+              Control = lbl3
+              Row = 1
+            end
+            item
+              Column = 1
+              Control = dbedt_fitStageDisplayName
+              Row = 1
+            end
+            item
+              Column = 0
+              Control = lbl4
+              Row = 2
+            end
+            item
+              Column = 1
+              Control = btndt_FemBs
+              Row = 2
+            end
+            item
+              Column = 0
+              Control = lbl5
+              Row = 3
+            end
+            item
+              Column = 1
+              Control = btndt_FemBsUrl
+              Row = 3
+            end
+            item
+              Column = 0
+              Control = lbl6
+              Row = 4
+            end
+            item
+              Column = 1
+              Control = btndt_ManBs
+              Row = 4
+            end
+            item
+              Column = 0
+              Control = lbl7
+              Row = 5
+            end
+            item
+              Column = 1
+              Control = btndt_ManBsUrl
+              Row = 5
+            end
+            item
+              Column = 0
+              Control = lbl8
+              Row = 6
+            end
+            item
+              Column = 1
+              Control = dblkcbbmuscleDefType
+              Row = 6
+            end
+            item
+              Column = 0
+              Control = lbl10
+              Row = 7
+            end
+            item
+              Column = 1
+              Control = dbmmoexcludedRaces
+              Row = 7
+            end>
+          RowCollection = <
+            item
+              SizeStyle = ssAuto
+            end
+            item
+              SizeStyle = ssAuto
+            end
+            item
+              SizeStyle = ssAuto
+            end
+            item
+              SizeStyle = ssAuto
+            end
+            item
+              SizeStyle = ssAuto
+            end
+            item
+              SizeStyle = ssAuto
+            end
+            item
+              SizeStyle = ssAuto
+            end
+            item
+              Value = 100.000000000000000000
+            end>
+          ShowCaption = False
+          TabOrder = 0
+          ExplicitLeft = 185
+          ExplicitTop = 0
+          ExplicitWidth = 436
+          ExplicitHeight = 413
+          object lbl2: TLabel
+            Left = 0
+            Top = 0
+            Width = 27
+            Height = 28
+            Align = alLeft
+            Caption = 'Name'
+            ExplicitLeft = 201
+            ExplicitTop = 31
+            ExplicitHeight = 13
+          end
+          object dbedt_fitStageName: TDBEdit
+            AlignWithMargins = True
+            Left = 100
+            Top = 0
+            Width = 294
+            Height = 21
+            Margins.Left = 0
+            Margins.Top = 0
+            Margins.Right = 0
+            Margins.Bottom = 7
+            Align = alTop
+            DataField = 'iName'
+            DataSource = dtmdl_Main.dsFitStages
+            TabOrder = 0
+            ExplicitWidth = 336
+          end
+          object lbl3: TLabel
+            Left = 0
+            Top = 28
+            Width = 63
+            Height = 28
+            Align = alLeft
+            Caption = 'Display name'
+            ExplicitLeft = 201
+            ExplicitTop = 72
+            ExplicitHeight = 13
+          end
+          object dbedt_fitStageDisplayName: TDBEdit
+            AlignWithMargins = True
+            Left = 100
+            Top = 28
+            Width = 294
+            Height = 21
+            Margins.Left = 0
+            Margins.Top = 0
+            Margins.Right = 0
+            Margins.Bottom = 7
+            Align = alTop
+            DataField = 'displayName'
+            DataSource = dtmdl_Main.dsFitStages
+            TabOrder = 1
+            OnChange = dbedt_fitStageDisplayNameChange
+            ExplicitWidth = 336
+          end
+          object lbl4: TLabel
+            Left = 0
+            Top = 56
+            Width = 72
+            Height = 28
+            Align = alLeft
+            Caption = 'Fem. Bodyslide'
+            ExplicitLeft = 201
+            ExplicitTop = 108
+            ExplicitHeight = 13
+          end
+          object btndt_FemBs: TButtonedEdit
+            AlignWithMargins = True
+            Left = 100
+            Top = 56
+            Width = 294
+            Height = 21
+            Margins.Left = 0
+            Margins.Top = 0
+            Margins.Right = 0
+            Margins.Bottom = 7
+            Align = alTop
+            Images = ilIcons24
+            RightButton.ImageIndex = 1
+            RightButton.Visible = True
+            TabOrder = 2
+            OnChange = dbedtBsChange
+            OnRightButtonClick = btn_femBsClick
+            ExplicitWidth = 336
+          end
+          object lbl5: TLabel
+            AlignWithMargins = True
+            Left = 0
+            Top = 84
+            Width = 70
+            Height = 13
+            Margins.Left = 0
+            Margins.Top = 0
+            Margins.Right = 30
+            Margins.Bottom = 0
+            Align = alTop
+            Alignment = taRightJustify
+            Caption = 'Url'
+            ExplicitLeft = 87
+            ExplicitTop = 77
+            ExplicitWidth = 13
+          end
+          object btndt_FemBsUrl: TButtonedEdit
+            AlignWithMargins = True
+            Left = 100
+            Top = 84
+            Width = 294
+            Height = 21
+            Margins.Left = 0
+            Margins.Top = 0
+            Margins.Right = 0
+            Margins.Bottom = 7
+            Align = alTop
+            Images = ilIcons24
+            RightButton.ImageIndex = 2
+            RightButton.Visible = True
+            TabOrder = 3
+            TextHint = 'Use this only if you are going to share this file'
+            OnRightButtonClick = btn_femBsUrlClick
+            ExplicitWidth = 336
+          end
+          object lbl6: TLabel
+            Left = 0
+            Top = 112
+            Width = 68
+            Height = 28
+            Align = alLeft
+            Caption = 'Man Bodyslide'
+            ExplicitLeft = 201
+            ExplicitTop = 181
+            ExplicitHeight = 13
+          end
+          object btndt_ManBs: TButtonedEdit
+            AlignWithMargins = True
+            Left = 100
+            Top = 112
+            Width = 294
+            Height = 21
+            Margins.Left = 0
+            Margins.Top = 0
+            Margins.Right = 0
+            Margins.Bottom = 7
+            Align = alTop
+            Images = ilIcons24
+            RightButton.ImageIndex = 1
+            RightButton.Visible = True
+            TabOrder = 4
+            OnChange = dbedtBsChange
+            OnRightButtonClick = btn_manBsClick
+            ExplicitWidth = 336
+          end
+          object lbl7: TLabel
+            AlignWithMargins = True
+            Left = 0
+            Top = 140
+            Width = 70
+            Height = 13
+            Margins.Left = 0
+            Margins.Top = 0
+            Margins.Right = 30
+            Margins.Bottom = 0
+            Align = alTop
+            Alignment = taRightJustify
+            Caption = 'Url'
+            ExplicitLeft = 57
+            ExplicitWidth = 13
+          end
+          object btndt_ManBsUrl: TButtonedEdit
+            AlignWithMargins = True
+            Left = 100
+            Top = 140
+            Width = 294
+            Height = 21
+            Margins.Left = 0
+            Margins.Top = 0
+            Margins.Right = 0
+            Margins.Bottom = 7
+            Align = alTop
+            Images = ilIcons24
+            RightButton.ImageIndex = 2
+            RightButton.Visible = True
+            TabOrder = 5
+            TextHint = 'Use this only if you are going to share this file'
+            OnRightButtonClick = btn_manBsUrlClick
+            ExplicitWidth = 336
+          end
+          object lbl8: TLabel
+            Left = 0
+            Top = 168
+            Width = 100
+            Height = 13
+            Align = alTop
+            Caption = 'Muscle definition'
+            ExplicitLeft = 201
+            ExplicitTop = 254
+            ExplicitWidth = 79
+          end
+          object dblkcbbmuscleDefType: TDBLookupComboBox
+            AlignWithMargins = True
+            Left = 100
+            Top = 168
+            Width = 294
+            Height = 21
+            Margins.Left = 0
+            Margins.Top = 0
+            Margins.Right = 0
+            Margins.Bottom = 7
+            Align = alTop
+            DataField = 'muscleDefType'
+            DataSource = dtmdl_Main.dsFitStages
+            KeyField = 'ID'
+            ListField = 'iName'
+            ListSource = dtmdl_Main.dsFitTypes
+            TabOrder = 6
+            ExplicitWidth = 336
+          end
+          object lbl10: TLabel
+            Left = 0
+            Top = 196
+            Width = 100
+            Height = 13
+            Align = alTop
+            Caption = 'Excluded races'
+            ExplicitLeft = 201
+            ExplicitTop = 290
+            ExplicitWidth = 72
+          end
+          object dbmmoexcludedRaces: TDBMemo
+            Left = 100
+            Top = 196
+            Width = 294
+            Height = 165
+            Align = alClient
+            DataField = 'excludedRaces'
+            DataSource = dtmdl_Main.dsFitStages
+            ScrollBars = ssVertical
+            TabOrder = 7
+            WordWrap = False
+            ExplicitWidth = 336
+            ExplicitHeight = 89
+          end
+        end
       end
     end
     object tsPlayerStages: TTabSheet
@@ -359,8 +489,8 @@ object frmMain: TfrmMain
       object imgJourney: TImage
         AlignWithMargins = True
         Left = 3
-        Top = 367
-        Width = 615
+        Top = 357
+        Width = 605
         Height = 43
         Margins.Top = 8
         Align = alBottom
@@ -381,9 +511,10 @@ object frmMain: TfrmMain
         Left = 0
         Top = 0
         Width = 185
-        Height = 359
+        Height = 349
         Align = alLeft
         TabOrder = 0
+        ExplicitHeight = 359
         object lbl11: TLabel
           AlignWithMargins = True
           Left = 4
@@ -410,7 +541,7 @@ object frmMain: TfrmMain
           Left = 1
           Top = 51
           Width = 183
-          Height = 307
+          Height = 297
           Hint = 'Right click to add/delete data'
           Align = alClient
           DataSource = dtmdl_Main.dsPlayerStages
@@ -760,18 +891,20 @@ object frmMain: TfrmMain
       object pnl2: TPanel
         Left = 185
         Top = 0
-        Width = 436
-        Height = 362
+        Width = 426
+        Height = 352
         Align = alClient
         Padding.Left = 15
         Padding.Top = 15
         Padding.Right = 15
         Padding.Bottom = 15
         TabOrder = 1
+        ExplicitWidth = 436
+        ExplicitHeight = 362
         object rltvpnl1: TRelativePanel
           Left = 16
           Top = 16
-          Width = 404
+          Width = 394
           Height = 65
           ControlCollection = <
             item
@@ -883,8 +1016,9 @@ object frmMain: TfrmMain
           BevelOuter = bvNone
           Padding.Bottom = 7
           TabOrder = 0
+          ExplicitWidth = 404
           DesignSize = (
-            404
+            394
             65)
           object lbl28: TLabel
             AlignWithMargins = True
@@ -930,7 +1064,7 @@ object frmMain: TfrmMain
           end
           object lbl30: TLabel
             AlignWithMargins = True
-            Left = 187
+            Left = 182
             Top = 2
             Width = 29
             Height = 13
@@ -942,7 +1076,7 @@ object frmMain: TfrmMain
           end
           object lbl31: TLabel
             AlignWithMargins = True
-            Left = 187
+            Left = 182
             Top = 20
             Width = 28
             Height = 13
@@ -954,7 +1088,7 @@ object frmMain: TfrmMain
           end
           object lbl32: TLabel
             AlignWithMargins = True
-            Left = 187
+            Left = 182
             Top = 38
             Width = 48
             Height = 13
@@ -965,7 +1099,7 @@ object frmMain: TfrmMain
             Caption = 'Is female:'
           end
           object dbtxtclass: TDBText
-            Left = 240
+            Left = 235
             Top = 2
             Width = 3
             Height = 13
@@ -975,7 +1109,7 @@ object frmMain: TfrmMain
             DataSource = dtmdl_Main.dsNPCs
           end
           object dbtxtrace: TDBText
-            Left = 240
+            Left = 235
             Top = 20
             Width = 3
             Height = 13
@@ -985,7 +1119,7 @@ object frmMain: TfrmMain
             DataSource = dtmdl_Main.dsNPCs
           end
           object dbtxtisFemale: TDBText
-            Left = 240
+            Left = 235
             Top = 38
             Width = 3
             Height = 13
@@ -1132,14 +1266,15 @@ object frmMain: TfrmMain
         Left = 0
         Top = 0
         Width = 185
-        Height = 362
+        Height = 352
         Align = alLeft
         TabOrder = 0
+        ExplicitHeight = 362
         object lbl21: TLabel
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 177
+          Width = 50
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -1155,7 +1290,6 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
-          ExplicitWidth = 50
         end
         object dbgrd2: TDBGrid
           Left = 1
@@ -1185,8 +1319,8 @@ object frmMain: TfrmMain
       end
       object stckpnl1: TStackPanel
         Left = 0
-        Top = 362
-        Width = 621
+        Top = 352
+        Width = 611
         Height = 51
         Align = alBottom
         ControlCollection = <
@@ -1196,6 +1330,8 @@ object frmMain: TfrmMain
         Padding.Left = 3
         Padding.Top = 15
         TabOrder = 2
+        ExplicitTop = 362
+        ExplicitWidth = 621
         inline filterImportedNPC1: TfrmFilterImportedNPC
           Left = 4
           Top = 16
@@ -1214,14 +1350,15 @@ object frmMain: TfrmMain
         Left = 0
         Top = 0
         Width = 185
-        Height = 413
+        Height = 403
         Align = alLeft
         TabOrder = 0
+        ExplicitHeight = 413
         object lbl35: TLabel
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 177
+          Width = 89
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -1237,7 +1374,6 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
-          ExplicitWidth = 89
         end
         object dbgrd3: TDBGrid
           Left = 1
@@ -1268,8 +1404,8 @@ object frmMain: TfrmMain
       object stckpnl2: TStackPanel
         Left = 185
         Top = 0
-        Width = 436
-        Height = 413
+        Width = 426
+        Height = 403
         Align = alClient
         ControlCollection = <
           item
@@ -1285,11 +1421,13 @@ object frmMain: TfrmMain
         Padding.Bottom = 15
         Spacing = 5
         TabOrder = 1
+        ExplicitWidth = 436
+        ExplicitHeight = 413
         object pnl7: TPanel
           AlignWithMargins = True
           Left = 16
           Top = 26
-          Width = 404
+          Width = 394
           Height = 165
           Margins.Left = 0
           Margins.Top = 0
@@ -1298,7 +1436,7 @@ object frmMain: TfrmMain
           BevelOuter = bvNone
           TabOrder = 0
           DesignSize = (
-            404
+            394
             165)
           object lbl39: TLabel
             Left = 0
@@ -1360,7 +1498,7 @@ object frmMain: TfrmMain
         object grp6: TGroupBox
           Left = 16
           Top = 206
-          Width = 404
+          Width = 394
           Height = 205
           Caption = 'Appearance'
           TabOrder = 1
@@ -1530,8 +1668,8 @@ object frmMain: TfrmMain
       object redtOutput: TRichEdit
         Left = 0
         Top = 0
-        Width = 621
-        Height = 413
+        Width = 611
+        Height = 403
         Align = alClient
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
@@ -1544,24 +1682,28 @@ object frmMain: TfrmMain
         ScrollBars = ssBoth
         TabOrder = 0
         Zoom = 100
+        ExplicitWidth = 621
+        ExplicitHeight = 413
       end
     end
   end
   object stat1: TStatusBar
     Left = 0
-    Top = 441
-    Width = 629
+    Top = 431
+    Width = 619
     Height = 19
     AutoHint = True
     Panels = <>
     ParentShowHint = False
     ShowHint = False
     SimplePanel = True
+    ExplicitTop = 441
+    ExplicitWidth = 629
   end
   object mm1: TMainMenu
     Images = ilActions32
-    Left = 16
-    Top = 373
+    Left = 84
+    Top = 363
     object File1: TMenuItem
       Caption = 'File'
       object New1: TMenuItem
@@ -1616,8 +1758,8 @@ object frmMain: TfrmMain
   end
   object pmRecords: TPopupMenu
     Images = ilActions32
-    Left = 152
-    Top = 373
+    Left = 16
+    Top = 406
     object Insert1: TMenuItem
       Action = actDBInsert
     end
@@ -1643,7 +1785,7 @@ object frmMain: TfrmMain
       end>
     Images = ilActions32
     Left = 16
-    Top = 244
+    Top = 234
     StyleName = 'Platform Default'
     object flpn1: TFileOpen
       Category = 'File'
@@ -1743,8 +1885,8 @@ object frmMain: TfrmMain
     ColorDepth = cd32Bit
     Height = 48
     Width = 48
-    Left = 16
-    Top = 330
+    Left = 84
+    Top = 320
     Bitmap = {
       494C010102005000040030003000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000C00000003000000001002000000000000090
@@ -2953,15 +3095,15 @@ object frmMain: TfrmMain
         FileMask = '*.xml'
       end>
     Options = []
-    Left = 16
-    Top = 287
+    Left = 84
+    Top = 277
   end
   object ilIcons24: TImageList
     ColorDepth = cd32Bit
     Height = 24
     Width = 24
-    Left = 152
-    Top = 330
+    Left = 16
+    Top = 363
     Bitmap = {
       494C010104000800040018001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000003000000001002000000000000048
@@ -3568,8 +3710,8 @@ object frmMain: TfrmMain
     ColorDepth = cd32Bit
     Height = 32
     Width = 32
-    Left = 152
-    Top = 287
+    Left = 16
+    Top = 320
     Bitmap = {
       494C010104000800040020002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000004000000001002000000000000080
@@ -4636,8 +4778,8 @@ object frmMain: TfrmMain
   end
   object ilIcons16: TImageList
     ColorDepth = cd32Bit
-    Left = 84
-    Top = 330
+    Left = 152
+    Top = 320
     Bitmap = {
       494C010101000800040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
@@ -4779,8 +4921,8 @@ object frmMain: TfrmMain
       000000000000}
   end
   object pmTrackbar: TPopupMenu
-    Left = 16
-    Top = 416
+    Left = 84
+    Top = 406
     object Setvalue1: TMenuItem
       Action = actTrackbarSet
     end
@@ -4793,12 +4935,12 @@ object frmMain: TfrmMain
         FileMask = '*.xml'
       end>
     Options = []
-    Left = 84
-    Top = 287
+    Left = 152
+    Top = 277
   end
   object pmGetClasses: TPopupMenu
-    Left = 84
-    Top = 373
+    Left = 152
+    Top = 363
     object Getclasses1: TMenuItem
       Caption = 'Get classes'
       OnClick = Getclasses1Click
@@ -4814,13 +4956,13 @@ object frmMain: TfrmMain
     DataSet = dtmdl_Main.tblPlayerStages
     ScopeMappings = <>
     Left = 152
-    Top = 244
+    Top = 234
   end
   object bndngslst1: TBindingsList
     Methods = <>
     OutputConverters = <>
     Left = 84
-    Top = 244
+    Top = 234
     object lnkcntrltfld1: TLinkControlToField
       Category = 'Quick Bindings'
       DataSource = bndsrcdb1
@@ -4828,5 +4970,39 @@ object frmMain: TfrmMain
       Control = nmbrbx1
       Track = True
     end
+    object lnkcntrltfld2: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = bndsrcdb2
+      FieldName = 'femBs'
+      Control = btndt_FemBs
+      Track = False
+    end
+    object lnkcntrltfld3: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = bndsrcdb2
+      FieldName = 'femBsUrl'
+      Control = btndt_FemBsUrl
+      Track = False
+    end
+    object lnkcntrltfld4: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = bndsrcdb2
+      FieldName = 'manBs'
+      Control = btndt_ManBs
+      Track = False
+    end
+    object lnkcntrltfld5: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = bndsrcdb2
+      FieldName = 'manBsUrl'
+      Control = btndt_ManBsUrl
+      Track = False
+    end
+  end
+  object bndsrcdb2: TBindSourceDB
+    DataSet = dtmdl_Main.tblFitStages
+    ScopeMappings = <>
+    Left = 16
+    Top = 277
   end
 end

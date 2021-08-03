@@ -32,11 +32,8 @@ type
     stat1: TStatusBar;
     lbl6: TLabel;
     lbl8: TLabel;
-    lbl9: TLabel;
     dblkcbbmuscleDefType: TDBLookupComboBox;
-    dblkcbbmuscleDefLvl: TDBLookupComboBox;
     lbl10: TLabel;
-    dbmmoexcludedRaces: TDBMemo;
     tsPlayerStages: TTabSheet;
     pnl4: TPanel;
     lbl11: TLabel;
@@ -68,14 +65,6 @@ type
     ilIcons16: TImageList;
     lbl5: TLabel;
     lbl7: TLabel;
-    btn_femBs: TSpeedButton;
-    dbedt_femBs: TDBEdit;
-    dbedt_femBsUrl: TDBEdit;
-    btn_femBsUrl: TSpeedButton;
-    dbedt_manBs: TDBEdit;
-    btn_manBs: TSpeedButton;
-    dbedt_manBsUrl: TDBEdit;
-    btn_manBsUrl: TSpeedButton;
     Open1: TMenuItem;
     SaveAs1: TMenuItem;
     actSave: TAction;
@@ -190,6 +179,18 @@ type
     Editknownclasses1: TMenuItem;
     N5: TMenuItem;
     Editknownclasses2: TMenuItem;
+    grdpnl1: TGridPanel;
+    btndt_FemBs: TButtonedEdit;
+    bndsrcdb2: TBindSourceDB;
+    lnkcntrltfld2: TLinkControlToField;
+    btndt_FemBsUrl: TButtonedEdit;
+    lnkcntrltfld3: TLinkControlToField;
+    btndt_ManBs: TButtonedEdit;
+    lnkcntrltfld4: TLinkControlToField;
+    btndt_ManBsUrl: TButtonedEdit;
+    lnkcntrltfld5: TLinkControlToField;
+    dbmmoexcludedRaces: TDBMemo;
+    pnl8: TPanel;
     procedure dbgrd_NavKeyDown(Sender: TObject; var Key: Word; Shift:
       TShiftState);
     procedure actDBInsertExecute(Sender: TObject);
@@ -221,11 +222,12 @@ type
     procedure dbtrckbrweightChange(Sender: TObject);
     procedure Getclasses1Click(Sender: TObject);
     procedure actEditKnownClassesExecute(Sender: TObject);
+    procedure FormResize(Sender: TObject);
   private
     procedure DisableCtrlDel(var Key: Word; Shift: TShiftState);
     procedure CheckDelAvailability;
     procedure SetBodyslideFromFile(const aField: string);
-    procedure DbEdtCursorToLastPos(const edt: TCustomMaskEdit);
+    procedure DbEdtCursorToLastPos(const edt: TCustomEdit);
     function ActivePageAsTable: TTableName;
     procedure SetEdtHint(const edt: TCustomEdit; const func: TStrToStr);
     procedure ShellOpen(const s: string);
@@ -360,23 +362,23 @@ end;
 procedure TfrmMain.btn_femBsClick(Sender: TObject);
 begin
   SetBodyslideFromFile('femBs');
-  DbEdtCursorToLastPos(dbedt_femBs);
+  DbEdtCursorToLastPos(btndt_FemBs);
 end;
 
 procedure TfrmMain.btn_femBsUrlClick(Sender: TObject);
 begin
-  ShellOpen(dbedt_femBsUrl.EditText);
+  ShellOpen(btndt_FemBsUrl.Text);
 end;
 
 procedure TfrmMain.btn_manBsClick(Sender: TObject);
 begin
   SetBodyslideFromFile('manBs');
-  DbEdtCursorToLastPos(dbedt_manBs);
+  DbEdtCursorToLastPos(btndt_ManBs);
 end;
 
 procedure TfrmMain.btn_manBsUrlClick(Sender: TObject);
 begin
-  ShellOpen(dbedt_manBsUrl.EditText);
+  ShellOpen(btndt_ManBsUrl.Text);
 end;
 
 procedure TfrmMain.CheckDelAvailability;
@@ -387,9 +389,9 @@ begin
     actDBDel.Enabled := true
 end;
 
-procedure TfrmMain.DbEdtCursorToLastPos(const edt: TCustomMaskEdit);
+procedure TfrmMain.DbEdtCursorToLastPos(const edt: TCustomEdit);
 begin
-  edt.SelStart := Length(edt.EditText);
+  edt.SelStart := Length(edt.Text);
   edt.SelLength := 0;
 end;
 
@@ -507,6 +509,11 @@ procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   Application.HintHidePause := 6000;
   filterImportedNPC1.Init(tnNPCs);
+end;
+
+procedure TfrmMain.FormResize(Sender: TObject);
+begin
+  DrawPlayerJourney;
 end;
 
 procedure TfrmMain.FormShow(Sender: TObject);
