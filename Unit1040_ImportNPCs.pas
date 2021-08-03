@@ -17,13 +17,10 @@ type
     btnClose: TButton;
     grp1: TGroupBox;
     filterImportedNPC1: TfrmFilterImportedNPC;
-    btnSearch: TBitBtn;
     btnAccept: TButton;
-    btnClearFilter: TBitBtn;
     procedure btnImportClick(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
     procedure btnSearchClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure dbgrd1KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure btnClearFilterClick(Sender: TObject);
@@ -81,7 +78,7 @@ end;
 
 procedure TfrmImportNPCs.btnSearchClick(Sender: TObject);
 begin
-  dtmdl_Main.FilterTable(tnAllNPCs, filterImportedNPC1.Filter);
+//  dtmdl_Main.FilterTable(tnAllNPCs, filterImportedNPC1.Filter);
 end;
 
 procedure TfrmImportNPCs.dbgrd1KeyDown(Sender: TObject; var Key: Word; Shift:
@@ -97,6 +94,7 @@ begin
   try
     with frmImportNPCs do begin
       HideAcceptBtn;
+      filterImportedNPC1.DefaultBtn := btnImport;
       ShowModal;
     end;
   finally
@@ -104,14 +102,9 @@ begin
   end;
 end;
 
-procedure TfrmImportNPCs.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-//  dtmdl_Main.FilterTable(tnAllNPCs, '');
-end;
-
 procedure TfrmImportNPCs.FormCreate(Sender: TObject);
 begin
-  filterImportedNPC1.Races := dtmdl_Main.ValidRaces;
+  filterImportedNPC1.Init(tnAllNPCs);
 end;
 
 procedure TfrmImportNPCs.HideAcceptBtn;
@@ -125,8 +118,7 @@ procedure TfrmImportNPCs.MakeSelectDlg;
 begin
   Caption := 'Select the NPC you want to set values for';
   btnImport.Visible := false;
-  btnSearch.Default := false;
-  btnAccept.Default := true;
+  filterImportedNPC1.DefaultBtn := btnAccept;
 end;
 
 class function TfrmImportNPCs.Select: Integer;

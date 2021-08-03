@@ -25,7 +25,7 @@ object frmMain: TfrmMain
     Top = 0
     Width = 629
     Height = 441
-    ActivePage = tsFitStages
+    ActivePage = tsNPCs
     Align = alClient
     TabOrder = 0
     OnChange = pgc1Change
@@ -164,7 +164,7 @@ object frmMain: TfrmMain
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 177
+          Width = 106
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -180,7 +180,6 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
-          ExplicitWidth = 106
         end
         object dbgrd_fitStagesNav: TDBGrid
           Left = 1
@@ -387,7 +386,7 @@ object frmMain: TfrmMain
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 106
+          Width = 177
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -403,6 +402,7 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
+          ExplicitWidth = 106
         end
         object dbgrd1: TDBGrid
           Left = 1
@@ -538,6 +538,7 @@ object frmMain: TfrmMain
           Top = 20
           Width = 180
           Height = 30
+          Enabled = False
           Max = 100
           PopupMenu = pmTrackbar
           Frequency = 10
@@ -553,10 +554,10 @@ object frmMain: TfrmMain
           Top = 20
           Width = 180
           Height = 30
+          Enabled = False
           Max = 100
           PopupMenu = pmTrackbar
           Frequency = 10
-          Position = 100
           PositionToolTip = ptTop
           ShowSelRange = False
           TabOrder = 1
@@ -569,6 +570,7 @@ object frmMain: TfrmMain
           Top = 90
           Width = 150
           Height = 30
+          Enabled = False
           Max = 6
           Min = 1
           Position = 1
@@ -583,9 +585,10 @@ object frmMain: TfrmMain
           Top = 90
           Width = 150
           Height = 30
+          Enabled = False
           Max = 6
           Min = 1
-          Position = 6
+          Position = 1
           PositionToolTip = ptTop
           ShowSelRange = False
           TabOrder = 3
@@ -597,11 +600,12 @@ object frmMain: TfrmMain
           Top = 160
           Width = 150
           Height = 30
+          Enabled = False
           Max = 40
           Min = 5
           PopupMenu = pmTrackbar
           Frequency = 5
-          Position = 30
+          Position = 5
           PositionToolTip = ptTop
           ShowSelRange = False
           TabOrder = 4
@@ -636,11 +640,12 @@ object frmMain: TfrmMain
           Top = 18
           Width = 120
           Height = 30
+          Enabled = False
           Max = 130
           Min = 70
           PopupMenu = pmTrackbar
           Frequency = 10
-          Position = 100
+          Position = 70
           PositionToolTip = ptTop
           ShowSelRange = False
           TabOrder = 0
@@ -652,11 +657,12 @@ object frmMain: TfrmMain
           Top = 18
           Width = 120
           Height = 30
+          Enabled = False
           Max = 130
           Min = 70
           PopupMenu = pmTrackbar
           Frequency = 10
-          Position = 100
+          Position = 70
           PositionToolTip = ptTop
           ShowSelRange = False
           TabOrder = 1
@@ -746,50 +752,417 @@ object frmMain: TfrmMain
     object tsNPCs: TTabSheet
       Caption = 'NPCs'
       ImageIndex = 3
-      object stckpnl1: TStackPanel
-        Left = 0
-        Top = 0
-        Width = 621
-        Height = 51
-        Align = alTop
-        ControlCollection = <
-          item
-            Control = filterImportedNPC1
-          end>
-        Padding.Left = 15
-        Padding.Top = 15
-        Padding.Right = 15
-        TabOrder = 0
-        inline filterImportedNPC1: TfrmFilterImportedNPC
-          Left = 16
-          Top = 16
-          Width = 541
-          Height = 21
-          AutoSize = True
-          TabOrder = 0
-          ExplicitLeft = 16
-          ExplicitTop = 16
-        end
-      end
       object pnl2: TPanel
-        Left = 0
-        Top = 51
-        Width = 621
+        Left = 185
+        Top = 0
+        Width = 436
         Height = 362
         Align = alClient
         Padding.Left = 15
         Padding.Top = 15
         Padding.Right = 15
         Padding.Bottom = 15
-        TabOrder = 1
-        object dbgrdNPCs: TDBGrid
+        TabOrder = 0
+        object rltvpnl1: TRelativePanel
           Left = 16
           Top = 16
-          Width = 589
-          Height = 330
+          Width = 404
+          Height = 65
+          ControlCollection = <
+            item
+              Control = lbl28
+              AlignBottomWithPanel = False
+              AlignHorizontalCenterWithPanel = False
+              AlignLeftWithPanel = True
+              AlignRightWithPanel = False
+              AlignTopWithPanel = True
+              AlignVerticalCenterWithPanel = False
+            end
+            item
+              Control = lbl29
+              AlignBottomWithPanel = False
+              AlignHorizontalCenterWithPanel = False
+              AlignLeftWithPanel = True
+              AlignRightWithPanel = False
+              AlignTopWithPanel = False
+              AlignVerticalCenterWithPanel = False
+              Below = lbl28
+            end
+            item
+              Control = dbtxtesp
+              AlignBottomWithPanel = False
+              AlignHorizontalCenterWithPanel = False
+              AlignLeftWithPanel = False
+              AlignRightWithPanel = False
+              AlignTopWith = lbl28
+              AlignTopWithPanel = False
+              AlignVerticalCenterWithPanel = False
+              RightOf = lbl28
+            end
+            item
+              Control = dbtxtformID
+              AlignBottomWithPanel = False
+              AlignHorizontalCenterWithPanel = False
+              AlignLeftWith = dbtxtesp
+              AlignLeftWithPanel = False
+              AlignRightWithPanel = False
+              AlignTopWith = lbl29
+              AlignTopWithPanel = False
+              AlignVerticalCenterWithPanel = False
+            end
+            item
+              Control = lbl30
+              AlignBottomWithPanel = False
+              AlignHorizontalCenterWithPanel = True
+              AlignLeftWithPanel = False
+              AlignRightWithPanel = False
+              AlignTopWithPanel = True
+              AlignVerticalCenterWithPanel = False
+            end
+            item
+              Control = lbl31
+              AlignBottomWithPanel = False
+              AlignHorizontalCenterWithPanel = False
+              AlignLeftWith = lbl30
+              AlignLeftWithPanel = False
+              AlignRightWithPanel = False
+              AlignTopWithPanel = False
+              AlignVerticalCenterWithPanel = False
+              Below = lbl30
+            end
+            item
+              Control = lbl32
+              AlignBottomWithPanel = False
+              AlignHorizontalCenterWithPanel = False
+              AlignLeftWith = lbl30
+              AlignLeftWithPanel = False
+              AlignRightWithPanel = False
+              AlignTopWithPanel = False
+              AlignVerticalCenterWithPanel = False
+              Below = lbl31
+            end
+            item
+              Control = dbtxtclass
+              AlignBottomWithPanel = False
+              AlignHorizontalCenterWithPanel = False
+              AlignLeftWith = dbtxtisFemale
+              AlignLeftWithPanel = False
+              AlignRightWithPanel = False
+              AlignTopWith = lbl30
+              AlignTopWithPanel = False
+              AlignVerticalCenterWithPanel = False
+            end
+            item
+              Control = dbtxtrace
+              AlignBottomWithPanel = False
+              AlignHorizontalCenterWithPanel = False
+              AlignLeftWith = dbtxtisFemale
+              AlignLeftWithPanel = False
+              AlignRightWithPanel = False
+              AlignTopWith = lbl31
+              AlignTopWithPanel = False
+              AlignVerticalCenterWithPanel = False
+            end
+            item
+              Control = dbtxtisFemale
+              AlignBottomWithPanel = False
+              AlignHorizontalCenterWithPanel = False
+              AlignLeftWithPanel = False
+              AlignRightWithPanel = False
+              AlignTopWith = lbl32
+              AlignTopWithPanel = False
+              AlignVerticalCenterWithPanel = False
+              RightOf = lbl32
+            end>
+          Align = alTop
+          BevelOuter = bvNone
+          Padding.Bottom = 7
+          TabOrder = 0
+          DesignSize = (
+            404
+            65)
+          object lbl28: TLabel
+            AlignWithMargins = True
+            Left = 0
+            Top = 2
+            Width = 44
+            Height = 13
+            Margins.Left = 0
+            Margins.Top = 2
+            Margins.Right = 10
+            Anchors = []
+            Caption = 'esp/esm:'
+          end
+          object lbl29: TLabel
+            AlignWithMargins = True
+            Left = 0
+            Top = 20
+            Width = 38
+            Height = 13
+            Margins.Left = 0
+            Margins.Top = 2
+            Margins.Right = 10
+            Anchors = []
+            Caption = 'FormId:'
+          end
+          object dbtxtesp: TDBText
+            Left = 54
+            Top = 2
+            Width = 57
+            Height = 13
+            Anchors = []
+            DataField = 'esp'
+            DataSource = dtmdl_Main.dsNPCs
+          end
+          object dbtxtformID: TDBText
+            Left = 54
+            Top = 20
+            Width = 67
+            Height = 13
+            Anchors = []
+            DataField = 'formID'
+            DataSource = dtmdl_Main.dsNPCs
+          end
+          object lbl30: TLabel
+            AlignWithMargins = True
+            Left = 187
+            Top = 2
+            Width = 29
+            Height = 13
+            Margins.Left = 0
+            Margins.Top = 2
+            Margins.Right = 10
+            Anchors = []
+            Caption = 'Class:'
+          end
+          object lbl31: TLabel
+            AlignWithMargins = True
+            Left = 187
+            Top = 20
+            Width = 28
+            Height = 13
+            Margins.Left = 0
+            Margins.Top = 2
+            Margins.Right = 10
+            Anchors = []
+            Caption = 'Race:'
+          end
+          object lbl32: TLabel
+            AlignWithMargins = True
+            Left = 187
+            Top = 38
+            Width = 48
+            Height = 13
+            Margins.Left = 0
+            Margins.Top = 2
+            Margins.Right = 5
+            Anchors = []
+            Caption = 'Is female:'
+          end
+          object dbtxtclass: TDBText
+            Left = 240
+            Top = 2
+            Width = 49
+            Height = 13
+            Anchors = []
+            AutoSize = True
+            DataField = 'class'
+            DataSource = dtmdl_Main.dsNPCs
+          end
+          object dbtxtrace: TDBText
+            Left = 240
+            Top = 20
+            Width = 47
+            Height = 13
+            Anchors = []
+            AutoSize = True
+            DataField = 'race'
+            DataSource = dtmdl_Main.dsNPCs
+          end
+          object dbtxtisFemale: TDBText
+            Left = 240
+            Top = 38
+            Width = 67
+            Height = 13
+            Anchors = []
+            AutoSize = True
+            DataField = 'isFemale'
+            DataSource = dtmdl_Main.dsNPCs
+          end
+        end
+        object pnl5: TPanel
+          Left = 16
+          Top = 90
+          Width = 404
+          Height = 281
+          BevelOuter = bvNone
+          TabOrder = 1
+          object lbl22: TLabel
+            Left = 0
+            Top = 4
+            Width = 64
+            Height = 13
+            Caption = 'Fitness stage'
+          end
+          object dblkcbbfitStage: TDBLookupComboBox
+            Left = 90
+            Top = 0
+            Width = 311
+            Height = 21
+            DataField = 'fitStage'
+            DataSource = dtmdl_Main.dsNPCs
+            KeyField = 'ID'
+            ListField = 'iName'
+            ListSource = dtmdl_Main.dsFitStages
+            TabOrder = 0
+          end
+          object grp4: TGroupBox
+            Left = 0
+            Top = 40
+            Width = 401
+            Height = 101
+            Caption = 'Body shape (from Bodyslide preset)'
+            TabOrder = 1
+            object lbl24: TLabel
+              Left = 20
+              Top = 30
+              Width = 40
+              Height = 13
+              Caption = 'Disabled'
+            end
+            object lbl25: TLabel
+              Left = 313
+              Top = 30
+              Width = 70
+              Height = 13
+              Caption = 'By NPC weight'
+            end
+            object lbl33: TLabel
+              Left = 20
+              Top = 70
+              Width = 77
+              Height = 13
+              Caption = 'Current setting:'
+            end
+            object lbl_NPCWeight: TLabel
+              Left = 110
+              Top = 70
+              Width = 239
+              Height = 13
+              Caption = 'Max Sick Gains won'#39't change this NPC body shape'
+            end
+            object dbtrckbrweight: TDBTrackBar
+              Left = 70
+              Top = 20
+              Width = 235
+              Height = 31
+              Hint = 
+                'NPC will look as if they was this weight|Don'#39't fret. This won'#39't ' +
+                'cause neck seams AT ALL.'
+              Enabled = False
+              Max = 101
+              Min = -1
+              PopupMenu = pmTrackbar
+              Frequency = 10
+              Position = -1
+              ShowSelRange = False
+              TabOrder = 0
+              OnChange = dbtrckbrweightChange
+              DataField = 'weight'
+              DataSource = dtmdl_Main.dsNPCs
+            end
+          end
+          object grp5: TGroupBox
+            Left = 0
+            Top = 160
+            Width = 401
+            Height = 101
+            Caption = 'Muscle definition'
+            TabOrder = 2
+            object lbl26: TLabel
+              Left = 60
+              Top = 30
+              Width = 40
+              Height = 13
+              Caption = 'Disabled'
+            end
+            object lbl27: TLabel
+              Left = 300
+              Top = 30
+              Width = 20
+              Height = 13
+              Caption = 'Max'
+            end
+            object lbl34: TLabel
+              Left = 20
+              Top = 70
+              Width = 77
+              Height = 13
+              Caption = 'Current setting:'
+            end
+            object lbl_NPCMuscleDef: TLabel
+              Left = 110
+              Top = 70
+              Width = 145
+              Height = 13
+              Caption = 'Don'#39't change muscle definition'
+            end
+            object dbtrckbrmuscleDef: TDBTrackBar
+              Left = 120
+              Top = 20
+              Width = 161
+              Height = 31
+              Enabled = False
+              Max = 6
+              Min = -1
+              Position = -1
+              ShowSelRange = False
+              TabOrder = 0
+              OnChange = dbtrckbrmuscleDefChange
+              DataField = 'muscleDef'
+              DataSource = dtmdl_Main.dsNPCs
+            end
+          end
+        end
+      end
+      object pnl3: TPanel
+        Left = 0
+        Top = 0
+        Width = 185
+        Height = 362
+        Align = alLeft
+        TabOrder = 1
+        object lbl21: TLabel
+          AlignWithMargins = True
+          Left = 4
+          Top = 9
+          Width = 177
+          Height = 34
+          Margins.Top = 8
+          Margins.Bottom = 8
+          Align = alTop
+          Alignment = taCenter
+          Caption = 'NPCs'
+          Color = clNone
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          GlowSize = 10
+          ParentColor = False
+          ParentFont = False
+          ExplicitWidth = 50
+        end
+        object dbgrd2: TDBGrid
+          Left = 1
+          Top = 51
+          Width = 183
+          Height = 310
+          Hint = 'Right click to add/delete data'
           Align = alClient
           DataSource = dtmdl_Main.dsNPCs
-          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgTitleClick, dgTitleHotTrack]
+          Options = [dgIndicator, dgConfirmDelete, dgTitleClick, dgTitleHotTrack]
           PopupMenu = pmRecords
           TabOrder = 0
           TitleFont.Charset = DEFAULT_CHARSET
@@ -797,71 +1170,37 @@ object frmMain: TfrmMain
           TitleFont.Height = -11
           TitleFont.Name = 'Tahoma'
           TitleFont.Style = []
-          OnColEnter = dbgrdNPCsColEnter
           OnKeyDown = dbgrd_NavKeyDown
           Columns = <
             item
               Expanded = False
-              FieldName = 'esp'
-              Title.Caption = 'esp file'
-              Width = 70
-              Visible = True
-            end
-            item
-              Expanded = False
-              FieldName = 'formID'
-              Title.Caption = 'FormID'
-              Width = 45
-              Visible = True
-            end
-            item
-              Expanded = False
               FieldName = 'fullName'
-              Title.Caption = 'Full name'
-              Width = 80
-              Visible = True
-            end
-            item
-              Expanded = False
-              FieldName = 'fitStageLook'
-              Title.Caption = 'Fitness stage'
-              Width = 110
-              Visible = True
-            end
-            item
-              Expanded = False
-              FieldName = 'weight'
-              Title.Caption = 'Weight'
-              Width = 50
-              Visible = True
-            end
-            item
-              Expanded = False
-              FieldName = 'muscleDef'
-              Title.Caption = 'Muscle def.'
-              Visible = True
-            end
-            item
-              Expanded = False
-              FieldName = 'class'
-              Title.Caption = 'Class'
-              Width = 90
-              Visible = True
-            end
-            item
-              Expanded = False
-              FieldName = 'race'
-              Title.Caption = 'Race'
-              Width = 70
-              Visible = True
-            end
-            item
-              Expanded = False
-              FieldName = 'isFemale'
-              Title.Caption = 'Is female?'
-              Width = 60
+              Width = 179
               Visible = True
             end>
+        end
+      end
+      object stckpnl1: TStackPanel
+        Left = 0
+        Top = 362
+        Width = 621
+        Height = 51
+        Align = alBottom
+        ControlCollection = <
+          item
+            Control = filterImportedNPC1
+          end>
+        Padding.Left = 3
+        Padding.Top = 15
+        TabOrder = 2
+        inline filterImportedNPC1: TfrmFilterImportedNPC
+          Left = 4
+          Top = 16
+          Width = 667
+          Height = 76
+          TabOrder = 0
+          ExplicitLeft = 4
+          ExplicitTop = 16
         end
       end
     end
@@ -937,7 +1276,7 @@ object frmMain: TfrmMain
   end
   object mm1: TMainMenu
     Images = ilActions32
-    Left = 112
+    Left = 84
     Top = 373
     object File1: TMenuItem
       Caption = 'File'
@@ -990,7 +1329,7 @@ object frmMain: TfrmMain
   end
   object pmRecords: TPopupMenu
     Images = ilActions32
-    Left = 160
+    Left = 152
     Top = 373
     object Insert1: TMenuItem
       Action = actDBInsert
@@ -1017,7 +1356,7 @@ object frmMain: TfrmMain
       end>
     Images = ilActions32
     Left = 16
-    Top = 330
+    Top = 287
     StyleName = 'Platform Default'
     object flpn1: TFileOpen
       Category = 'File'
@@ -1112,7 +1451,7 @@ object frmMain: TfrmMain
     ColorDepth = cd32Bit
     Height = 48
     Width = 48
-    Left = 160
+    Left = 84
     Top = 330
     Bitmap = {
       494C010102005000040030003000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
@@ -2322,14 +2661,14 @@ object frmMain: TfrmMain
         FileMask = '*.xml'
       end>
     Options = []
-    Left = 64
-    Top = 330
+    Left = 84
+    Top = 287
   end
   object ilIcons24: TImageList
     ColorDepth = cd32Bit
     Height = 24
     Width = 24
-    Left = 64
+    Left = 16
     Top = 373
     Bitmap = {
       494C010104000800040018001800FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
@@ -2937,7 +3276,7 @@ object frmMain: TfrmMain
     ColorDepth = cd32Bit
     Height = 32
     Width = 32
-    Left = 112
+    Left = 16
     Top = 330
     Bitmap = {
       494C010104000800040020002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
@@ -4005,8 +4344,8 @@ object frmMain: TfrmMain
   end
   object ilIcons16: TImageList
     ColorDepth = cd32Bit
-    Left = 16
-    Top = 373
+    Left = 152
+    Top = 330
     Bitmap = {
       494C010101000800040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
@@ -4162,7 +4501,7 @@ object frmMain: TfrmMain
         FileMask = '*.xml'
       end>
     Options = []
-    Left = 300
-    Top = 240
+    Left = 152
+    Top = 287
   end
 end

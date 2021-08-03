@@ -72,21 +72,29 @@ type
     qryAux: TADOQuery;
     JE: TJetEngine;
     strngfldConfigLuaCfgPath: TStringField;
-    tblNPCs: TADOTable;
-    atncfldNPCsID: TAutoIncField;
-    intgrfldNPCsNPCid: TIntegerField;
-    intgrfldNPCsfitStage: TIntegerField;
-    smlntfldNPCsweight: TSmallintField;
-    wrdfldNPCsmuscleDef: TWordField;
     dsNPCs: TDataSource;
-    strngfldNPCsfullName: TStringField;
-    strngfldNPCsformID: TStringField;
-    strngfldNPCsesp: TStringField;
-    strngfldNPCsclass: TStringField;
-    strngfldNPCsrace: TStringField;
-    blnfldNPCsisFemale: TBooleanField;
-    strngfldNPCsfitStageLook: TStringField;
     qryGenerate: TADOQuery;
+    tblRacesID: TAutoIncField;
+    tblRacesracialGroup: TWideStringField;
+    tblRacesraces: TWideMemoField;
+    tblRacesdescription: TWideMemoField;
+    tblRacesabbreviation: TWideStringField;
+    qryNPCs: TADOQuery;
+    atncfldNPCsNPCsID: TAutoIncField;
+    intgrfldNPCsNPCid1: TIntegerField;
+    intgrfldNPCsfitStage1: TIntegerField;
+    smlntfldNPCsweight1: TSmallintField;
+    smlntfldNPCsmuscleDef1: TSmallintField;
+    atncfldNPCsAllNPCsID: TAutoIncField;
+    wdstrngfldNPCsuId: TWideStringField;
+    wdstrngfldNPCsformID: TWideStringField;
+    wdstrngfldNPCsesp: TWideStringField;
+    wdstrngfldNPCsfullName: TWideStringField;
+    wdstrngfldNPCsclass: TWideStringField;
+    wdstrngfldNPCsrace: TWideStringField;
+    blnfldNPCsisFemale1: TBooleanField;
+    intgrfldNPCsmuscleDefType: TIntegerField;
+    strngfldNPCsmuscleDefTypeName1: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
@@ -95,8 +103,6 @@ type
     function BlankDB: string;
     function CfgFile: string;
     function ConfigFieldToStr(const aField: TConfigField): string;
-    function FieldFrom(const aTbl: TCustomADODataSet; const aField: string):
-      string;
     function GetConfiguredPath(const aCfgField: TConfigField): string;
     function GetTable(const aTable: TTableName): TCustomADODataSet;
     function TempDB: string;
@@ -177,7 +183,14 @@ begin
   cmd.CommandText := aCmd();
   if cmd.CommandText <> '' then begin
     cmd.Execute;
-    RefreshToLast(tbl);
+    if tbl is TADOTable then
+      RefreshToLast(tbl)
+    else if tbl is TADOQuery then begin
+      with tbl as TADOQuery do begin
+        Close;
+        Open;
+      end;
+    end;
   end;
 end;
 
@@ -200,7 +213,7 @@ begin
     function: string
     begin
       Result := Format(
-        'INSERT INTO NPCs (NPCid, fitStage, weight, muscleDef) VALUES (%d, 1, 101, 0)',
+        'INSERT INTO NPCs (NPCid, fitStage, weight, muscleDef) VALUES (%d, 1, 101, -1)',
         [aId]
         );
     end;
@@ -370,12 +383,6 @@ begin
   Result := GetTable(aTable).FieldByName(aField);
 end;
 
-function Tdtmdl_Main.FieldFrom(const aTbl: TCustomADODataSet; const aField:
-  string): string;
-begin
-  Result := aTbl.FieldByName(aField).AsString;
-end;
-
 procedure Tdtmdl_Main.FilterTable(const aTable: TTableName; const aFilter:
   string);
 begin
@@ -506,7 +513,7 @@ begin
     tnAllNPCs:
       Result := tblAllNPCs;
     tnNPCs:
-      Result := tblNPCs;
+      Result := qryNPCs;
   else
     {$IFDEF DEBUG}
     raise Exception.CreateFmt('Asked for some invalid table: %d.', [Integer(aTable)]);

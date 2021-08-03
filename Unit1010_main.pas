@@ -12,7 +12,7 @@ uses
   System.Types, Vcl.Imaging.pngimage, Vcl.Imaging.jpeg, System.Math,
   Unit9020_Types, Winapi.ShellAPI, Vcl.Themes, System.StrUtils,
   DataAware.TDBTrackBar, System.Generics.Collections, System.Notification,
-  Unit3010_FilterImportedNPC, Winapi.OleDB, System.Win.ComObj;
+  Unit3010_FilterImportedNPC, Winapi.OleDB, System.Win.ComObj, Vcl.WinXCtrls;
 
 type
   TfrmMain = class(TForm)
@@ -126,8 +126,36 @@ type
     filterImportedNPC1: TfrmFilterImportedNPC;
     stckpnl1: TStackPanel;
     pnl2: TPanel;
-    dbgrdNPCs: TDBGrid;
     opnDlgBs: TFileOpenDialog;
+    pnl3: TPanel;
+    lbl21: TLabel;
+    dbgrd2: TDBGrid;
+    dbtxtesp: TDBText;
+    dbtxtformID: TDBText;
+    dblkcbbfitStage: TDBLookupComboBox;
+    dbtrckbrweight: TDBTrackBar;
+    dbtrckbrmuscleDef: TDBTrackBar;
+    lbl22: TLabel;
+    lbl24: TLabel;
+    lbl25: TLabel;
+    lbl26: TLabel;
+    lbl27: TLabel;
+    lbl28: TLabel;
+    lbl29: TLabel;
+    rltvpnl1: TRelativePanel;
+    lbl30: TLabel;
+    lbl31: TLabel;
+    lbl32: TLabel;
+    dbtxtclass: TDBText;
+    dbtxtrace: TDBText;
+    dbtxtisFemale: TDBText;
+    pnl5: TPanel;
+    grp4: TGroupBox;
+    lbl33: TLabel;
+    grp5: TGroupBox;
+    lbl34: TLabel;
+    lbl_NPCWeight: TLabel;
+    lbl_NPCMuscleDef: TLabel;
     procedure dbgrd_NavKeyDown(Sender: TObject; var Key: Word; Shift:
       TShiftState);
     procedure actDBInsertExecute(Sender: TObject);
@@ -155,7 +183,8 @@ type
     procedure actSaveExecute(Sender: TObject);
     procedure flpn1Accept(Sender: TObject);
     procedure actFileNewExecute(Sender: TObject);
-    procedure dbgrdNPCsColEnter(Sender: TObject);
+    procedure dbtrckbrmuscleDefChange(Sender: TObject);
+    procedure dbtrckbrweightChange(Sender: TObject);
   private
     procedure DisableCtrlDel(var Key: Word; Shift: TShiftState);
     procedure CheckDelAvailability;
@@ -265,10 +294,14 @@ var
   val: Integer;
 begin
   trackbar := pmTrackbar.PopupComponent as TTrackBar;
+  trackbar.SetFocus;
   newPos := (Round(trackbar.Position / 10) * 10).ToString;
   newPos := InputBox('Set the value you want', 'Value', newPos);
   if TryStrToInt(newPos, val) then
-    trackbar.Position := val;
+    if trackbar is TDBTrackBar then
+      (trackbar as TDBTrackBar).SetPosition(val)
+    else
+      trackbar.Position := val;
 end;
 
 procedure TfrmMain.ApplyConfig;
@@ -336,16 +369,6 @@ begin
     end);
 end;
 
-procedure TfrmMain.dbgrdNPCsColEnter(Sender: TObject);
-begin
-  with dbgrdNPCs do begin
-    if (SelectedIndex < 3) or (SelectedIndex > 5) then
-      Options := Options - [dgEditing, dgAlwaysShowEditor]
-    else
-      Options := Options + [dgEditing, dgAlwaysShowEditor]
-  end;
-end;
-
 procedure TfrmMain.dbgrd_fitStagesNavColEnter(Sender: TObject);
 begin
   CheckDelAvailability;
@@ -355,6 +378,43 @@ procedure TfrmMain.dbgrd_NavKeyDown(Sender: TObject; var Key: Word; Shift:
   TShiftState);
 begin
   DisableCtrlDel(Key, Shift)
+end;
+
+procedure TfrmMain.dbtrckbrmuscleDefChange(Sender: TObject);
+var
+  cap, musDefType: string;
+  val: Integer;
+begin
+  { TODO : Call when user changes fitness stage }
+  musDefType := dtmdl_Main.Field(tnNPCs, 'muscleDefTypeName').AsString +
+    ' looking';
+  val := dbtrckbrmuscleDef.Position;
+  case val of
+    -1:
+      cap := 'Don''t change muscle definition.';
+    0:
+      cap := Format('%s. Get from NPC weight.', [musDefType]);
+  else
+    cap := Format('%s. Level %d.', [musDefType, val]);
+  end;
+  lbl_NPCMuscleDef.Caption := cap;
+end;
+
+procedure TfrmMain.dbtrckbrweightChange(Sender: TObject);
+var
+  val: Integer;
+  cap: string;
+begin
+  val := dbtrckbrweight.Position;
+  case val of
+    -1:
+      cap := 'Max Sick Gains won''t change this NPC body shape.';
+    101:
+      cap := 'Get from NPC weight. Will look as usual.';
+  else
+    cap := Format('NPC will look as if their weight was %d.', [val]);
+  end;
+  lbl_NPCWeight.Caption := cap;
 end;
 
 procedure TfrmMain.JourneyTrackbarExit(Sender: TObject);
@@ -402,6 +462,7 @@ end;
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   Application.HintHidePause := 6000;
+  filterImportedNPC1.Init(tnNPCs);
 end;
 
 procedure TfrmMain.FormShow(Sender: TObject);

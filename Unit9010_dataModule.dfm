@@ -6,8 +6,8 @@ object dtmdl_Main: Tdtmdl_Main
   Width = 443
   object dsFitStages: TDataSource
     DataSet = tblFitStages
-    Left = 220
-    Top = 145
+    Left = 16
+    Top = 188
   end
   object conMain: TADOConnection
     Connected = True
@@ -26,7 +26,7 @@ object dtmdl_Main: Tdtmdl_Main
     Connection = conMain
     CursorType = ctStatic
     TableName = 'FitStages'
-    Left = 152
+    Left = 220
     Top = 59
     object atncfldFitStagesID: TAutoIncField
       FieldName = 'ID'
@@ -74,14 +74,16 @@ object dtmdl_Main: Tdtmdl_Main
     end
   end
   object tblFitTypes: TADOTable
+    Active = True
     Connection = conMain
+    CursorType = ctStatic
     TableName = 'FitnessTypes'
-    Left = 220
-    Top = 59
+    Left = 16
+    Top = 102
   end
   object dsFitTypes: TDataSource
     DataSet = tblFitTypes
-    Left = 16
+    Left = 84
     Top = 188
   end
   object tblFitLvls: TADOTable
@@ -89,12 +91,12 @@ object dtmdl_Main: Tdtmdl_Main
     Connection = conMain
     CursorType = ctStatic
     TableName = 'FitnessLevels'
-    Left = 84
+    Left = 152
     Top = 59
   end
   object dsFitLvls: TDataSource
     DataSet = tblFitLvls
-    Left = 152
+    Left = 220
     Top = 145
   end
   object cmd: TADOCommand
@@ -104,11 +106,10 @@ object dtmdl_Main: Tdtmdl_Main
     Top = 16
   end
   object tblPlayerStages: TADOTable
-    Active = True
     Connection = conMain
     CursorType = ctStatic
     TableName = 'PlayerStages'
-    Left = 84
+    Left = 152
     Top = 102
     object atncfldPlayerStagesID: TAutoIncField
       FieldName = 'ID'
@@ -155,25 +156,24 @@ object dtmdl_Main: Tdtmdl_Main
   end
   object dsPlayerStages: TDataSource
     DataSet = tblPlayerStages
-    Left = 152
+    Left = 220
     Top = 188
   end
   object qryPlayerJourney: TADOQuery
-    Active = True
     Connection = conMain
     CursorType = ctStatic
     Parameters = <>
     SQL.Strings = (
       'SELECT * FROM QryPlayerJourney')
-    Left = 220
-    Top = 16
+    Left = 16
+    Top = 59
   end
   object cdsConfig: TClientDataSet
     Aggregates = <>
     Params = <>
     ProviderName = 'dtstprvdrConfig'
-    Left = 220
-    Top = 102
+    Left = 16
+    Top = 145
     object bytfldMaxMuscleDefLevels: TByteField
       FieldName = 'MaxMuscleDefLevels'
     end
@@ -201,33 +201,52 @@ object dtmdl_Main: Tdtmdl_Main
   end
   object dsConfig: TDataSource
     DataSet = cdsConfig
-    Left = 84
+    Left = 152
     Top = 145
   end
   object tblRaces: TADOTable
-    Active = True
     Connection = conMain
     CursorType = ctStatic
     TableName = 'Races'
-    Left = 152
+    Left = 220
     Top = 102
+    object tblRacesID: TAutoIncField
+      FieldName = 'ID'
+      ReadOnly = True
+    end
+    object tblRacesracialGroup: TWideStringField
+      FieldName = 'racialGroup'
+      Size = 255
+    end
+    object tblRacesraces: TWideMemoField
+      FieldName = 'races'
+      BlobType = ftWideMemo
+    end
+    object tblRacesdescription: TWideMemoField
+      FieldName = 'description'
+      BlobType = ftWideMemo
+    end
+    object tblRacesabbreviation: TWideStringField
+      FieldName = 'abbreviation'
+      Size = 255
+    end
   end
   object dsRaces: TDataSource
     DataSet = tblRaces
-    Left = 220
-    Top = 188
+    Left = 16
+    Top = 231
   end
   object tblAllNPCs: TADOTable
     Active = True
     Connection = conMain
     CursorType = ctStatic
     TableName = 'AllNPCs'
-    Left = 16
+    Left = 84
     Top = 59
   end
   object dsAllNPCs: TDataSource
     DataSet = tblAllNPCs
-    Left = 16
+    Left = 84
     Top = 145
   end
   object qryAux: TADOQuery
@@ -241,100 +260,12 @@ object dtmdl_Main: Tdtmdl_Main
   object JE: TJetEngine
     AutoConnect = False
     ConnectKind = ckRunningOrNew
-    Left = 16
+    Left = 84
     Top = 231
   end
-  object tblNPCs: TADOTable
-    Active = True
-    Connection = conMain
-    CursorType = ctStatic
-    TableName = 'NPCs'
-    Left = 16
-    Top = 102
-    object atncfldNPCsID: TAutoIncField
-      FieldName = 'ID'
-      ReadOnly = True
-    end
-    object intgrfldNPCsNPCid: TIntegerField
-      FieldName = 'NPCid'
-    end
-    object intgrfldNPCsfitStage: TIntegerField
-      FieldName = 'fitStage'
-    end
-    object smlntfldNPCsweight: TSmallintField
-      FieldName = 'weight'
-    end
-    object wrdfldNPCsmuscleDef: TWordField
-      FieldName = 'muscleDef'
-    end
-    object strngfldNPCsfullName: TStringField
-      FieldKind = fkLookup
-      FieldName = 'fullName'
-      LookupDataSet = tblAllNPCs
-      LookupKeyFields = 'ID'
-      LookupResultField = 'fullName'
-      KeyFields = 'NPCid'
-      Size = 100
-      Lookup = True
-    end
-    object strngfldNPCsformID: TStringField
-      FieldKind = fkLookup
-      FieldName = 'formID'
-      LookupDataSet = tblAllNPCs
-      LookupKeyFields = 'ID'
-      LookupResultField = 'formID'
-      KeyFields = 'NPCid'
-      Lookup = True
-    end
-    object strngfldNPCsesp: TStringField
-      FieldKind = fkLookup
-      FieldName = 'esp'
-      LookupDataSet = tblAllNPCs
-      LookupKeyFields = 'ID'
-      LookupResultField = 'esp'
-      KeyFields = 'NPCid'
-      Lookup = True
-    end
-    object strngfldNPCsclass: TStringField
-      FieldKind = fkLookup
-      FieldName = 'class'
-      LookupDataSet = tblAllNPCs
-      LookupKeyFields = 'ID'
-      LookupResultField = 'class'
-      KeyFields = 'NPCid'
-      Lookup = True
-    end
-    object strngfldNPCsrace: TStringField
-      FieldKind = fkLookup
-      FieldName = 'race'
-      LookupDataSet = tblAllNPCs
-      LookupKeyFields = 'ID'
-      LookupResultField = 'race'
-      KeyFields = 'NPCid'
-      Lookup = True
-    end
-    object blnfldNPCsisFemale: TBooleanField
-      FieldKind = fkLookup
-      FieldName = 'isFemale'
-      LookupDataSet = tblAllNPCs
-      LookupKeyFields = 'ID'
-      LookupResultField = 'isFemale'
-      KeyFields = 'NPCid'
-      Lookup = True
-    end
-    object strngfldNPCsfitStageLook: TStringField
-      FieldKind = fkLookup
-      FieldName = 'fitStageLook'
-      LookupDataSet = tblFitStages
-      LookupKeyFields = 'ID'
-      LookupResultField = 'iName'
-      KeyFields = 'fitStage'
-      Lookup = True
-    end
-  end
   object dsNPCs: TDataSource
-    DataSet = tblNPCs
-    Left = 84
+    DataSet = qryNPCs
+    Left = 152
     Top = 188
   end
   object qryGenerate: TADOQuery
@@ -342,7 +273,85 @@ object dtmdl_Main: Tdtmdl_Main
     Parameters = <>
     SQL.Strings = (
       'SELECT * FROM GenNPCs')
-    Left = 200
-    Top = 270
+    Left = 220
+    Top = 16
+  end
+  object qryNPCs: TADOQuery
+    Active = True
+    Connection = conMain
+    CursorType = ctStatic
+    Parameters = <>
+    SQL.Strings = (
+      
+        'SELECT * FROM NPCs, AllNPCs WHERE NPCs.NPCId = AllNPCs.id ORDER ' +
+        'BY fullName')
+    Left = 230
+    Top = 260
+    object atncfldNPCsNPCsID: TAutoIncField
+      FieldName = 'NPCs.ID'
+      ReadOnly = True
+    end
+    object intgrfldNPCsNPCid1: TIntegerField
+      FieldName = 'NPCid'
+    end
+    object intgrfldNPCsfitStage1: TIntegerField
+      FieldName = 'fitStage'
+    end
+    object smlntfldNPCsweight1: TSmallintField
+      FieldName = 'weight'
+    end
+    object smlntfldNPCsmuscleDef1: TSmallintField
+      FieldName = 'muscleDef'
+    end
+    object atncfldNPCsAllNPCsID: TAutoIncField
+      FieldName = 'AllNPCs.ID'
+      ReadOnly = True
+    end
+    object wdstrngfldNPCsuId: TWideStringField
+      FieldName = 'uId'
+      Size = 255
+    end
+    object wdstrngfldNPCsformID: TWideStringField
+      FieldName = 'formID'
+      Size = 255
+    end
+    object wdstrngfldNPCsesp: TWideStringField
+      FieldName = 'esp'
+      Size = 255
+    end
+    object wdstrngfldNPCsfullName: TWideStringField
+      FieldName = 'fullName'
+      Size = 255
+    end
+    object wdstrngfldNPCsclass: TWideStringField
+      FieldName = 'class'
+      Size = 255
+    end
+    object wdstrngfldNPCsrace: TWideStringField
+      FieldName = 'race'
+      Size = 255
+    end
+    object blnfldNPCsisFemale1: TBooleanField
+      FieldName = 'isFemale'
+    end
+    object intgrfldNPCsmuscleDefType: TIntegerField
+      FieldKind = fkLookup
+      FieldName = 'muscleDefType'
+      LookupDataSet = tblFitStages
+      LookupKeyFields = 'ID'
+      LookupResultField = 'muscleDefType'
+      KeyFields = 'fitStage'
+      Lookup = True
+    end
+    object strngfldNPCsmuscleDefTypeName1: TStringField
+      FieldKind = fkLookup
+      FieldName = 'muscleDefTypeName'
+      LookupDataSet = tblFitTypes
+      LookupKeyFields = 'ID'
+      LookupResultField = 'iName'
+      KeyFields = 'muscleDefType'
+      Size = 30
+      Lookup = True
+    end
   end
 end
