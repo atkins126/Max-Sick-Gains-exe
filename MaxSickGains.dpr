@@ -19,7 +19,8 @@ uses
   Unit3010_FilterImportedNPC in 'Unit3010_FilterImportedNPC.pas' {frmFilterImportedNPC: TFrame},
   Functions.Utils in 'Functions.Utils.pas',
   Unit9015_GenMod in 'Unit9015_GenMod.pas',
-  Unit1050_GetClasses in 'Unit1050_GetClasses.pas' {frmGetClasses};
+  Unit1050_GetClasses in 'Unit1050_GetClasses.pas' {frmGetClasses},
+  Unit1045_KnownClasses in 'Unit1045_KnownClasses.pas' {frmKnownClasses};
 
 {$R *.res}
 

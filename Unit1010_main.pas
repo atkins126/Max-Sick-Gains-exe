@@ -13,7 +13,9 @@ uses
   Unit9020_Types, Winapi.ShellAPI, Vcl.Themes, System.StrUtils,
   DataAware.TDBTrackBar, System.Generics.Collections, System.Notification,
   Unit3010_FilterImportedNPC, Winapi.OleDB, System.Win.ComObj, Vcl.WinXCtrls,
-  Vcl.JumpList;
+  Vcl.JumpList, Vcl.NumberBox, System.Rtti, System.Bindings.Outputs,
+  Vcl.Bind.Editors, Data.Bind.EngExt, Vcl.Bind.DBEngExt, Data.Bind.Components,
+  Data.Bind.DBScope;
 
 type
   TfrmMain = class(TForm)
@@ -84,7 +86,6 @@ type
     dbtrckbrbsMin: TDBTrackBar;
     lbl13: TLabel;
     dblkcbbFitnessStage: TDBLookupComboBox;
-    dbedtminDays: TDBEdit;
     dbtrckbrbsMax: TDBTrackBar;
     lbl14: TLabel;
     lbl15: TLabel;
@@ -161,20 +162,34 @@ type
     pnl6: TPanel;
     lbl35: TLabel;
     dbgrd3: TDBGrid;
-    lbl36: TLabel;
-    dbmmoknownClasses: TDBMemo;
     stckpnl2: TStackPanel;
     lbl37: TLabel;
     dbmmoclasses: TDBMemo;
     lbl38: TLabel;
     dblkcbbfitStage1: TDBLookupComboBox;
-    bvl1: TBevel;
-    stckpnl3: TStackPanel;
-    bvl2: TBevel;
     lbl39: TLabel;
     dbedtiName: TDBEdit;
     pmGetClasses: TPopupMenu;
     Getclasses1: TMenuItem;
+    nmbrbx1: TNumberBox;
+    bndsrcdb1: TBindSourceDB;
+    bndngslst1: TBindingsList;
+    lnkcntrltfld1: TLinkControlToField;
+    grp6: TGroupBox;
+    dbtrckbrbsMin1: TDBTrackBar;
+    lbl36: TLabel;
+    dbtrckbrbsMax1: TDBTrackBar;
+    lbl40: TLabel;
+    dbtrckbrmuscleMax1: TDBTrackBar;
+    lbl41: TLabel;
+    lbl42: TLabel;
+    dbtrckbrmuscleMin1: TDBTrackBar;
+    pnl7: TPanel;
+    bvl1: TBevel;
+    actEditKnownClasses: TAction;
+    Editknownclasses1: TMenuItem;
+    N5: TMenuItem;
+    Editknownclasses2: TMenuItem;
     procedure dbgrd_NavKeyDown(Sender: TObject; var Key: Word; Shift:
       TShiftState);
     procedure actDBInsertExecute(Sender: TObject);
@@ -205,6 +220,7 @@ type
     procedure dbtrckbrmuscleDefChange(Sender: TObject);
     procedure dbtrckbrweightChange(Sender: TObject);
     procedure Getclasses1Click(Sender: TObject);
+    procedure actEditKnownClassesExecute(Sender: TObject);
   private
     procedure DisableCtrlDel(var Key: Word; Shift: TShiftState);
     procedure CheckDelAvailability;
@@ -231,7 +247,7 @@ implementation
 
 uses
   TargaImage, Unit1020_TexGen, Unit5020_DrawJourney, Unit1030_Config,
-  Unit1040_ImportNPCs, Functions.Utils, Unit1050_GetClasses, Functions.Strings;
+  Unit1040_ImportNPCs, Functions.Utils, Unit1050_GetClasses, Functions.Strings, Unit1045_KnownClasses;
 
 {$R *.dfm}
 
@@ -258,10 +274,15 @@ begin
   InsertProcedure(ActivePageAsTable)();
 end;
 
+procedure TfrmMain.actEditKnownClassesExecute(Sender: TObject);
+begin
+  TfrmKnownClasses.Execute;
+end;
+
 procedure TfrmMain.actFileNewExecute(Sender: TObject);
 begin
-  dtmdl_Main.OpenFile;
   // Calling it without filename opens a new one from template
+  dtmdl_Main.OpenFile;
 end;
 
 procedure TfrmMain.actGenerateExecute(Sender: TObject);

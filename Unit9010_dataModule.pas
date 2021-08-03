@@ -210,8 +210,8 @@ end;
 function Tdtmdl_Main.AppendClassArchetype: string;
 begin
   Result :=
-    'INSERT INTO ClassArchetypes (iName, classes, fitStage) ' +
-    'VALUES ("New archetype", "", 1)';
+    'INSERT INTO ClassArchetypes (iName, classes, fitStage, bsLo, bsHi, muscleDefLo, muscleDefHi) ' +
+    'VALUES ("New archetype", "", 1, 0, 100, 0, 100)';
 end;
 
 function Tdtmdl_Main.AppendFitStage: string;
