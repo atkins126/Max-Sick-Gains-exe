@@ -2,8 +2,8 @@ object frmMain: TfrmMain
   Left = 0
   Top = 0
   Caption = 'Max Sick Gains'
-  ClientHeight = 450
-  ClientWidth = 619
+  ClientHeight = 471
+  ClientWidth = 674
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -24,9 +24,9 @@ object frmMain: TfrmMain
   object pgc1: TPageControl
     Left = 0
     Top = 0
-    Width = 619
-    Height = 431
-    ActivePage = tsFitStages
+    Width = 674
+    Height = 452
+    ActivePage = tsRaces
     Align = alClient
     TabOrder = 0
     OnChange = pgc1Change
@@ -38,7 +38,7 @@ object frmMain: TfrmMain
         Left = 0
         Top = 0
         Width = 185
-        Height = 403
+        Height = 424
         Align = alLeft
         TabOrder = 0
         ExplicitHeight = 413
@@ -68,7 +68,7 @@ object frmMain: TfrmMain
           Left = 1
           Top = 51
           Width = 183
-          Height = 351
+          Height = 372
           Hint = 'Right click to add/delete data'
           Align = alClient
           DataSource = dtmdl_Main.dsFitStages
@@ -94,8 +94,8 @@ object frmMain: TfrmMain
       object pnl8: TPanel
         Left = 185
         Top = 0
-        Width = 426
-        Height = 403
+        Width = 481
+        Height = 424
         Margins.Left = 0
         Margins.Top = 0
         Margins.Right = 0
@@ -115,10 +115,11 @@ object frmMain: TfrmMain
         object grdpnl1: TGridPanel
           Left = 16
           Top = 26
-          Width = 394
-          Height = 361
+          Width = 449
+          Height = 382
           Align = alClient
           BevelOuter = bvNone
+          Caption = 'Use this only if you are going to share this file'
           ColumnCollection = <
             item
               SizeStyle = ssAbsolute
@@ -254,7 +255,7 @@ object frmMain: TfrmMain
             AlignWithMargins = True
             Left = 100
             Top = 0
-            Width = 294
+            Width = 349
             Height = 21
             Margins.Left = 0
             Margins.Top = 0
@@ -281,7 +282,7 @@ object frmMain: TfrmMain
             AlignWithMargins = True
             Left = 100
             Top = 28
-            Width = 294
+            Width = 349
             Height = 21
             Margins.Left = 0
             Margins.Top = 0
@@ -309,7 +310,7 @@ object frmMain: TfrmMain
             AlignWithMargins = True
             Left = 100
             Top = 56
-            Width = 294
+            Width = 349
             Height = 21
             Margins.Left = 0
             Margins.Top = 0
@@ -345,7 +346,7 @@ object frmMain: TfrmMain
             AlignWithMargins = True
             Left = 100
             Top = 84
-            Width = 294
+            Width = 349
             Height = 21
             Margins.Left = 0
             Margins.Top = 0
@@ -375,7 +376,7 @@ object frmMain: TfrmMain
             AlignWithMargins = True
             Left = 100
             Top = 112
-            Width = 294
+            Width = 349
             Height = 21
             Margins.Left = 0
             Margins.Top = 0
@@ -410,7 +411,7 @@ object frmMain: TfrmMain
             AlignWithMargins = True
             Left = 100
             Top = 140
-            Width = 294
+            Width = 349
             Height = 21
             Margins.Left = 0
             Margins.Top = 0
@@ -440,7 +441,7 @@ object frmMain: TfrmMain
             AlignWithMargins = True
             Left = 100
             Top = 168
-            Width = 294
+            Width = 349
             Height = 21
             Margins.Left = 0
             Margins.Top = 0
@@ -469,8 +470,8 @@ object frmMain: TfrmMain
           object dbmmoexcludedRaces: TDBMemo
             Left = 100
             Top = 196
-            Width = 294
-            Height = 165
+            Width = 349
+            Height = 186
             Align = alClient
             DataField = 'excludedRaces'
             DataSource = dtmdl_Main.dsFitStages
@@ -489,8 +490,8 @@ object frmMain: TfrmMain
       object imgJourney: TImage
         AlignWithMargins = True
         Left = 3
-        Top = 357
-        Width = 605
+        Top = 378
+        Width = 660
         Height = 43
         Margins.Top = 8
         Align = alBottom
@@ -511,7 +512,7 @@ object frmMain: TfrmMain
         Left = 0
         Top = 0
         Width = 185
-        Height = 349
+        Height = 370
         Align = alLeft
         TabOrder = 0
         ExplicitHeight = 359
@@ -541,7 +542,7 @@ object frmMain: TfrmMain
           Left = 1
           Top = 51
           Width = 183
-          Height = 297
+          Height = 318
           Hint = 'Right click to add/delete data'
           Align = alClient
           DataSource = dtmdl_Main.dsPlayerStages
@@ -563,286 +564,615 @@ object frmMain: TfrmMain
             end>
         end
       end
-      object grp1: TGroupBox
-        Left = 200
-        Top = 20
-        Width = 409
-        Height = 51
-        Caption = 'Stage configuration'
-        Padding.Left = 10
-        Padding.Right = 10
-        Padding.Bottom = 10
+      object stckpnl3: TStackPanel
+        Left = 185
+        Top = 0
+        Width = 481
+        Height = 370
+        Align = alClient
+        BevelOuter = bvNone
+        ControlCollection = <
+          item
+            Control = grp1
+            HorizontalPositioning = sphpFill
+            VerticalPositioning = spvpTop
+          end
+          item
+            Control = grp2
+            HorizontalPositioning = sphpFill
+            VerticalPositioning = spvpTop
+          end
+          item
+            Control = grp3
+            HorizontalPositioning = sphpFill
+            VerticalPositioning = spvpTop
+          end>
+        HorizontalPositioning = sphpFill
+        Padding.Left = 15
+        Padding.Top = 25
+        Padding.Right = 15
+        Padding.Bottom = 25
+        Spacing = 20
         TabOrder = 1
-        object lbl12: TLabel
-          AlignWithMargins = True
-          Left = 230
-          Top = 24
-          Width = 93
-          Height = 13
-          Margins.Top = 8
-          Margins.Right = 6
-          Caption = 'Min duration (days)'
-          Constraints.MaxHeight = 13
-        end
-        object lbl13: TLabel
-          Left = 20
-          Top = 24
-          Width = 28
-          Height = 13
-          Caption = 'Stage'
-        end
-        object dblkcbbFitnessStage: TDBLookupComboBox
-          Left = 60
-          Top = 20
-          Width = 151
-          Height = 21
-          DataField = 'FitnessStage'
-          DataSource = dtmdl_Main.dsPlayerStages
-          KeyField = 'ID'
-          ListField = 'iName'
-          ListSource = dtmdl_Main.dsFitStages
+        ExplicitTop = -40
+        ExplicitWidth = 531
+        ExplicitHeight = 386
+        object grp1: TGroupBox
+          Left = 15
+          Top = 25
+          Width = 451
+          Height = 51
+          Margins.Left = 0
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 10
+          Caption = 'Stage configuration'
+          Padding.Top = 5
           TabOrder = 0
+          object grdpnl2: TGridPanel
+            Left = 2
+            Top = 20
+            Width = 447
+            Height = 29
+            Align = alClient
+            BevelOuter = bvNone
+            Caption = 'grdpnl2'
+            ColumnCollection = <
+              item
+                SizeStyle = ssAuto
+                Value = 40.000000000000000000
+              end
+              item
+                Value = 100.000000000000000000
+              end
+              item
+                SizeStyle = ssAuto
+              end
+              item
+                SizeStyle = ssAuto
+                Value = 34.530386740331490000
+              end>
+            ControlCollection = <
+              item
+                Column = 0
+                Control = lbl13
+                Row = 0
+              end
+              item
+                Column = 1
+                Control = dblkcbbFitnessStage
+                Row = 0
+              end
+              item
+                Column = 2
+                Control = lbl12
+                Row = 0
+              end
+              item
+                Column = 3
+                Control = nmbrbx1
+                Row = 0
+              end>
+            ExpandStyle = emAddColumns
+            Padding.Left = 5
+            Padding.Right = 5
+            RowCollection = <
+              item
+                Value = 100.000000000000000000
+              end>
+            ShowCaption = False
+            TabOrder = 0
+            ExplicitWidth = 497
+            object lbl13: TLabel
+              Left = 10
+              Top = 0
+              Width = 30
+              Height = 29
+              Align = alClient
+              Caption = 'Stage'
+              ExplicitLeft = 20
+              ExplicitTop = 24
+              ExplicitWidth = 28
+              ExplicitHeight = 13
+            end
+            object dblkcbbFitnessStage: TDBLookupComboBox
+              Left = 50
+              Top = 0
+              Width = 197
+              Height = 21
+              Align = alTop
+              DataField = 'FitnessStage'
+              DataSource = dtmdl_Main.dsPlayerStages
+              KeyField = 'ID'
+              ListField = 'iName'
+              ListSource = dtmdl_Main.dsFitStages
+              TabOrder = 0
+              ExplicitWidth = 247
+            end
+            object lbl12: TLabel
+              Left = 257
+              Top = 0
+              Width = 92
+              Height = 13
+              Margins.Top = 8
+              Margins.Right = 6
+              Align = alClient
+              Caption = 'Min duration (days)'
+              Constraints.MaxHeight = 13
+              ExplicitLeft = 230
+              ExplicitTop = 24
+              ExplicitWidth = 93
+            end
+            object nmbrbx1: TNumberBox
+              Left = 359
+              Top = 0
+              Width = 78
+              Height = 21
+              Align = alTop
+              LargeStep = 100.000000000000000000
+              MinValue = 1.000000000000000000
+              MaxValue = 9999999.000000000000000000
+              SmallStep = 10.000000000000000000
+              TabOrder = 1
+              Value = 20.000000000000000000
+              SpinButtonOptions.Placement = nbspInline
+              ExplicitLeft = 409
+            end
+          end
         end
-        object nmbrbx1: TNumberBox
-          Left = 330
-          Top = 20
-          Width = 71
-          Height = 21
-          LargeStep = 100.000000000000000000
-          MinValue = 1.000000000000000000
-          MaxValue = 9999999.000000000000000000
-          SmallStep = 10.000000000000000000
+        object grp2: TGroupBox
+          Left = 15
+          Top = 96
+          Width = 451
+          Height = 208
+          Margins.Left = 0
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 10
+          Caption = 'Appearance'
+          Padding.Left = 15
+          Padding.Right = 15
           TabOrder = 1
-          Value = 20.000000000000000000
-          SpinButtonOptions.Placement = nbspInline
+          object grdpnl4: TGridPanel
+            Left = 17
+            Top = 15
+            Width = 417
+            Height = 186
+            Align = alTop
+            BevelOuter = bvNone
+            Caption = 'grdpnl4'
+            ColumnCollection = <
+              item
+                Value = 50.000000000000000000
+              end
+              item
+                Value = 50.000000000000000000
+              end>
+            ControlCollection = <
+              item
+                Column = 0
+                Control = dbtrckbrbsMin
+                Row = 0
+              end
+              item
+                Column = 1
+                Control = dbtrckbrbsMax
+                Row = 0
+              end
+              item
+                Column = 0
+                Control = lbl14
+                Row = 1
+              end
+              item
+                Column = 1
+                Control = lbl15
+                Row = 1
+              end
+              item
+                Column = 0
+                Control = dbtrckbrmuscleMin
+                Row = 2
+              end
+              item
+                Column = 1
+                Control = dbtrckbrmuscleMax
+                Row = 2
+              end
+              item
+                Column = 0
+                Control = lbl16
+                Row = 3
+              end
+              item
+                Column = 1
+                Control = lbl17
+                Row = 3
+              end
+              item
+                Column = 0
+                ColumnSpan = 2
+                Control = dbtrckbrblend
+                Row = 4
+              end
+              item
+                Column = 0
+                ColumnSpan = 2
+                Control = lbl18
+                Row = 5
+              end>
+            RowCollection = <
+              item
+                SizeStyle = ssAbsolute
+                Value = 40.000000000000000000
+              end
+              item
+                SizeStyle = ssAbsolute
+                Value = 20.000000000000000000
+              end
+              item
+                SizeStyle = ssAbsolute
+                Value = 40.000000000000000000
+              end
+              item
+                SizeStyle = ssAbsolute
+                Value = 20.000000000000000000
+              end
+              item
+                SizeStyle = ssAbsolute
+                Value = 40.000000000000000000
+              end
+              item
+                SizeStyle = ssAbsolute
+                Value = 20.000000000000000000
+              end>
+            ShowCaption = False
+            TabOrder = 0
+            ExplicitWidth = 467
+            object dbtrckbrbsMin: TDBTrackBar
+              Left = 0
+              Top = 15
+              Width = 208
+              Height = 25
+              Align = alBottom
+              Enabled = False
+              Max = 100
+              PopupMenu = pmTrackbar
+              Frequency = 10
+              PositionToolTip = ptTop
+              ShowSelRange = False
+              TabOrder = 0
+              OnExit = JourneyTrackbarExit
+              DataField = 'bsMin'
+              DataSource = dtmdl_Main.dsPlayerStages
+              ExplicitWidth = 234
+            end
+            object dbtrckbrbsMax: TDBTrackBar
+              Left = 208
+              Top = 15
+              Width = 209
+              Height = 25
+              Align = alBottom
+              Enabled = False
+              Max = 100
+              PopupMenu = pmTrackbar
+              Frequency = 10
+              PositionToolTip = ptTop
+              ShowSelRange = False
+              TabOrder = 1
+              OnExit = JourneyTrackbarExit
+              DataField = 'bsMax'
+              DataSource = dtmdl_Main.dsPlayerStages
+              ExplicitLeft = 234
+              ExplicitWidth = 233
+            end
+            object lbl14: TLabel
+              AlignWithMargins = True
+              Left = 0
+              Top = 40
+              Width = 208
+              Height = 13
+              Margins.Left = 0
+              Margins.Top = 0
+              Margins.Right = 0
+              Margins.Bottom = 0
+              Align = alTop
+              Alignment = taCenter
+              AutoSize = False
+              Caption = 'Starting weight'
+              ExplicitLeft = 10
+              ExplicitTop = 50
+              ExplicitWidth = 180
+            end
+            object lbl15: TLabel
+              AlignWithMargins = True
+              Left = 208
+              Top = 40
+              Width = 209
+              Height = 13
+              Margins.Left = 0
+              Margins.Top = 0
+              Margins.Right = 0
+              Margins.Bottom = 0
+              Align = alTop
+              Alignment = taCenter
+              AutoSize = False
+              Caption = 'Ending weight'
+              ExplicitLeft = 220
+              ExplicitTop = 50
+              ExplicitWidth = 180
+            end
+            object dbtrckbrmuscleMin: TDBTrackBar
+              AlignWithMargins = True
+              Left = 30
+              Top = 75
+              Width = 148
+              Height = 25
+              Margins.Left = 30
+              Margins.Top = 0
+              Margins.Right = 30
+              Margins.Bottom = 0
+              Align = alBottom
+              Enabled = False
+              Max = 6
+              Min = 1
+              Position = 1
+              PositionToolTip = ptTop
+              ShowSelRange = False
+              TabOrder = 2
+              DataField = 'muscleMin'
+              DataSource = dtmdl_Main.dsPlayerStages
+              ExplicitWidth = 174
+            end
+            object dbtrckbrmuscleMax: TDBTrackBar
+              AlignWithMargins = True
+              Left = 238
+              Top = 75
+              Width = 149
+              Height = 25
+              Margins.Left = 30
+              Margins.Top = 0
+              Margins.Right = 30
+              Margins.Bottom = 0
+              Align = alBottom
+              Enabled = False
+              Max = 6
+              Min = 1
+              Position = 1
+              PositionToolTip = ptTop
+              ShowSelRange = False
+              TabOrder = 3
+              DataField = 'muscleMax'
+              DataSource = dtmdl_Main.dsPlayerStages
+              ExplicitLeft = 264
+              ExplicitWidth = 173
+            end
+            object lbl16: TLabel
+              AlignWithMargins = True
+              Left = 0
+              Top = 100
+              Width = 208
+              Height = 13
+              Margins.Left = 0
+              Margins.Top = 0
+              Margins.Right = 0
+              Margins.Bottom = 0
+              Align = alTop
+              Alignment = taCenter
+              AutoSize = False
+              Caption = 'Starting muscle definiton'
+              ExplicitLeft = 6
+              ExplicitTop = 68
+              ExplicitWidth = 150
+            end
+            object lbl17: TLabel
+              AlignWithMargins = True
+              Left = 208
+              Top = 100
+              Width = 209
+              Height = 13
+              Margins.Left = 0
+              Margins.Top = 0
+              Margins.Right = 0
+              Margins.Bottom = 0
+              Align = alTop
+              Alignment = taCenter
+              AutoSize = False
+              Caption = 'Ending muscle definiton'
+              ExplicitLeft = 165
+              ExplicitTop = 68
+              ExplicitWidth = 150
+            end
+            object dbtrckbrblend: TDBTrackBar
+              AlignWithMargins = True
+              Left = 150
+              Top = 135
+              Width = 117
+              Height = 25
+              Margins.Left = 150
+              Margins.Top = 0
+              Margins.Right = 150
+              Margins.Bottom = 0
+              Align = alBottom
+              Enabled = False
+              Max = 40
+              Min = 5
+              PopupMenu = pmTrackbar
+              Frequency = 5
+              Position = 5
+              PositionToolTip = ptTop
+              ShowSelRange = False
+              TabOrder = 4
+              OnExit = JourneyTrackbarExit
+              DataField = 'blend'
+              DataSource = dtmdl_Main.dsPlayerStages
+              ExplicitWidth = 167
+            end
+            object lbl18: TLabel
+              Left = 0
+              Top = 160
+              Width = 417
+              Height = 13
+              Align = alTop
+              Alignment = taCenter
+              AutoSize = False
+              Caption = 'Blend at'
+              ExplicitLeft = 130
+              ExplicitTop = 190
+              ExplicitWidth = 150
+            end
+          end
         end
-      end
-      object grp2: TGroupBox
-        Left = 200
-        Top = 80
-        Width = 411
-        Height = 221
-        Caption = 'Appearance'
-        TabOrder = 2
-        object lbl14: TLabel
-          Left = 10
-          Top = 50
-          Width = 180
-          Height = 13
-          Alignment = taCenter
-          AutoSize = False
-          Caption = 'Starting weight'
-        end
-        object lbl15: TLabel
-          Left = 220
-          Top = 50
-          Width = 180
-          Height = 13
-          Alignment = taCenter
-          AutoSize = False
-          Caption = 'Ending weight'
-        end
-        object lbl16: TLabel
-          Left = 25
-          Top = 120
-          Width = 150
-          Height = 13
-          Alignment = taCenter
-          AutoSize = False
-          Caption = 'Starting muscle definiton'
-        end
-        object lbl17: TLabel
-          Left = 235
-          Top = 120
-          Width = 150
-          Height = 13
-          Alignment = taCenter
-          AutoSize = False
-          Caption = 'Ending muscle definiton'
-        end
-        object lbl18: TLabel
-          Left = 130
-          Top = 190
-          Width = 150
-          Height = 13
-          Alignment = taCenter
-          AutoSize = False
-          Caption = 'Blend at'
-        end
-        object dbtrckbrbsMin: TDBTrackBar
-          Left = 10
-          Top = 20
-          Width = 180
-          Height = 30
-          Enabled = False
-          Max = 100
-          PopupMenu = pmTrackbar
-          Frequency = 10
-          PositionToolTip = ptTop
-          ShowSelRange = False
-          TabOrder = 0
-          OnExit = JourneyTrackbarExit
-          DataField = 'bsMin'
-          DataSource = dtmdl_Main.dsPlayerStages
-        end
-        object dbtrckbrbsMax: TDBTrackBar
-          Left = 220
-          Top = 20
-          Width = 180
-          Height = 30
-          Enabled = False
-          Max = 100
-          PopupMenu = pmTrackbar
-          Frequency = 10
-          PositionToolTip = ptTop
-          ShowSelRange = False
-          TabOrder = 1
-          OnExit = JourneyTrackbarExit
-          DataField = 'bsMax'
-          DataSource = dtmdl_Main.dsPlayerStages
-        end
-        object dbtrckbrmuscleMin: TDBTrackBar
-          Left = 25
-          Top = 90
-          Width = 150
-          Height = 30
-          Enabled = False
-          Max = 6
-          Min = 1
-          Position = 1
-          PositionToolTip = ptTop
-          ShowSelRange = False
+        object grp3: TGroupBox
+          Left = 15
+          Top = 324
+          Width = 451
+          Height = 53
+          Caption = 'Head resizing'
+          Padding.Left = 15
+          Padding.Top = 10
+          Padding.Bottom = 5
           TabOrder = 2
-          DataField = 'muscleMin'
-          DataSource = dtmdl_Main.dsPlayerStages
-        end
-        object dbtrckbrmuscleMax: TDBTrackBar
-          Left = 235
-          Top = 90
-          Width = 150
-          Height = 30
-          Enabled = False
-          Max = 6
-          Min = 1
-          Position = 1
-          PositionToolTip = ptTop
-          ShowSelRange = False
-          TabOrder = 3
-          DataField = 'muscleMax'
-          DataSource = dtmdl_Main.dsPlayerStages
-        end
-        object dbtrckbrblend: TDBTrackBar
-          Left = 130
-          Top = 160
-          Width = 150
-          Height = 30
-          Enabled = False
-          Max = 40
-          Min = 5
-          PopupMenu = pmTrackbar
-          Frequency = 5
-          Position = 5
-          PositionToolTip = ptTop
-          ShowSelRange = False
-          TabOrder = 4
-          OnExit = JourneyTrackbarExit
-          DataField = 'blend'
-          DataSource = dtmdl_Main.dsPlayerStages
-        end
-      end
-      object grp3: TGroupBox
-        Left = 200
-        Top = 310
-        Width = 411
-        Height = 51
-        Caption = 'Head resizing'
-        TabOrder = 3
-        object lbl19: TLabel
-          Left = 20
-          Top = 22
-          Width = 59
-          Height = 13
-          Caption = 'Starting size'
-        end
-        object lbl20: TLabel
-          Left = 223
-          Top = 22
-          Width = 53
-          Height = 13
-          Caption = 'Ending size'
-        end
-        object dbtrckbrheadInit: TDBTrackBar
-          Left = 80
-          Top = 18
-          Width = 120
-          Height = 30
-          Enabled = False
-          Max = 130
-          Min = 70
-          PopupMenu = pmTrackbar
-          Frequency = 10
-          Position = 70
-          PositionToolTip = ptTop
-          ShowSelRange = False
-          TabOrder = 0
-          DataField = 'headInit'
-          DataSource = dtmdl_Main.dsPlayerStages
-        end
-        object dbtrckbrheadFinal: TDBTrackBar
-          Left = 280
-          Top = 18
-          Width = 120
-          Height = 30
-          Enabled = False
-          Max = 130
-          Min = 70
-          PopupMenu = pmTrackbar
-          Frequency = 10
-          Position = 70
-          PositionToolTip = ptTop
-          ShowSelRange = False
-          TabOrder = 1
-          DataField = 'headFinal'
-          DataSource = dtmdl_Main.dsPlayerStages
+          object grdpnl3: TGridPanel
+            Left = 17
+            Top = 25
+            Width = 432
+            Height = 21
+            Align = alClient
+            BevelOuter = bvNone
+            Caption = 'grdpnl3'
+            ColumnCollection = <
+              item
+                SizeStyle = ssAbsolute
+                Value = 65.000000000000000000
+              end
+              item
+                Value = 50.000000000000000000
+              end
+              item
+                SizeStyle = ssAbsolute
+                Value = 65.000000000000000000
+              end
+              item
+                Value = 50.000000000000000000
+              end>
+            ControlCollection = <
+              item
+                Column = 0
+                Control = lbl19
+                Row = 0
+              end
+              item
+                Column = 1
+                Control = dbtrckbrheadInit
+                Row = 0
+              end
+              item
+                Column = 2
+                Control = lbl20
+                Row = 0
+              end
+              item
+                Column = 3
+                Control = dbtrckbrheadFinal
+                Row = 0
+              end>
+            ExpandStyle = emAddColumns
+            Padding.Right = 5
+            RowCollection = <
+              item
+                Value = 100.000000000000000000
+              end>
+            ShowCaption = False
+            TabOrder = 0
+            ExplicitLeft = 50
+            ExplicitTop = 20
+            ExplicitWidth = 185
+            ExplicitHeight = 41
+            object lbl19: TLabel
+              Left = 0
+              Top = 0
+              Width = 60
+              Height = 59
+              Align = alTop
+              Caption = 'Starting size'
+              ExplicitWidth = 26
+            end
+            object dbtrckbrheadInit: TDBTrackBar
+              Left = 65
+              Top = 0
+              Width = 143
+              Height = 24
+              Align = alTop
+              Enabled = False
+              Max = 130
+              Min = 70
+              PopupMenu = pmTrackbar
+              Frequency = 10
+              Position = 70
+              PositionToolTip = ptTop
+              ShowSelRange = False
+              TabOrder = 0
+              DataField = 'headInit'
+              DataSource = dtmdl_Main.dsPlayerStages
+              ExplicitLeft = 80
+              ExplicitTop = 18
+              ExplicitWidth = 120
+              ExplicitHeight = 30
+            end
+            object lbl20: TLabel
+              Left = 213
+              Top = 0
+              Width = 60
+              Height = 53
+              Align = alTop
+              Alignment = taCenter
+              Caption = 'Ending size'
+              ExplicitLeft = 214
+              ExplicitWidth = 26
+            end
+            object dbtrckbrheadFinal: TDBTrackBar
+              Left = 278
+              Top = 0
+              Width = 144
+              Height = 24
+              Align = alTop
+              Enabled = False
+              Max = 130
+              Min = 70
+              PopupMenu = pmTrackbar
+              Frequency = 10
+              Position = 70
+              PositionToolTip = ptTop
+              ShowSelRange = False
+              TabOrder = 1
+              DataField = 'headFinal'
+              DataSource = dtmdl_Main.dsPlayerStages
+              ExplicitLeft = 280
+              ExplicitTop = 18
+              ExplicitWidth = 120
+              ExplicitHeight = 30
+            end
+          end
         end
       end
     end
     object tsRaces: TTabSheet
       Caption = 'Races'
       ImageIndex = 6
-      object dbmmoraces: TDBMemo
-        Left = 210
-        Top = 30
-        Width = 391
-        Height = 201
-        Hint = 'Write only one race per line'
-        DataField = 'races'
-        DataSource = dtmdl_Main.dsRaces
-        ScrollBars = ssVertical
-        TabOrder = 1
-      end
-      object dbmmodescription: TDBMemo
-        Left = 210
-        Top = 250
-        Width = 391
-        Height = 161
-        DataField = 'description'
-        DataSource = dtmdl_Main.dsRaces
-        ReadOnly = True
-        TabOrder = 2
-      end
       object pnl1: TPanel
         Left = 0
         Top = 0
         Width = 185
-        Height = 413
+        Height = 424
         Align = alLeft
         TabOrder = 0
+        ExplicitHeight = 403
         object lbl23: TLabel
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 102
+          Width = 177
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -858,12 +1188,13 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
+          ExplicitWidth = 102
         end
         object dbgrd4: TDBGrid
           Left = 1
           Top = 51
           Width = 183
-          Height = 361
+          Height = 372
           Hint = 'No. You can'#39't add/delete racial groups.'
           Align = alClient
           DataSource = dtmdl_Main.dsRaces
@@ -884,6 +1215,57 @@ object frmMain: TfrmMain
             end>
         end
       end
+      object pnl9: TPanel
+        Left = 185
+        Top = 0
+        Width = 481
+        Height = 424
+        Align = alClient
+        BevelOuter = bvNone
+        Caption = 'pnl9'
+        Padding.Left = 15
+        Padding.Top = 25
+        Padding.Right = 15
+        Padding.Bottom = 15
+        ShowCaption = False
+        TabOrder = 1
+        ExplicitLeft = 320
+        ExplicitTop = 80
+        ExplicitWidth = 475
+        ExplicitHeight = 191
+        object dbmmodescription: TDBMemo
+          AlignWithMargins = True
+          Left = 15
+          Top = 270
+          Width = 451
+          Height = 139
+          Margins.Left = 0
+          Margins.Top = 15
+          Margins.Right = 0
+          Margins.Bottom = 0
+          Align = alBottom
+          DataField = 'description'
+          DataSource = dtmdl_Main.dsRaces
+          ReadOnly = True
+          TabOrder = 1
+        end
+        object dbmmoraces: TDBMemo
+          Left = 15
+          Top = 25
+          Width = 451
+          Height = 230
+          Hint = 'Write only one race per line'
+          Align = alClient
+          DataField = 'races'
+          DataSource = dtmdl_Main.dsRaces
+          ScrollBars = ssVertical
+          TabOrder = 0
+          ExplicitLeft = 84
+          ExplicitTop = -10
+          ExplicitWidth = 391
+          ExplicitHeight = 201
+        end
+      end
     end
     object tsNPCs: TTabSheet
       Caption = 'NPCs'
@@ -891,8 +1273,8 @@ object frmMain: TfrmMain
       object pnl2: TPanel
         Left = 185
         Top = 0
-        Width = 426
-        Height = 352
+        Width = 481
+        Height = 373
         Align = alClient
         Padding.Left = 15
         Padding.Top = 15
@@ -904,7 +1286,7 @@ object frmMain: TfrmMain
         object rltvpnl1: TRelativePanel
           Left = 16
           Top = 16
-          Width = 394
+          Width = 449
           Height = 65
           ControlCollection = <
             item
@@ -1018,7 +1400,7 @@ object frmMain: TfrmMain
           TabOrder = 0
           ExplicitWidth = 404
           DesignSize = (
-            394
+            449
             65)
           object lbl28: TLabel
             AlignWithMargins = True
@@ -1064,7 +1446,7 @@ object frmMain: TfrmMain
           end
           object lbl30: TLabel
             AlignWithMargins = True
-            Left = 182
+            Left = 210
             Top = 2
             Width = 29
             Height = 13
@@ -1076,7 +1458,7 @@ object frmMain: TfrmMain
           end
           object lbl31: TLabel
             AlignWithMargins = True
-            Left = 182
+            Left = 210
             Top = 20
             Width = 28
             Height = 13
@@ -1088,7 +1470,7 @@ object frmMain: TfrmMain
           end
           object lbl32: TLabel
             AlignWithMargins = True
-            Left = 182
+            Left = 210
             Top = 38
             Width = 48
             Height = 13
@@ -1099,7 +1481,7 @@ object frmMain: TfrmMain
             Caption = 'Is female:'
           end
           object dbtxtclass: TDBText
-            Left = 235
+            Left = 263
             Top = 2
             Width = 3
             Height = 13
@@ -1109,7 +1491,7 @@ object frmMain: TfrmMain
             DataSource = dtmdl_Main.dsNPCs
           end
           object dbtxtrace: TDBText
-            Left = 235
+            Left = 263
             Top = 20
             Width = 3
             Height = 13
@@ -1119,7 +1501,7 @@ object frmMain: TfrmMain
             DataSource = dtmdl_Main.dsNPCs
           end
           object dbtxtisFemale: TDBText
-            Left = 235
+            Left = 263
             Top = 38
             Width = 3
             Height = 13
@@ -1266,15 +1648,15 @@ object frmMain: TfrmMain
         Left = 0
         Top = 0
         Width = 185
-        Height = 352
+        Height = 373
         Align = alLeft
         TabOrder = 0
-        ExplicitHeight = 362
+        ExplicitHeight = 352
         object lbl21: TLabel
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 50
+          Width = 177
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -1290,12 +1672,13 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
+          ExplicitWidth = 50
         end
         object dbgrd2: TDBGrid
           Left = 1
           Top = 51
           Width = 183
-          Height = 310
+          Height = 321
           Hint = 'Right click to add/delete data'
           Align = alClient
           DataSource = dtmdl_Main.dsNPCs
@@ -1319,8 +1702,8 @@ object frmMain: TfrmMain
       end
       object stckpnl1: TStackPanel
         Left = 0
-        Top = 352
-        Width = 611
+        Top = 373
+        Width = 666
         Height = 51
         Align = alBottom
         ControlCollection = <
@@ -1350,15 +1733,15 @@ object frmMain: TfrmMain
         Left = 0
         Top = 0
         Width = 185
-        Height = 403
+        Height = 424
         Align = alLeft
         TabOrder = 0
-        ExplicitHeight = 413
+        ExplicitHeight = 403
         object lbl35: TLabel
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 89
+          Width = 177
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -1374,12 +1757,13 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
+          ExplicitWidth = 89
         end
         object dbgrd3: TDBGrid
           Left = 1
           Top = 51
           Width = 183
-          Height = 361
+          Height = 372
           Hint = 'Right click to add/delete data'
           Align = alClient
           DataSource = dtmdl_Main.dsClassArchetypes
@@ -1404,8 +1788,8 @@ object frmMain: TfrmMain
       object stckpnl2: TStackPanel
         Left = 185
         Top = 0
-        Width = 426
-        Height = 403
+        Width = 481
+        Height = 424
         Align = alClient
         ControlCollection = <
           item
@@ -1427,7 +1811,7 @@ object frmMain: TfrmMain
           AlignWithMargins = True
           Left = 16
           Top = 26
-          Width = 394
+          Width = 449
           Height = 165
           Margins.Left = 0
           Margins.Top = 0
@@ -1436,7 +1820,7 @@ object frmMain: TfrmMain
           BevelOuter = bvNone
           TabOrder = 0
           DesignSize = (
-            394
+            449
             165)
           object lbl39: TLabel
             Left = 0
@@ -1498,7 +1882,7 @@ object frmMain: TfrmMain
         object grp6: TGroupBox
           Left = 16
           Top = 206
-          Width = 394
+          Width = 449
           Height = 205
           Caption = 'Appearance'
           TabOrder = 1
@@ -1668,8 +2052,8 @@ object frmMain: TfrmMain
       object redtOutput: TRichEdit
         Left = 0
         Top = 0
-        Width = 611
-        Height = 403
+        Width = 666
+        Height = 424
         Align = alClient
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
@@ -1689,8 +2073,8 @@ object frmMain: TfrmMain
   end
   object stat1: TStatusBar
     Left = 0
-    Top = 431
-    Width = 619
+    Top = 452
+    Width = 674
     Height = 19
     AutoHint = True
     Panels = <>

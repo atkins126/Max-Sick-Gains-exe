@@ -191,6 +191,11 @@ type
     lnkcntrltfld5: TLinkControlToField;
     dbmmoexcludedRaces: TDBMemo;
     pnl8: TPanel;
+    grdpnl2: TGridPanel;
+    grdpnl4: TGridPanel;
+    stckpnl3: TStackPanel;
+    grdpnl3: TGridPanel;
+    pnl9: TPanel;
     procedure dbgrd_NavKeyDown(Sender: TObject; var Key: Word; Shift:
       TShiftState);
     procedure actDBInsertExecute(Sender: TObject);
@@ -513,7 +518,7 @@ end;
 
 procedure TfrmMain.FormResize(Sender: TObject);
 begin
-  DrawPlayerJourney;
+//  DrawPlayerJourney;
 end;
 
 procedure TfrmMain.FormShow(Sender: TObject);
