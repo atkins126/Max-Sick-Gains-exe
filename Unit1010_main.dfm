@@ -2,14 +2,15 @@ object frmMain: TfrmMain
   Left = 0
   Top = 0
   Caption = 'Max Sick Gains'
-  ClientHeight = 471
-  ClientWidth = 674
+  ClientHeight = 502
+  ClientWidth = 697
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  Padding.Top = 15
   Menu = mm1
   OldCreateOrder = False
   Position = poDesktopCenter
@@ -23,22 +24,21 @@ object frmMain: TfrmMain
   TextHeight = 13
   object pgc1: TPageControl
     Left = 0
-    Top = 0
-    Width = 674
-    Height = 452
-    ActivePage = tsRaces
+    Top = 15
+    Width = 697
+    Height = 468
+    ActivePage = tsClasses
     Align = alClient
+    TabHeight = 25
     TabOrder = 0
     OnChange = pgc1Change
-    ExplicitWidth = 629
-    ExplicitHeight = 441
     object tsFitStages: TTabSheet
       Caption = 'Fitness stages'
       object pnl1Nav: TPanel
         Left = 0
         Top = 0
         Width = 185
-        Height = 424
+        Height = 433
         Align = alLeft
         TabOrder = 0
         ExplicitHeight = 413
@@ -46,7 +46,7 @@ object frmMain: TfrmMain
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 177
+          Width = 106
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -62,13 +62,12 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
-          ExplicitWidth = 106
         end
         object dbgrd_fitStagesNav: TDBGrid
           Left = 1
           Top = 51
           Width = 183
-          Height = 372
+          Height = 381
           Hint = 'Right click to add/delete data'
           Align = alClient
           DataSource = dtmdl_Main.dsFitStages
@@ -94,8 +93,8 @@ object frmMain: TfrmMain
       object pnl8: TPanel
         Left = 185
         Top = 0
-        Width = 481
-        Height = 424
+        Width = 504
+        Height = 433
         Margins.Left = 0
         Margins.Top = 0
         Margins.Right = 0
@@ -115,8 +114,8 @@ object frmMain: TfrmMain
         object grdpnl1: TGridPanel
           Left = 16
           Top = 26
-          Width = 449
-          Height = 382
+          Width = 472
+          Height = 391
           Align = alClient
           BevelOuter = bvNone
           Caption = 'Use this only if you are going to share this file'
@@ -247,15 +246,13 @@ object frmMain: TfrmMain
             Height = 28
             Align = alLeft
             Caption = 'Name'
-            ExplicitLeft = 201
-            ExplicitTop = 31
             ExplicitHeight = 13
           end
           object dbedt_fitStageName: TDBEdit
             AlignWithMargins = True
             Left = 100
             Top = 0
-            Width = 349
+            Width = 372
             Height = 21
             Margins.Left = 0
             Margins.Top = 0
@@ -274,15 +271,13 @@ object frmMain: TfrmMain
             Height = 28
             Align = alLeft
             Caption = 'Display name'
-            ExplicitLeft = 201
-            ExplicitTop = 72
             ExplicitHeight = 13
           end
           object dbedt_fitStageDisplayName: TDBEdit
             AlignWithMargins = True
             Left = 100
             Top = 28
-            Width = 349
+            Width = 372
             Height = 21
             Margins.Left = 0
             Margins.Top = 0
@@ -302,15 +297,13 @@ object frmMain: TfrmMain
             Height = 28
             Align = alLeft
             Caption = 'Fem. Bodyslide'
-            ExplicitLeft = 201
-            ExplicitTop = 108
             ExplicitHeight = 13
           end
           object btndt_FemBs: TButtonedEdit
             AlignWithMargins = True
             Left = 100
             Top = 56
-            Width = 349
+            Width = 372
             Height = 21
             Margins.Left = 0
             Margins.Top = 0
@@ -338,15 +331,14 @@ object frmMain: TfrmMain
             Align = alTop
             Alignment = taRightJustify
             Caption = 'Url'
-            ExplicitLeft = 87
-            ExplicitTop = 77
+            ExplicitLeft = 57
             ExplicitWidth = 13
           end
           object btndt_FemBsUrl: TButtonedEdit
             AlignWithMargins = True
             Left = 100
             Top = 84
-            Width = 349
+            Width = 372
             Height = 21
             Margins.Left = 0
             Margins.Top = 0
@@ -368,15 +360,13 @@ object frmMain: TfrmMain
             Height = 28
             Align = alLeft
             Caption = 'Man Bodyslide'
-            ExplicitLeft = 201
-            ExplicitTop = 181
             ExplicitHeight = 13
           end
           object btndt_ManBs: TButtonedEdit
             AlignWithMargins = True
             Left = 100
             Top = 112
-            Width = 349
+            Width = 372
             Height = 21
             Margins.Left = 0
             Margins.Top = 0
@@ -411,7 +401,7 @@ object frmMain: TfrmMain
             AlignWithMargins = True
             Left = 100
             Top = 140
-            Width = 349
+            Width = 372
             Height = 21
             Margins.Left = 0
             Margins.Top = 0
@@ -433,15 +423,13 @@ object frmMain: TfrmMain
             Height = 13
             Align = alTop
             Caption = 'Muscle definition'
-            ExplicitLeft = 201
-            ExplicitTop = 254
             ExplicitWidth = 79
           end
           object dblkcbbmuscleDefType: TDBLookupComboBox
             AlignWithMargins = True
             Left = 100
             Top = 168
-            Width = 349
+            Width = 372
             Height = 21
             Margins.Left = 0
             Margins.Top = 0
@@ -463,23 +451,19 @@ object frmMain: TfrmMain
             Height = 13
             Align = alTop
             Caption = 'Excluded races'
-            ExplicitLeft = 201
-            ExplicitTop = 290
             ExplicitWidth = 72
           end
           object dbmmoexcludedRaces: TDBMemo
             Left = 100
             Top = 196
-            Width = 349
-            Height = 186
+            Width = 372
+            Height = 195
             Align = alClient
             DataField = 'excludedRaces'
             DataSource = dtmdl_Main.dsFitStages
             ScrollBars = ssVertical
             TabOrder = 7
             WordWrap = False
-            ExplicitWidth = 336
-            ExplicitHeight = 89
           end
         end
       end
@@ -490,8 +474,8 @@ object frmMain: TfrmMain
       object imgJourney: TImage
         AlignWithMargins = True
         Left = 3
-        Top = 378
-        Width = 660
+        Top = 387
+        Width = 683
         Height = 43
         Margins.Top = 8
         Align = alBottom
@@ -512,7 +496,7 @@ object frmMain: TfrmMain
         Left = 0
         Top = 0
         Width = 185
-        Height = 370
+        Height = 379
         Align = alLeft
         TabOrder = 0
         ExplicitHeight = 359
@@ -520,7 +504,7 @@ object frmMain: TfrmMain
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 177
+          Width = 106
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -536,13 +520,12 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
-          ExplicitWidth = 106
         end
         object dbgrd1: TDBGrid
           Left = 1
           Top = 51
           Width = 183
-          Height = 318
+          Height = 327
           Hint = 'Right click to add/delete data'
           Align = alClient
           DataSource = dtmdl_Main.dsPlayerStages
@@ -567,8 +550,8 @@ object frmMain: TfrmMain
       object stckpnl3: TStackPanel
         Left = 185
         Top = 0
-        Width = 481
-        Height = 370
+        Width = 504
+        Height = 379
         Align = alClient
         BevelOuter = bvNone
         ControlCollection = <
@@ -600,7 +583,7 @@ object frmMain: TfrmMain
         object grp1: TGroupBox
           Left = 15
           Top = 25
-          Width = 451
+          Width = 474
           Height = 51
           Margins.Left = 0
           Margins.Top = 0
@@ -612,7 +595,7 @@ object frmMain: TfrmMain
           object grdpnl2: TGridPanel
             Left = 2
             Top = 20
-            Width = 447
+            Width = 470
             Height = 29
             Align = alClient
             BevelOuter = bvNone
@@ -670,15 +653,13 @@ object frmMain: TfrmMain
               Height = 29
               Align = alClient
               Caption = 'Stage'
-              ExplicitLeft = 20
-              ExplicitTop = 24
               ExplicitWidth = 28
               ExplicitHeight = 13
             end
             object dblkcbbFitnessStage: TDBLookupComboBox
               Left = 50
               Top = 0
-              Width = 197
+              Width = 220
               Height = 21
               Align = alTop
               DataField = 'FitnessStage'
@@ -690,7 +671,7 @@ object frmMain: TfrmMain
               ExplicitWidth = 247
             end
             object lbl12: TLabel
-              Left = 257
+              Left = 280
               Top = 0
               Width = 92
               Height = 13
@@ -699,12 +680,10 @@ object frmMain: TfrmMain
               Align = alClient
               Caption = 'Min duration (days)'
               Constraints.MaxHeight = 13
-              ExplicitLeft = 230
-              ExplicitTop = 24
               ExplicitWidth = 93
             end
             object nmbrbx1: TNumberBox
-              Left = 359
+              Left = 382
               Top = 0
               Width = 78
               Height = 21
@@ -723,7 +702,7 @@ object frmMain: TfrmMain
         object grp2: TGroupBox
           Left = 15
           Top = 96
-          Width = 451
+          Width = 474
           Height = 208
           Margins.Left = 0
           Margins.Top = 0
@@ -736,7 +715,7 @@ object frmMain: TfrmMain
           object grdpnl4: TGridPanel
             Left = 17
             Top = 15
-            Width = 417
+            Width = 440
             Height = 186
             Align = alTop
             BevelOuter = bvNone
@@ -832,7 +811,7 @@ object frmMain: TfrmMain
             object dbtrckbrbsMin: TDBTrackBar
               Left = 0
               Top = 15
-              Width = 208
+              Width = 220
               Height = 25
               Align = alBottom
               Enabled = False
@@ -848,9 +827,9 @@ object frmMain: TfrmMain
               ExplicitWidth = 234
             end
             object dbtrckbrbsMax: TDBTrackBar
-              Left = 208
+              Left = 220
               Top = 15
-              Width = 209
+              Width = 220
               Height = 25
               Align = alBottom
               Enabled = False
@@ -870,7 +849,7 @@ object frmMain: TfrmMain
               AlignWithMargins = True
               Left = 0
               Top = 40
-              Width = 208
+              Width = 220
               Height = 13
               Margins.Left = 0
               Margins.Top = 0
@@ -886,9 +865,9 @@ object frmMain: TfrmMain
             end
             object lbl15: TLabel
               AlignWithMargins = True
-              Left = 208
+              Left = 220
               Top = 40
-              Width = 209
+              Width = 220
               Height = 13
               Margins.Left = 0
               Margins.Top = 0
@@ -898,7 +877,6 @@ object frmMain: TfrmMain
               Alignment = taCenter
               AutoSize = False
               Caption = 'Ending weight'
-              ExplicitLeft = 220
               ExplicitTop = 50
               ExplicitWidth = 180
             end
@@ -906,7 +884,7 @@ object frmMain: TfrmMain
               AlignWithMargins = True
               Left = 30
               Top = 75
-              Width = 148
+              Width = 160
               Height = 25
               Margins.Left = 30
               Margins.Top = 0
@@ -926,9 +904,9 @@ object frmMain: TfrmMain
             end
             object dbtrckbrmuscleMax: TDBTrackBar
               AlignWithMargins = True
-              Left = 238
+              Left = 250
               Top = 75
-              Width = 149
+              Width = 160
               Height = 25
               Margins.Left = 30
               Margins.Top = 0
@@ -951,7 +929,7 @@ object frmMain: TfrmMain
               AlignWithMargins = True
               Left = 0
               Top = 100
-              Width = 208
+              Width = 220
               Height = 13
               Margins.Left = 0
               Margins.Top = 0
@@ -967,9 +945,9 @@ object frmMain: TfrmMain
             end
             object lbl17: TLabel
               AlignWithMargins = True
-              Left = 208
+              Left = 220
               Top = 100
-              Width = 209
+              Width = 220
               Height = 13
               Margins.Left = 0
               Margins.Top = 0
@@ -987,7 +965,7 @@ object frmMain: TfrmMain
               AlignWithMargins = True
               Left = 150
               Top = 135
-              Width = 117
+              Width = 140
               Height = 25
               Margins.Left = 150
               Margins.Top = 0
@@ -1011,7 +989,7 @@ object frmMain: TfrmMain
             object lbl18: TLabel
               Left = 0
               Top = 160
-              Width = 417
+              Width = 440
               Height = 13
               Align = alTop
               Alignment = taCenter
@@ -1026,8 +1004,8 @@ object frmMain: TfrmMain
         object grp3: TGroupBox
           Left = 15
           Top = 324
-          Width = 451
-          Height = 53
+          Width = 474
+          Height = 57
           Caption = 'Head resizing'
           Padding.Left = 15
           Padding.Top = 10
@@ -1036,8 +1014,8 @@ object frmMain: TfrmMain
           object grdpnl3: TGridPanel
             Left = 17
             Top = 25
-            Width = 432
-            Height = 21
+            Width = 455
+            Height = 25
             Align = alClient
             BevelOuter = bvNone
             Caption = 'grdpnl3'
@@ -1092,16 +1070,15 @@ object frmMain: TfrmMain
             object lbl19: TLabel
               Left = 0
               Top = 0
-              Width = 60
-              Height = 59
+              Width = 59
+              Height = 13
               Align = alTop
               Caption = 'Starting size'
-              ExplicitWidth = 26
             end
             object dbtrckbrheadInit: TDBTrackBar
               Left = 65
               Top = 0
-              Width = 143
+              Width = 155
               Height = 24
               Align = alTop
               Enabled = False
@@ -1121,20 +1098,18 @@ object frmMain: TfrmMain
               ExplicitHeight = 30
             end
             object lbl20: TLabel
-              Left = 213
+              Left = 225
               Top = 0
-              Width = 60
-              Height = 53
+              Width = 53
+              Height = 13
               Align = alTop
               Alignment = taCenter
               Caption = 'Ending size'
-              ExplicitLeft = 214
-              ExplicitWidth = 26
             end
             object dbtrckbrheadFinal: TDBTrackBar
-              Left = 278
+              Left = 290
               Top = 0
-              Width = 144
+              Width = 155
               Height = 24
               Align = alTop
               Enabled = False
@@ -1164,7 +1139,7 @@ object frmMain: TfrmMain
         Left = 0
         Top = 0
         Width = 185
-        Height = 424
+        Height = 433
         Align = alLeft
         TabOrder = 0
         ExplicitHeight = 403
@@ -1172,7 +1147,7 @@ object frmMain: TfrmMain
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 177
+          Width = 102
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -1188,13 +1163,12 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
-          ExplicitWidth = 102
         end
         object dbgrd4: TDBGrid
           Left = 1
           Top = 51
           Width = 183
-          Height = 372
+          Height = 381
           Hint = 'No. You can'#39't add/delete racial groups.'
           Align = alClient
           DataSource = dtmdl_Main.dsRaces
@@ -1218,8 +1192,8 @@ object frmMain: TfrmMain
       object pnl9: TPanel
         Left = 185
         Top = 0
-        Width = 481
-        Height = 424
+        Width = 504
+        Height = 433
         Align = alClient
         BevelOuter = bvNone
         Caption = 'pnl9'
@@ -1236,8 +1210,8 @@ object frmMain: TfrmMain
         object dbmmodescription: TDBMemo
           AlignWithMargins = True
           Left = 15
-          Top = 270
-          Width = 451
+          Top = 279
+          Width = 474
           Height = 139
           Margins.Left = 0
           Margins.Top = 15
@@ -1248,12 +1222,14 @@ object frmMain: TfrmMain
           DataSource = dtmdl_Main.dsRaces
           ReadOnly = True
           TabOrder = 1
+          ExplicitTop = 270
+          ExplicitWidth = 451
         end
         object dbmmoraces: TDBMemo
           Left = 15
           Top = 25
-          Width = 451
-          Height = 230
+          Width = 474
+          Height = 239
           Hint = 'Write only one race per line'
           Align = alClient
           DataField = 'races'
@@ -1273,20 +1249,18 @@ object frmMain: TfrmMain
       object pnl2: TPanel
         Left = 185
         Top = 0
-        Width = 481
-        Height = 373
+        Width = 504
+        Height = 382
         Align = alClient
         Padding.Left = 15
         Padding.Top = 15
         Padding.Right = 15
         Padding.Bottom = 15
         TabOrder = 1
-        ExplicitWidth = 436
-        ExplicitHeight = 362
         object rltvpnl1: TRelativePanel
           Left = 16
           Top = 16
-          Width = 449
+          Width = 472
           Height = 65
           ControlCollection = <
             item
@@ -1398,9 +1372,8 @@ object frmMain: TfrmMain
           BevelOuter = bvNone
           Padding.Bottom = 7
           TabOrder = 0
-          ExplicitWidth = 404
           DesignSize = (
-            449
+            472
             65)
           object lbl28: TLabel
             AlignWithMargins = True
@@ -1446,7 +1419,7 @@ object frmMain: TfrmMain
           end
           object lbl30: TLabel
             AlignWithMargins = True
-            Left = 210
+            Left = 221
             Top = 2
             Width = 29
             Height = 13
@@ -1458,7 +1431,7 @@ object frmMain: TfrmMain
           end
           object lbl31: TLabel
             AlignWithMargins = True
-            Left = 210
+            Left = 221
             Top = 20
             Width = 28
             Height = 13
@@ -1470,7 +1443,7 @@ object frmMain: TfrmMain
           end
           object lbl32: TLabel
             AlignWithMargins = True
-            Left = 210
+            Left = 221
             Top = 38
             Width = 48
             Height = 13
@@ -1481,7 +1454,7 @@ object frmMain: TfrmMain
             Caption = 'Is female:'
           end
           object dbtxtclass: TDBText
-            Left = 263
+            Left = 274
             Top = 2
             Width = 3
             Height = 13
@@ -1491,7 +1464,7 @@ object frmMain: TfrmMain
             DataSource = dtmdl_Main.dsNPCs
           end
           object dbtxtrace: TDBText
-            Left = 263
+            Left = 274
             Top = 20
             Width = 3
             Height = 13
@@ -1501,7 +1474,7 @@ object frmMain: TfrmMain
             DataSource = dtmdl_Main.dsNPCs
           end
           object dbtxtisFemale: TDBText
-            Left = 263
+            Left = 274
             Top = 38
             Width = 3
             Height = 13
@@ -1648,7 +1621,7 @@ object frmMain: TfrmMain
         Left = 0
         Top = 0
         Width = 185
-        Height = 373
+        Height = 382
         Align = alLeft
         TabOrder = 0
         ExplicitHeight = 352
@@ -1656,7 +1629,7 @@ object frmMain: TfrmMain
           AlignWithMargins = True
           Left = 4
           Top = 9
-          Width = 177
+          Width = 50
           Height = 34
           Margins.Top = 8
           Margins.Bottom = 8
@@ -1672,13 +1645,12 @@ object frmMain: TfrmMain
           GlowSize = 10
           ParentColor = False
           ParentFont = False
-          ExplicitWidth = 50
         end
         object dbgrd2: TDBGrid
           Left = 1
           Top = 51
           Width = 183
-          Height = 321
+          Height = 330
           Hint = 'Right click to add/delete data'
           Align = alClient
           DataSource = dtmdl_Main.dsNPCs
@@ -1702,8 +1674,8 @@ object frmMain: TfrmMain
       end
       object stckpnl1: TStackPanel
         Left = 0
-        Top = 373
-        Width = 666
+        Top = 382
+        Width = 689
         Height = 51
         Align = alBottom
         ControlCollection = <
@@ -1713,8 +1685,6 @@ object frmMain: TfrmMain
         Padding.Left = 3
         Padding.Top = 15
         TabOrder = 2
-        ExplicitTop = 362
-        ExplicitWidth = 621
         inline filterImportedNPC1: TfrmFilterImportedNPC
           Left = 4
           Top = 16
@@ -1733,10 +1703,9 @@ object frmMain: TfrmMain
         Left = 0
         Top = 0
         Width = 185
-        Height = 424
+        Height = 433
         Align = alLeft
         TabOrder = 0
-        ExplicitHeight = 403
         object lbl35: TLabel
           AlignWithMargins = True
           Left = 4
@@ -1763,7 +1732,7 @@ object frmMain: TfrmMain
           Left = 1
           Top = 51
           Width = 183
-          Height = 372
+          Height = 381
           Hint = 'Right click to add/delete data'
           Align = alClient
           DataSource = dtmdl_Main.dsClassArchetypes
@@ -1788,8 +1757,8 @@ object frmMain: TfrmMain
       object stckpnl2: TStackPanel
         Left = 185
         Top = 0
-        Width = 481
-        Height = 424
+        Width = 504
+        Height = 433
         Align = alClient
         ControlCollection = <
           item
@@ -1805,13 +1774,11 @@ object frmMain: TfrmMain
         Padding.Bottom = 15
         Spacing = 5
         TabOrder = 1
-        ExplicitWidth = 436
-        ExplicitHeight = 413
         object pnl7: TPanel
           AlignWithMargins = True
           Left = 16
           Top = 26
-          Width = 449
+          Width = 472
           Height = 165
           Margins.Left = 0
           Margins.Top = 0
@@ -1820,7 +1787,7 @@ object frmMain: TfrmMain
           BevelOuter = bvNone
           TabOrder = 0
           DesignSize = (
-            449
+            472
             165)
           object lbl39: TLabel
             Left = 0
@@ -1882,7 +1849,7 @@ object frmMain: TfrmMain
         object grp6: TGroupBox
           Left = 16
           Top = 206
-          Width = 449
+          Width = 472
           Height = 205
           Caption = 'Appearance'
           TabOrder = 1
@@ -2013,6 +1980,445 @@ object frmMain: TfrmMain
     object tsMuscleDef: TTabSheet
       Caption = 'Muscle definition'
       ImageIndex = 4
+      object pnl10: TPanel
+        Left = 0
+        Top = 0
+        Width = 689
+        Height = 191
+        Align = alTop
+        BevelOuter = bvNone
+        Caption = 'pnl10'
+        ShowCaption = False
+        TabOrder = 0
+        object pnl12: TPanel
+          AlignWithMargins = True
+          Left = 15
+          Top = 0
+          Width = 185
+          Height = 191
+          Margins.Left = 15
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 0
+          Align = alLeft
+          TabOrder = 0
+          object lbl9: TLabel
+            AlignWithMargins = True
+            Left = 4
+            Top = 9
+            Width = 177
+            Height = 34
+            Margins.Top = 8
+            Margins.Bottom = 8
+            Align = alTop
+            Alignment = taCenter
+            Caption = 'Racial patches'
+            Color = clNone
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -12
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            GlowSize = 10
+            ParentColor = False
+            ParentFont = False
+            ExplicitWidth = 107
+          end
+          object dbgrd5: TDBGrid
+            Left = 1
+            Top = 51
+            Width = 183
+            Height = 139
+            Hint = 'Right click to add/delete data'
+            Align = alClient
+            DataSource = dtmdl_Main.dsFitStages
+            Options = [dgIndicator, dgConfirmDelete, dgTitleHotTrack]
+            PopupMenu = pmRecords
+            TabOrder = 0
+            TitleFont.Charset = DEFAULT_CHARSET
+            TitleFont.Color = clWindowText
+            TitleFont.Height = -11
+            TitleFont.Name = 'Tahoma'
+            TitleFont.Style = []
+            OnColEnter = dbgrd_fitStagesNavColEnter
+            OnKeyDown = dbgrd_NavKeyDown
+            Columns = <
+              item
+                Expanded = False
+                FieldName = 'iName'
+                Width = 179
+                Visible = True
+              end>
+          end
+        end
+        object pnl13: TPanel
+          Left = 200
+          Top = 0
+          Width = 489
+          Height = 191
+          Align = alClient
+          BevelOuter = bvNone
+          Padding.Left = 15
+          Padding.Top = 25
+          Padding.Right = 15
+          TabOrder = 1
+          object grdpnl5: TGridPanel
+            Left = 15
+            Top = 25
+            Width = 459
+            Height = 166
+            Align = alClient
+            BevelOuter = bvNone
+            Caption = 'grdpnl5'
+            ColumnCollection = <
+              item
+                SizeStyle = ssAbsolute
+                Value = 80.000000000000000000
+              end
+              item
+                Value = 100.000000000000000000
+              end>
+            ControlCollection = <
+              item
+                Column = 0
+                Control = lbl43
+                Row = 1
+              end
+              item
+                Column = 1
+                Control = dbedt1
+                Row = 1
+              end
+              item
+                Column = 0
+                Control = lbl44
+                Row = 2
+              end
+              item
+                Column = 1
+                Control = dbedt2
+                Row = 2
+              end
+              item
+                Column = 0
+                Control = lbl48
+                Row = 3
+              end
+              item
+                Column = 1
+                Control = dbmmo4
+                Row = 3
+              end
+              item
+                Column = 0
+                Control = lbl49
+                Row = 0
+              end
+              item
+                Column = 1
+                Control = dbedt3
+                Row = 0
+              end>
+            RowCollection = <
+              item
+                SizeStyle = ssAuto
+                Value = 50.000000000000000000
+              end
+              item
+                SizeStyle = ssAuto
+                Value = 100.000000000000000000
+              end
+              item
+                Value = 100.000000000000000000
+              end
+              item
+                SizeStyle = ssAuto
+              end>
+            ShowCaption = False
+            TabOrder = 0
+            object lbl43: TLabel
+              Left = 0
+              Top = 28
+              Width = 62
+              Height = 28
+              Align = alLeft
+              Caption = 'Face texture'
+              ExplicitHeight = 13
+            end
+            object dbedt1: TDBEdit
+              AlignWithMargins = True
+              Left = 80
+              Top = 28
+              Width = 379
+              Height = 21
+              Hint = 'data/textures/actors/character/etc...'
+              Margins.Left = 0
+              Margins.Top = 0
+              Margins.Right = 0
+              Margins.Bottom = 7
+              Align = alTop
+              TabOrder = 1
+            end
+            object lbl44: TLabel
+              Left = 0
+              Top = 56
+              Width = 63
+              Height = 21
+              Align = alLeft
+              Caption = 'Body texture'
+              ExplicitHeight = 13
+            end
+            object dbedt2: TDBEdit
+              AlignWithMargins = True
+              Left = 80
+              Top = 56
+              Width = 379
+              Height = 21
+              Hint = 'data/textures/actors/character/etc...'
+              Margins.Left = 0
+              Margins.Top = 0
+              Margins.Right = 0
+              Margins.Bottom = 7
+              Align = alTop
+              TabOrder = 2
+            end
+            object lbl48: TLabel
+              Left = 0
+              Top = 77
+              Width = 80
+              Height = 13
+              Align = alTop
+              Caption = 'Races'
+              ExplicitWidth = 29
+            end
+            object dbmmo4: TDBMemo
+              Left = 80
+              Top = 77
+              Width = 379
+              Height = 89
+              Align = alClient
+              ScrollBars = ssVertical
+              TabOrder = 3
+            end
+            object lbl49: TLabel
+              Left = 0
+              Top = 0
+              Width = 80
+              Height = 13
+              Align = alTop
+              Caption = 'Patch name'
+              ExplicitWidth = 56
+            end
+            object dbedt3: TDBEdit
+              AlignWithMargins = True
+              Left = 80
+              Top = 0
+              Width = 379
+              Height = 21
+              Margins.Left = 0
+              Margins.Top = 0
+              Margins.Right = 0
+              Margins.Bottom = 7
+              Align = alTop
+              TabOrder = 0
+            end
+          end
+        end
+      end
+      object pnl11: TPanel
+        Left = 0
+        Top = 191
+        Width = 689
+        Height = 242
+        Align = alClient
+        BevelOuter = bvNone
+        Caption = 'pnl11'
+        Padding.Left = 15
+        Padding.Top = 15
+        Padding.Right = 15
+        Padding.Bottom = 15
+        ShowCaption = False
+        TabOrder = 1
+        object grp7: TGroupBox
+          Left = 15
+          Top = 15
+          Width = 659
+          Height = 212
+          Align = alClient
+          Caption = 'Don'#39't apply muscle defintion to these races'
+          Padding.Left = 5
+          Padding.Top = 10
+          Padding.Right = 5
+          Padding.Bottom = 10
+          TabOrder = 0
+          object grdpnl6: TGridPanel
+            Left = 7
+            Top = 25
+            Width = 645
+            Height = 175
+            Align = alClient
+            BevelOuter = bvNone
+            Caption = 'grdpnl6'
+            ColumnCollection = <
+              item
+                Value = 33.333333333333340000
+              end
+              item
+                Value = 33.333333333333340000
+              end
+              item
+                Value = 33.333333333333310000
+              end>
+            ControlCollection = <
+              item
+                Column = 0
+                Control = dbmmo1
+                Row = 1
+              end
+              item
+                Column = 1
+                Control = dbmmo2
+                Row = 1
+              end
+              item
+                Column = 2
+                Control = dbmmo3
+                Row = 1
+              end
+              item
+                Column = 0
+                Control = lbl45
+                Row = 0
+              end
+              item
+                Column = 1
+                Control = lbl46
+                Row = 0
+              end
+              item
+                Column = 2
+                Control = lbl47
+                Row = 0
+              end>
+            ExpandStyle = emAddColumns
+            RowCollection = <
+              item
+                SizeStyle = ssAuto
+                Value = 20.000000000000000000
+              end
+              item
+                Value = 100.000000000000000000
+              end>
+            ShowCaption = False
+            TabOrder = 0
+            object dbmmo1: TDBMemo
+              AlignWithMargins = True
+              Left = 5
+              Top = 49
+              Width = 205
+              Height = 126
+              Margins.Left = 5
+              Margins.Top = 0
+              Margins.Right = 5
+              Margins.Bottom = 0
+              Align = alClient
+              TabOrder = 0
+            end
+            object dbmmo2: TDBMemo
+              AlignWithMargins = True
+              Left = 220
+              Top = 49
+              Width = 205
+              Height = 126
+              Margins.Left = 5
+              Margins.Top = 0
+              Margins.Right = 5
+              Margins.Bottom = 0
+              Align = alClient
+              TabOrder = 1
+            end
+            object dbmmo3: TDBMemo
+              AlignWithMargins = True
+              Left = 435
+              Top = 49
+              Width = 205
+              Height = 126
+              Margins.Left = 5
+              Margins.Top = 0
+              Margins.Right = 5
+              Margins.Bottom = 0
+              Align = alClient
+              TabOrder = 2
+            end
+            object lbl45: TLabel
+              AlignWithMargins = True
+              Left = 3
+              Top = 8
+              Width = 209
+              Height = 33
+              Margins.Top = 8
+              Margins.Bottom = 8
+              Align = alTop
+              Alignment = taCenter
+              Caption = 'Plain'
+              Color = clNone
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              GlowSize = 10
+              ParentColor = False
+              ParentFont = False
+              ExplicitWidth = 47
+            end
+            object lbl46: TLabel
+              AlignWithMargins = True
+              Left = 218
+              Top = 8
+              Width = 209
+              Height = 33
+              Margins.Top = 8
+              Margins.Bottom = 8
+              Align = alTop
+              Alignment = taCenter
+              Caption = 'Athletic'
+              Color = clNone
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              GlowSize = 10
+              ParentColor = False
+              ParentFont = False
+              ExplicitWidth = 64
+            end
+            object lbl47: TLabel
+              AlignWithMargins = True
+              Left = 433
+              Top = 8
+              Width = 209
+              Height = 33
+              Margins.Top = 8
+              Margins.Bottom = 8
+              Align = alTop
+              Alignment = taCenter
+              Caption = 'Fat'
+              Color = clNone
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              GlowSize = 10
+              ParentColor = False
+              ParentFont = False
+              ExplicitWidth = 38
+            end
+          end
+        end
+      end
     end
     object tsMCM: TTabSheet
       Caption = 'MCM'
@@ -2052,8 +2458,8 @@ object frmMain: TfrmMain
       object redtOutput: TRichEdit
         Left = 0
         Top = 0
-        Width = 666
-        Height = 424
+        Width = 689
+        Height = 433
         Align = alClient
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
@@ -2066,23 +2472,19 @@ object frmMain: TfrmMain
         ScrollBars = ssBoth
         TabOrder = 0
         Zoom = 100
-        ExplicitWidth = 621
-        ExplicitHeight = 413
       end
     end
   end
   object stat1: TStatusBar
     Left = 0
-    Top = 452
-    Width = 674
+    Top = 483
+    Width = 697
     Height = 19
     AutoHint = True
     Panels = <>
     ParentShowHint = False
     ShowHint = False
     SimplePanel = True
-    ExplicitTop = 441
-    ExplicitWidth = 629
   end
   object mm1: TMainMenu
     Images = ilActions32

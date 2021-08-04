@@ -4,13 +4,15 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.DBCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.DBCtrls,
+  Vcl.Menus;
 
 type
   TfrmKnownClasses = class(TForm)
     flwpnl1: TFlowPanel;
     btn1: TButton;
     dbmmoknownClasses: TDBMemo;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
   public
@@ -23,7 +25,7 @@ var
 implementation
 
 uses
-  Unit9010_dataModule;
+  Unit9010_dataModule, Unit1010_main;
 
 {$R *.dfm}
 
@@ -37,6 +39,11 @@ begin
   finally
     frmKnownClasses.Free;
   end;
+end;
+
+procedure TfrmKnownClasses.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  dtmdl_Main.Post(tnSingletons);
 end;
 
 end.

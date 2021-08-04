@@ -1,7 +1,6 @@
 object frmKnownClasses: TfrmKnownClasses
   Left = 0
   Top = 0
-  BorderIcons = []
   BorderStyle = bsDialog
   Caption = 'Known classes'
   ClientHeight = 341
@@ -18,6 +17,7 @@ object frmKnownClasses: TfrmKnownClasses
   Padding.Bottom = 15
   OldCreateOrder = False
   Position = poOwnerFormCenter
+  OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 13
   object flwpnl1: TFlowPanel

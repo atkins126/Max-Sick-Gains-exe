@@ -28,7 +28,7 @@ object frmImportNPCs: TfrmImportNPCs
     Align = alClient
     DataSource = dtmdl_Main.dsAllNPCs
     Options = [dgTitles, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
-    TabOrder = 0
+    TabOrder = 1
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText
     TitleFont.Height = -11
@@ -118,7 +118,7 @@ object frmImportNPCs: TfrmImportNPCs
     AutoSize = True
     BevelOuter = bvNone
     Padding.Top = 15
-    TabOrder = 1
+    TabOrder = 2
     DesignSize = (
       619
       40)
@@ -203,7 +203,7 @@ object frmImportNPCs: TfrmImportNPCs
       Cancel = True
       Caption = '&Cancel'
       ModalResult = 2
-      TabOrder = 1
+      TabOrder = 2
       OnClick = btnCloseClick
     end
     object btnAccept: TButton
@@ -214,7 +214,7 @@ object frmImportNPCs: TfrmImportNPCs
       Anchors = []
       Caption = '&Accept'
       ModalResult = 1
-      TabOrder = 2
+      TabOrder = 1
     end
   end
   object grp1: TGroupBox
@@ -232,7 +232,7 @@ object frmImportNPCs: TfrmImportNPCs
     Padding.Left = 15
     Padding.Top = 5
     Padding.Right = 15
-    TabOrder = 2
+    TabOrder = 0
     inline filterImportedNPC1: TfrmFilterImportedNPC
       Left = 17
       Top = 20

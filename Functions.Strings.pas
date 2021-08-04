@@ -4,7 +4,7 @@ interface
 
 uses
   System.StrUtils, Functional.FuncFactory, System.SysUtils, Data.DB,
-  System.Classes;
+  System.Classes, Functional.Sequence;
 
 function FilterByContainsTxt(const aSubText: string): Functional.FuncFactory.TPredicate
   <string>;
@@ -34,7 +34,28 @@ function StrToList(const aText: string; const aSorted: Boolean = true; const
   allowDuplicates: Boolean = true; const aCaseSensitive: Boolean = false):
   TStringList;
 
+function DelBlankLines(const aText: string; const aSorted: Boolean = true; const
+  allowDuplicates: Boolean = true; const aCaseSensitive: Boolean = false): string;
+
 implementation
+
+uses
+  Functions.Utils;
+
+function DelBlankLines(const aText: string; const aSorted: Boolean = true; const
+  allowDuplicates: Boolean = true; const aCaseSensitive: Boolean = false): string;
+var
+  lst: TStringList;
+begin
+  lst := StrToList(aText, aSorted, allowDuplicates, aCaseSensitive);
+  try
+    Result := TSeq.From(lst)
+      .Filter(NotNullStr)
+      .Fold<string>(ReduceNewLine(), '');
+  finally
+    lst.Free;
+  end;
+end;
 
 function SortNLSeparatedStr(const aText: string; const allowDuplicates: Boolean):
   string;
@@ -126,7 +147,7 @@ begin
     function(const input: TDataSet; const Accumulator: string): string
     begin
       Result := ReduceStr(aSeparator)(input.FieldByName(aField).AsString,
-        Accumulator);
+        Accumulator)
     end;
 end;
 

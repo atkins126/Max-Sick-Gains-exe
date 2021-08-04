@@ -6,9 +6,10 @@ uses
   Winapi.Windows, Winapi.ShellAPI, System.SysUtils, System.Classes, Data.DB,
   Data.Win.ADODB, System.IOUtils, System.StrUtils, Functional.Sequence,
   Unit9020_Types, System.Generics.Collections, Datasnap.DBClient,
-  Datasnap.Provider, Vcl.OleServer, JRO_TLB, System.Win.ComObj;
+  Datasnap.Provider, Vcl.OleServer, JRO_TLB, System.Win.ComObj, Vcl.Menus,
+  System.Actions, Vcl.ActnList, Vcl.StdCtrls;
 
-//{$DEFINE OpenPathsInExplorer}
+// {$DEFINE OpenPathsInExplorer}
 const
   AppFullName = 'Max Sick Gains for SSE';
 
@@ -100,8 +101,13 @@ type
     tblSingletons: TADOTable;
     dsClassArchetypes: TDataSource;
     dsSingletons: TDataSource;
+    actlst1: TActionList;
+    pmListBoxSelect: TPopupMenu;
+    actSelectInv: TAction;
+    Invertselection1: TMenuItem;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
+    procedure actSelectInvExecute(Sender: TObject);
   private
     FCfgSavePoint: Int64;
     FWorkingFile: string;
@@ -135,6 +141,7 @@ type
     function GenerateLuaDatabase: string;
     function GenNPCs: string;
     function GenFitStages: string;
+    function GenRaces: string;
     function GetTexOutFolder: string;
     function GetCfgOutFolder: string;
     function GetLuaOutFolder: string;
@@ -148,7 +155,7 @@ type
     procedure ConfigUpdate(aField: TConfigField; val: Variant);
     procedure Edit(const aTable: TTableName; const aField: string; const aVal:
       Variant);
-    procedure ExecuteSQL(const SQL: string);
+    procedure ExecuteSQL(const sql: string);
     procedure FilterTable(const aTable: TTableName; const aFilter: string);
     procedure ForceDirIntoExistance(const dirName: string);
     procedure LoadConfig;
@@ -167,13 +174,29 @@ implementation
 
 uses
   Vcl.Forms, Unit5010_ExportBs, Functions.Strings, Unit1010_main,
-  Unit1030_Config, Unit9015_GenMod;
+  Unit1030_Config, Unit9015_GenMod, Functions.Utils;
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 {$R *.dfm}
 
 function AsDir(const aDir: string): string;
 begin
   Result := IncludeTrailingPathDelimiter(aDir);
+end;
+
+procedure Tdtmdl_Main.actSelectInvExecute(Sender: TObject);
+var
+  lst: TListBox;
+  i: Integer;
+begin
+  { TODO : Factorize }
+  lst := pmListBoxSelect.PopupComponent as TListBox;
+
+  lst.items.BeginUpdate;
+  for i := 0 to lst.items.Count - 1 do
+    lst.Selected[i] := not lst.Selected[i];
+  lst.items.EndUpdate;
+
+  // trackbar := pmTrackbar.PopupComponent as TTrackBar;
 end;
 
 procedure Tdtmdl_Main.Append(const aTable: TTableName; const aCmd: TFunc<string>);
@@ -209,16 +232,14 @@ end;
 
 function Tdtmdl_Main.AppendClassArchetype: string;
 begin
-  Result :=
-    'INSERT INTO ClassArchetypes (iName, classes, fitStage, bsLo, bsHi, muscleDefLo, muscleDefHi) ' +
-    'VALUES ("New archetype", "", 1, 0, 100, 0, 100)';
+  Result := 'INSERT INTO ClassArchetypes (iName, classes, fitStage, bsLo, bsHi, muscleDefLo, muscleDefHi) '
+    + 'VALUES ("New archetype", "", 1, 0, 100, 0, 100)';
 end;
 
 function Tdtmdl_Main.AppendFitStage: string;
 begin
-  Result :=
-    'INSERT INTO FitStages (iName, muscleDefType, muscleDefLvl, excludedRaces) ' +
-    'VALUES ("New Stage", 0, 0, "")';
+  Result := 'INSERT INTO FitStages (iName, muscleDefType, muscleDefLvl, excludedRaces) '
+    + 'VALUES ("New Stage", 0, 0, "")';
 end;
 
 function Tdtmdl_Main.AppendNPC(const aId: Integer): TFunc<string>;
@@ -226,18 +247,17 @@ begin
   Result :=
     function: string
     begin
-      Result := Format(
-        'INSERT INTO NPCs (NPCid, fitStage, weight, muscleDef) VALUES (%d, 1, 101, -1)',
-        [aId]
-        );
+      Result := Format
+        ('INSERT INTO NPCs (NPCid, fitStage, weight, muscleDef) VALUES (%d, 1, 101, -1)',
+        [aId]);
     end;
 end;
 
 function Tdtmdl_Main.AppendPlayerStage: string;
 begin
   Result := 'INSERT INTO PlayerStages ' +
-    '(fitnessStage, minDays, bsMin, bsMax, muscleMin, muscleMax, blend, headInit, headFinal) ' +
-    'VALUES (1, 20, 0, 100, 1, 6, 30, 100, 100)';
+    '(fitnessStage, minDays, bsMin, bsMax, muscleMin, muscleMax, blend, headInit, headFinal) '
+    + 'VALUES (1, 20, 0, 100, 1, 6, 30, 100, 100)';
 end;
 
 function Tdtmdl_Main.AppPath: string;
@@ -343,9 +363,9 @@ begin
   end;
 end;
 
-procedure Tdtmdl_Main.ExecuteSQL(const SQL: string);
+procedure Tdtmdl_Main.ExecuteSQL(const sql: string);
 begin
-  cmd.CommandText := SQL;
+  cmd.CommandText := sql;
   if cmd.CommandText <> '' then begin
     cmd.Execute;
   end;
@@ -401,7 +421,7 @@ procedure Tdtmdl_Main.FilterTable(const aTable: TTableName; const aFilter:
   string);
 begin
   with GetTable(aTable) do begin
-    Filtered := false;
+    Filtered := False;
     Filter := aFilter;
     if Trim(aFilter) = '' then
       Exit;
@@ -416,8 +436,8 @@ end;
 
 function Tdtmdl_Main.FitStagesToLua: string;
 begin
-//  Result := 'database.fitStages = ' +
-//    ToLuaTable(DataSetToLua(tnFitStages, FitStageToLua), false);
+  // Result := 'database.fitStages = ' +
+  // ToLuaTable(DataSetToLua(tnFitStages, FitStageToLua), false);
 end;
 
 procedure Tdtmdl_Main.ForceDirIntoExistance(const dirName: string);
@@ -429,6 +449,7 @@ end;
 
 function Tdtmdl_Main.GenerateAllModData: string;
 begin
+  PostAll;
   ForceDirIntoExistance(GetCfgOutFolder);
   ForceDirIntoExistance(GetLuaOutFolder);
   StringToFile(dtmdl_Main.GenNPCs, GetCfgOutFolder + 'npcs.json');
@@ -439,14 +460,15 @@ end;
 
 function Tdtmdl_Main.GenerateLuaDatabase: string;
 begin
-  Result := TSeq.From<string>(
-    TArray<string>.Create(
+  Result := TSeq.From<string>(TArray<string>
+    .Create(
     'local database = {}',
+    GenRaces,
     'database.' + GenFitStages,
     'return database'
-    )
-    )
-    .Fold<string>(ReduceStr(#13#10#13#10), '');
+    ))
+    .Fold<string>(ReduceStr(#13#10#13#10), ''
+    );
 end;
 
 function Tdtmdl_Main.GenFitStages: string;
@@ -467,15 +489,33 @@ begin
     .Map<string>(GenNpc)
     .Fold<string>(CommaAndNL(), '');
   meta := JsonPair('typeName', '"JFormMap"');
-  meta := JsonPair('__metaInfo', JsonObject(meta)) + ','#13#10;
-  Result := JsonMasterObject(meta + npcs);
+  meta := JsonPair('__metaInfo', JsonObject(meta));
+  Result := JsonMasterObject(
+    meta +
+    IfThen(NotNullStr(npcs), ','#13#10, '') +
+    npcs);
 end;
 
 procedure Tdtmdl_Main.GenQuery(const sql: string);
 begin
   qryGenerate.Close;
-  qryGenerate.SQL.Text := sql;
+  qryGenerate.sql.Text := sql;
   qryGenerate.Open;
+end;
+
+function Tdtmdl_Main.GenRaces: string;
+var
+  tbl: string;
+begin
+  tbl := Unit9015_GenMod.GenRaces(ValidRaces);
+  Result := TSeq.From<string>(TArray<string>
+    .Create(
+    '-- Actual data used for calculations',
+    LuaAssign('database.races', LowerCase(tbl)),
+    '-- Used for displaying messages in the Skyrim console',
+    LuaAssign('database.racesDisplay', tbl)
+    ))
+    .Fold<string>(ReduceNewLine(), '');
 end;
 
 function Tdtmdl_Main.GetCfgOutFolder: string;
@@ -533,11 +573,11 @@ begin
     tnSingletons:
       Result := tblSingletons;
   else
-    {$IFDEF DEBUG}
+{$IFDEF DEBUG}
     raise Exception.CreateFmt('Asked for some invalid table: %d.', [Integer(aTable)]);
-    {$ELSE}
+{$ELSE}
     Result := nil;
-    {$ENDIF}
+{$ENDIF}
   end;
 end;
 
@@ -645,7 +685,7 @@ begin
   FWorkingFile := aFileName;
   // Save compacted DB
   tmp := FWorkingFile + '.tmp';
-  CopyFile(PWideChar(TempDB), PWideChar(tmp), false);
+  CopyFile(PWideChar(TempDB), PWideChar(tmp), False);
   dbSrc := SProvider + tmp;
   dbDest := SProvider + FWorkingFile;
   if FileExists(FWorkingFile) then
@@ -689,10 +729,11 @@ end;
 function Tdtmdl_Main.ValidRaces: string;
 begin
   qryAux.Close;
-  qryAux.SQL.Text := 'SELECT * FROM QryValidRaces';
+  qryAux.sql.Text := 'SELECT * FROM QryValidRaces';
   qryAux.Open;
-  Result := TSeq.From(qryAux)
+  Result := TSeq.From(qryAux).Filter(NotNullStrField('validRaces'))
     .Fold<string>(ReduceStrField('validRaces', #13#10), '');
+  Result := DelBlankLines(Result, true, False);
 end;
 
 end.

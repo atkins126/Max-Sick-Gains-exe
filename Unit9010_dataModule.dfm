@@ -380,4 +380,20 @@ object dtmdl_Main: Tdtmdl_Main
     Left = 16
     Top = 274
   end
+  object actlst1: TActionList
+    Left = 320
+    Top = 110
+    object actSelectInv: TAction
+      Category = 'Listbox'
+      Caption = 'Invert selection'
+      OnExecute = actSelectInvExecute
+    end
+  end
+  object pmListBoxSelect: TPopupMenu
+    Left = 320
+    Top = 160
+    object Invertselection1: TMenuItem
+      Action = actSelectInv
+    end
+  end
 end

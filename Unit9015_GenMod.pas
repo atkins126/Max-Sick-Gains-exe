@@ -8,9 +8,13 @@ uses
 
 function LuaAssign(aVar, aVal: string): string;
 
+//function LuaTableContents(aContent: string): string;
+
 function GenFitStage(ds: TDataSet): string;
 
 function GenNpc(ds: TDataSet): string;
+
+function GenRaces(races: string): string;
 
 function LuaTableNewLineContents(const aContent: string): string;
 
@@ -178,12 +182,17 @@ begin
     LuaAssignStrField(ds, 'displayName'),
     LuaAssignField(ds, 'muscleDefType'),
 //    LuaAssignField(ds, 'muscleDefLvl'),   Unused
-    LuaAssign('femBs', LuaTableContents(femBs)),
+      LuaAssign('femBs', LuaTableContents(femBs)),
     LuaAssign('manBs', LuaTableContents(manBs)),
     LuaAssignStrListField(ds, 'excludedRaces')
     ),
     LuaAssign, LuaTableContents
     );
+end;
+
+function GenRaces(races: string): string;
+begin
+  Result := LuaStrArray(races);
 end;
 
 end.

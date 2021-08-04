@@ -29,8 +29,6 @@ object frmGetClasses: TfrmGetClasses
     FlowStyle = fsRightLeftBottomTop
     Padding.Top = 15
     TabOrder = 1
-    ExplicitTop = 290
-    ExplicitWidth = 238
     object btnCancel: TButton
       Left = 161
       Top = 15
@@ -61,6 +59,7 @@ object frmGetClasses: TfrmGetClasses
     Align = alClient
     ItemHeight = 13
     MultiSelect = True
+    PopupMenu = dtmdl_Main.pmListBoxSelect
     TabOrder = 0
   end
 end
