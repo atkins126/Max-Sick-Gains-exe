@@ -463,7 +463,7 @@ begin
   Result := TSeq.From<string>(TArray<string>
     .Create(
     'local database = {}',
-    GenRaces,
+    'database.' + GenRaces,
     'database.' + GenFitStages,
     'return database'
     ))
@@ -477,7 +477,7 @@ begin
   Result := TSeq.From(qryGenerate)
     .Map<string>(GenFitStage)
     .Fold<string>(CommaAndNL(), '');
-  Result := LuaAssign('fitStages', LuaTableNewLineContents(Result));
+  Result := LuaMasterAssign('fitStages', Result);
 end;
 
 function Tdtmdl_Main.GenNPCs: string;
@@ -504,18 +504,12 @@ begin
 end;
 
 function Tdtmdl_Main.GenRaces: string;
-var
-  tbl: string;
 begin
-  tbl := Unit9015_GenMod.GenRaces(ValidRaces);
-  Result := TSeq.From<string>(TArray<string>
-    .Create(
-    '-- Actual data used for calculations',
-    LuaAssign('database.races', LowerCase(tbl)),
-    '-- Used for displaying messages in the Skyrim console',
-    LuaAssign('database.racesDisplay', tbl)
-    ))
-    .Fold<string>(ReduceNewLine(), '');
+  GenQuery('SELECT * FROM Races ORDER BY Id');
+  Result := TSeq.From(qryGenerate)
+    .Map<string>(GenRace)
+    .Fold<string>(CommaAndNL(), '');
+  Result := LuaMasterAssign('races', Result);
 end;
 
 function Tdtmdl_Main.GetCfgOutFolder: string;

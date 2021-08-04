@@ -6,6 +6,9 @@ uses
   System.StrUtils, Functional.FuncFactory, System.SysUtils, Data.DB,
   System.Classes, Functional.Sequence;
 
+function AskedForLowerCase(const toLowerCase: Boolean; const aText: string):
+  string;
+
 function FilterByContainsTxt(const aSubText: string): Functional.FuncFactory.TPredicate
   <string>;
 
@@ -41,6 +44,12 @@ implementation
 
 uses
   Functions.Utils;
+
+function AskedForLowerCase(const toLowerCase: Boolean; const aText: string):
+  string;
+begin
+  Result := IfThen(toLowerCase, LowerCase(aText), aText);
+end;
 
 function DelBlankLines(const aText: string; const aSorted: Boolean = true; const
   allowDuplicates: Boolean = true; const aCaseSensitive: Boolean = false): string;
