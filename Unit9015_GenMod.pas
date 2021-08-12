@@ -4,11 +4,11 @@ interface
 
 uses
   Data.DB, Functional.Sequence, System.Generics.Collections, System.SysUtils,
-  System.Classes, System.StrUtils;
+  System.Classes, System.StrUtils, System.RegularExpressions;
 
 function LuaAssign(aVar, aVal: string): string;
 
-function LuaMasterAssign(aVar, aVal: string): string;
+function LuaMasterTable(aVar, aVal: string): string;
 
 function GenFitStage(ds: TDataSet): string;
 
@@ -117,7 +117,7 @@ begin
   Result := EncloseStr('{'#13#10, #13#10'}')(aContent);
 end;
 
-function LuaMasterAssign(aVar, aVal: string): string;
+function LuaMasterTable(aVar, aVal: string): string;
 begin
   Result := LuaAssign(aVar, LuaTableNewLineContents(aVal));
 end;
@@ -132,6 +132,12 @@ begin
   Result := ds.FieldByName(aField).AsString;
 end;
 
+function LuaAssignStr(aVar, aVal: string): string;
+begin
+  // Returns a string in the form aVar = "aVal"
+  Result := LuaAssign(aVar, LuaStr(aVal));
+end;
+
 function LuaAssignField(const ds: TDataSet; aField: string): string;
 begin
   // Returns a string in the form aField = aField.asString;
@@ -139,10 +145,35 @@ begin
   Result := LuaAssign(aField, StrField(ds, aField));
 end;
 
+function LuaAssignStrFieldBase(const ds: TDataSet; aField: string; const func:
+  TFunc<string, string>): string;
+var
+  f: string;
+begin
+  // Returns a string in the form aField = "aField.asString"
+  f := func(StrField(ds, aField));
+  Result := LuaAssignStr(aField, f);
+//  Result := LuaAssign(aField, LuaStr(f));
+end;
+
 function LuaAssignStrField(const ds: TDataSet; aField: string): string;
 begin
   // Returns a string in the form aField = "aField.asString"
-  Result := LuaAssign(aField, LuaStr(StrField(ds, aField)));
+  Result := LuaAssignStrFieldBase(ds, aField, Identity)
+//  Result := LuaAssign(aField, LuaStr(StrField(ds, aField)));
+end;
+
+function LuaAssignStrFieldLower(const ds: TDataSet; aField: string): string;
+var
+  LowerCaseAdapter: TFunc<string, string>;
+begin
+  // Returns a string in the form aField = "aField.asstring"
+  LowerCaseAdapter :=
+    function(s: string): string
+    begin
+      Result := LowerCase(s);
+    end;
+  Result := LuaAssignStrFieldBase(ds, aField, LowerCaseAdapter);
 end;
 
 function LuaAssignStrListField(const ds: TDataSet; aField: string; const
@@ -189,7 +220,24 @@ begin
     WrapperFunc);
 end;
 
-function GenNpc(ds: TDataSet): string;
+// Used for exporting data for the Formlist method for recognizing NPCs
+// Hopefully this will never be used
+function GenNpcForFormlist(ds: TDataSet): string;
+begin
+  Result := ReduceCommon(
+    LuaTableItemDeclStr(LowerCase(StrField(ds, 'fullName') + StrField(ds, 'formId'))),
+    TArray<string>.Create(
+    LuaAssignField(ds, 'fitStage'),
+    LuaAssignField(ds, 'weight'),
+    LuaAssignField(ds, 'muscleDef'),
+    LuaAssignStrField(ds, 'formId')
+    ),
+    LuaAssign, LuaTableContents
+    );
+end;
+
+// That was an unreliable method, but it is still left here for reference.
+function GenNpcForJFormMap(ds: TDataSet): string;
 begin
   Result := ReduceCommon(
     '__formData|' + ds.FieldByName('uId').AsString,
@@ -199,6 +247,21 @@ begin
     JsonPairField(ds, 'muscleDef')
     ),
     JsonPair, JsonObject
+    );
+end;
+
+function GenNpc(ds: TDataSet): string;
+begin
+  Result := ReduceCommon(
+    LuaTableItemDeclStr(LowerCase(StrField(ds, 'formId'))),
+    TArray<string>.Create(
+    LuaAssignField(ds, 'fitStage'),
+    LuaAssignField(ds, 'weight'),
+    LuaAssignField(ds, 'muscleDef'),
+    LuaAssignStrFieldLower(ds, 'class'),
+    LuaAssignStrFieldLower(ds, 'race')
+    ),
+    LuaAssign, LuaTableContents
     );
 end;
 
@@ -223,7 +286,34 @@ begin
     );
 end;
 
-function GenRace(ds: TDataSet): string;
+function TooShort(const s: string): Boolean;
+begin
+  Result := Length(s) <= 2;
+end;
+
+function MustBeValid(const s: string): Boolean;
+begin
+  // Can't contain spaces
+  Result := not TRegEx.Create('\s').Match(s).Success;
+  // Can't contain special Lua symbols
+  Result := Result and
+    (not TRegEx.Create('[\^\$\(\)\%\.\[\]\*\+\-\?\\]+').Match(s).Success);
+end;
+
+{ TODO :
+Warn invalid race
+Throw error on repeated }
+function ValidEDID(const s: string): Boolean;
+begin
+  Result := NotNullStr(s) and (not TooShort(s)) and MustBeValid(s);
+end;
+
+function TrimAdapter(s: string): string;
+begin
+  Result := Trim(s);
+end;
+
+function GenRaceRacialGroupOriented(ds: TDataSet): string;
 var
   races: TStringList;
   assigns: TSeq<string>;
@@ -231,7 +321,8 @@ begin
   Result := StrField(ds, 'abbreviation');
   races := StrToList(StrField(ds, 'races'), true, false);
   assigns := TSeq.From(races)
-    .Filter(NotNullStr)
+    .Map(TrimAdapter)
+    .Filter(ValidEDID)
     .Map(
     function(race: string): string
     begin
@@ -241,6 +332,29 @@ begin
 
   Result := ReduceCommonBase(StrField(ds, 'abbreviation'), assigns, LuaAssign,
     LuaTableContents);
+  races.Free;
+end;
+
+function GenRace(ds: TDataSet): string;
+var
+  races: TStringList;
+begin
+  races := StrToList(StrField(ds, 'races'), true, false);
+  Result := TSeq.From(races)
+    .Map(TrimAdapter)
+    .Filter(ValidEDID)
+    .Map(
+    function(race: string): string
+    begin
+      Result := ReduceCommon(
+        LowerCase(race),
+        TArray<string>.Create(
+        LuaAssignStr('group', StrField(ds, 'abbreviation')),
+        LuaAssignStr('display', race)
+        ),
+        LuaAssign, LuaTableContents);
+    end)
+    .Fold<string>(CommaAndNL(), '');
   races.Free;
 end;
 

@@ -9,7 +9,7 @@ uses
   Datasnap.Provider, Vcl.OleServer, JRO_TLB, System.Win.ComObj, Vcl.Menus,
   System.Actions, Vcl.ActnList, Vcl.StdCtrls;
 
-// {$DEFINE OpenPathsInExplorer}
+//{$DEFINE OpenPathsInExplorer}
 const
   AppFullName = 'Max Sick Gains for SSE';
 
@@ -70,7 +70,6 @@ type
     tblRaces: TADOTable;
     dsRaces: TDataSource;
     tblAllNPCs: TADOTable;
-    dsAllNPCs: TDataSource;
     qryAux: TADOQuery;
     JE: TJetEngine;
     strngfldConfigLuaCfgPath: TStringField;
@@ -88,7 +87,6 @@ type
     smlntfldNPCsweight1: TSmallintField;
     smlntfldNPCsmuscleDef1: TSmallintField;
     atncfldNPCsAllNPCsID: TAutoIncField;
-    wdstrngfldNPCsuId: TWideStringField;
     wdstrngfldNPCsformID: TWideStringField;
     wdstrngfldNPCsesp: TWideStringField;
     wdstrngfldNPCsfullName: TWideStringField;
@@ -450,9 +448,9 @@ end;
 function Tdtmdl_Main.GenerateAllModData: string;
 begin
   PostAll;
-  ForceDirIntoExistance(GetCfgOutFolder);
+//  ForceDirIntoExistance(GetCfgOutFolder);
   ForceDirIntoExistance(GetLuaOutFolder);
-  StringToFile(dtmdl_Main.GenNPCs, GetCfgOutFolder + 'npcs.json');
+//  StringToFile(dtmdl_Main.GenNPCs, GetCfgOutFolder + 'npcs.json');
   StringToFile(GenerateLuaDatabase, GetLuaOutFolder + 'database.lua');
   // Outputs warnings
   Result := '';
@@ -465,6 +463,7 @@ begin
     'local database = {}',
     'database.' + GenRaces,
     'database.' + GenFitStages,
+    'database.' + GenNPCs,
     'return database'
     ))
     .Fold<string>(ReduceStr(#13#10#13#10), ''
@@ -477,23 +476,16 @@ begin
   Result := TSeq.From(qryGenerate)
     .Map<string>(GenFitStage)
     .Fold<string>(CommaAndNL(), '');
-  Result := LuaMasterAssign('fitStages', Result);
+  Result := LuaMasterTable('fitStages', Result);
 end;
 
 function Tdtmdl_Main.GenNPCs: string;
-var
-  npcs, meta: string;
 begin
   GenQuery('SELECT * FROM GenNPCs');
-  npcs := TSeq.From(qryGenerate)
+  Result := TSeq.From(qryGenerate)
     .Map<string>(GenNpc)
     .Fold<string>(CommaAndNL(), '');
-  meta := JsonPair('typeName', '"JFormMap"');
-  meta := JsonPair('__metaInfo', JsonObject(meta));
-  Result := JsonMasterObject(
-    meta +
-    IfThen(NotNullStr(npcs), ','#13#10, '') +
-    npcs);
+  Result := LuaMasterTable('npcs', Result);
 end;
 
 procedure Tdtmdl_Main.GenQuery(const sql: string);
@@ -509,7 +501,7 @@ begin
   Result := TSeq.From(qryGenerate)
     .Map<string>(GenRace)
     .Fold<string>(CommaAndNL(), '');
-  Result := LuaMasterAssign('races', Result);
+  Result := LuaMasterTable('races', Result);
 end;
 
 function Tdtmdl_Main.GetCfgOutFolder: string;

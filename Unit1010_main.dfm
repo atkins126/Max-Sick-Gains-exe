@@ -2006,7 +2006,7 @@ object frmMain: TfrmMain
             AlignWithMargins = True
             Left = 4
             Top = 9
-            Width = 177
+            Width = 107
             Height = 34
             Margins.Top = 8
             Margins.Bottom = 8
@@ -2022,7 +2022,6 @@ object frmMain: TfrmMain
             GlowSize = 10
             ParentColor = False
             ParentFont = False
-            ExplicitWidth = 107
           end
           object dbgrd5: TDBGrid
             Left = 1
@@ -2140,10 +2139,9 @@ object frmMain: TfrmMain
               Left = 0
               Top = 28
               Width = 62
-              Height = 28
+              Height = 13
               Align = alLeft
               Caption = 'Face texture'
-              ExplicitHeight = 13
             end
             object dbedt1: TDBEdit
               AlignWithMargins = True
@@ -2163,10 +2161,9 @@ object frmMain: TfrmMain
               Left = 0
               Top = 56
               Width = 63
-              Height = 21
+              Height = 13
               Align = alLeft
               Caption = 'Body texture'
-              ExplicitHeight = 13
             end
             object dbedt2: TDBEdit
               AlignWithMargins = True
@@ -2185,11 +2182,10 @@ object frmMain: TfrmMain
             object lbl48: TLabel
               Left = 0
               Top = 77
-              Width = 80
+              Width = 29
               Height = 13
               Align = alTop
               Caption = 'Races'
-              ExplicitWidth = 29
             end
             object dbmmo4: TDBMemo
               Left = 80
@@ -2203,11 +2199,10 @@ object frmMain: TfrmMain
             object lbl49: TLabel
               Left = 0
               Top = 0
-              Width = 80
+              Width = 56
               Height = 13
               Align = alTop
               Caption = 'Patch name'
-              ExplicitWidth = 56
             end
             object dbedt3: TDBEdit
               AlignWithMargins = True
@@ -2354,7 +2349,7 @@ object frmMain: TfrmMain
               AlignWithMargins = True
               Left = 3
               Top = 8
-              Width = 209
+              Width = 47
               Height = 33
               Margins.Top = 8
               Margins.Bottom = 8
@@ -2370,13 +2365,12 @@ object frmMain: TfrmMain
               GlowSize = 10
               ParentColor = False
               ParentFont = False
-              ExplicitWidth = 47
             end
             object lbl46: TLabel
               AlignWithMargins = True
               Left = 218
               Top = 8
-              Width = 209
+              Width = 64
               Height = 33
               Margins.Top = 8
               Margins.Bottom = 8
@@ -2392,13 +2386,12 @@ object frmMain: TfrmMain
               GlowSize = 10
               ParentColor = False
               ParentFont = False
-              ExplicitWidth = 64
             end
             object lbl47: TLabel
               AlignWithMargins = True
               Left = 433
               Top = 8
-              Width = 209
+              Width = 38
               Height = 33
               Margins.Top = 8
               Margins.Bottom = 8
@@ -2414,7 +2407,6 @@ object frmMain: TfrmMain
               GlowSize = 10
               ParentColor = False
               ParentFont = False
-              ExplicitWidth = 38
             end
           end
         end

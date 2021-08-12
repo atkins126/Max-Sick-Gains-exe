@@ -44,7 +44,10 @@ var
     output, esp, id, race, uId, name, isFemale, aClass, sex: string;
 begin
   if Signature(e) <> 'NPC_' then Exit;
-  e := MasterOrSelf(e);
+  // Get original filename
+  esp := GetFileName(GetFile(MasterOrSelf(e)));
+  // Get updated data
+  e := HighestOverrideOrSelf(e);
 
   isUnique := ElementByPath(e, 'ACBS\Flags\Unique');
   if not (Assigned(isUnique) and GetElementNativeValues(e, 'ACBS\Flags\Unique')) then Exit;
@@ -58,20 +61,18 @@ begin
   aClass := GetElementEditValues(LinksTo(ElementByPath(e, 'CNAM')),'EDID');
   if ContainsText(aClass, 'player')  then Exit;
 
-  // esm, id, name, class, sex, race
-  esp := GetFileName(GetFile(e));
   id := ActualFixedFormID(e);
-  uId := esp + '|0x' + id;
+  // uId := esp + '|0x' + id;
   sex := GetElementEditValues(e, 'ACBS\Flags\Female');
 
   outputList.Append(
       Format(
-        'INSERT INTO AllNPCs (fullName, uId, esp, formID, class, isFemale, race) VALUES ("%s", "%s", "%s", "%s", "%s", %s, "%s");',
-        [name, uId, esp, id, aClass, sex, race]
+        'INSERT INTO AllNPCs (fullName,  esp, formID, class, isFemale, race) VALUES ("%s", "%s", "%s", "%s", "%s", %s, "%s");',
+        [name, esp, id, aClass, sex, race]
       )
     );
   AddMessage(
-    Format('%s, %s, %s, %s, %s, %s, %s', [uId, esp, name, id, aClass, sex, race]
+    Format('%s, %s, %s, %s, %s, %s, %s', [esp, name, id, aClass, sex, race]
     )
   );
 end;
